@@ -1,6 +1,6 @@
 """
 Naver Map Search Workflow for Alfred 5
-Copyright (c) 2022 Kyeongwon Lee
+Copyright (c) 2024 Inchan Song
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,8 @@ SOFTWARE.
 
 import sys
 import os
+import re
+
 from workflow import web, Workflow
 
 default_latitude = os.environ.get('latitude')
@@ -65,11 +67,33 @@ def main(wf):
                 arg=f"https://map.naver.com/v5/search/{args}",
                 quicklookurl=f"https://map.naver.com/v5/search/{args}",
                 valid=True)
+    
+    wf.add_item(title=f"Search only Place for '{args}'",
+                autocomplete=args,
+                arg=f"place: {args}",
+                valid=True)
+    
+    wf.add_item(title=f"Search only Address for '{args}'",
+                autocomplete=args,
+                arg=f"address: {args}",
+                valid=True)
 
+
+    if re.match(r'^\d+$', args):
+        wf.add_item(title=f"Search only Bus for '{args}'",
+                    autocomplete=args,
+                    arg=f"bus: {args}",
+                    valid=True)
+        
     def wrapper():
         return get_data(args)
 
     res_json = wf.cached_data(f"navmap_{args}", wrapper, max_age=query_cache_age)
+
+    if not res_json:  
+        wf.add_item(
+                    title=f"No search results for '{args}'",
+                    valid=False)
 
     for item in res_json:
         if item.get("address"):
@@ -77,15 +101,17 @@ def main(wf):
             address_key = "fullAddress"
             txt = ltxt[address_key]
             address = ltxt["title"]
-            type = ltxt["fullAddress"]
+            type = "address"
+            x = ltxt["x"]
+            y = ltxt["y"]
             wf.add_item(
                 title=f"Search Naver Map for \'{txt}\'",
                 subtitle=address,
                 autocomplete=txt,
-                arg=f"https://map.naver.com/p/search/{txt}/{type}",
+                arg=f"https://map.naver.com/p/entry/{type}/{y},{x},{txt}",
                 copytext=txt,
                 largetext=txt,
-                quicklookurl=f"https://map.naver.com/p/search/{txt}/{type}",
+                quicklookurl=f"https://map.naver.com/p/entry/{type}/{y},{x},{txt}",
                 valid=True)
         elif item.get("place"):
             ltxt = item["place"]
@@ -122,7 +148,6 @@ def main(wf):
                 quicklookurl=f"https://map.naver.com/p/search/{txt}/{type}/{_id}",
                 valid=True)
 
-    
     wf.send_feedback()
 
 if __name__ == '__main__':
