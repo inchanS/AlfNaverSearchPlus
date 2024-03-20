@@ -22,18 +22,22 @@ SOFTWARE.
 """
 
 import sys
-import os
-
 from workflow import web, Workflow
 
-default_latitude = os.environ.get('latitude')
-default_longitude = os.environ.get('longitude')
-
 def get_data(word):
+    location_data = wf.cached_data('location_data', max_age=0)
+
+    if location_data is None:
+        print('위치 정보를 불러올 수 없습니다.')
+        sys.exit(1)
+
+    latitude = location_data['ip_latitude']
+    longitude = location_data['ip_longitude']
+
     url = 'https://map.naver.com/v5/api/search/instant-search'
     params = dict(query=word,
                   type="all",
-                  coords= f'{default_latitude},{default_longitude}',
+                  coords= f'{latitude},{longitude}',
                   lang="ko",
                   caller="pcweb"
                   )
