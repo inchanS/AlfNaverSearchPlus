@@ -3,7 +3,8 @@ alfnaversearch : Naver Search Workflow for Alfred ![Test](../../actions/workflow
 
 Naver Search Workflow for Alfred
 
-Alfred에서 네이버 검색, 네이버 쇼핑, 네이버 지도, 국어/영어/일본어/중국어/한자/독일어/프랑스어/이탈리아어/러시아어/스페인어/태국어/베트남어/인도네시아어 사전 검색이 자동완성 되는 워크플로우
+Alfred에서 네이버 검색, 네이버 쇼핑, 네이버 지식백과, 네이버 지도,  
+그리고 각종 네이버 사전 검색이 자동완성 되는 워크플로우  
 Naver is a most famous search engine in Korea.
 This workflow finds words in dictonaries of Naver dictionary and searches contents by Naver search engine. 
 You can use easily to discover Korean contents with the this Alfred workflow.
@@ -22,57 +23,70 @@ Install workflow
 - Python 2 사용 불가
 
 
-Usage
+General Usage
 --------------
 * `na ...`  : Naver Search(일반 네이버 검색)
 * `ns ...`  : Naver Shopping(네이버 쇼핑 검색)
 * `nt ...`  : Naver Terms(네이버 지식백과 검색)
-* `nmap ...` : Naver Map(네이버 지도 검색)
-* `nak ...` : Naver Korean Dictionary (국어 사전)
-* `nae ...` : Naver Korean-English Dictionary (영어 사전)
-* `naee ...` : Naver English-English Dictionary (영영 사전)
-* `naj ...` : Naver Korean-Japanese Dictionary (일본어 사전)
-* `nac ...` : Naver Korean-Chinese Dictionary (중국어 사전)
-* `nah ...` : Naver Hanja Dictionary (한자 사전)
-* `nad ...` : Naver Korean-German Dictionary (독일어 사전)
-* `naf ...` : Naver Korean-French Dictionary (프랑스어 사전)
-* `nai ...` : Naver Korean-Italian Dictionary (이탈리아어 사전)
-* `nar ...` : Naver Korean-Russian Dictionary (러시아어 사전)
-* `nas ...` : Naver Korean-Spanish Dictionary (스페인어 사전)
-* `nat ...` : Naver Korean-Thai Dictionary (태국어 사전)
-* `nav ...` : Naver Korean-Vietnamese Dictionary (베트남어 사전)
-* `nan ...` : Naver Korean-Indonesian Dictionary (인도네시아어 사전)
-* `nau ...` : Naver Korean-Uzbekistan Dictionary (우즈베키스탄어 사전)
-* `nane ...` : Naver Korean-Nepali Dictionary (네팔어 사전)
-* `namn ...` : Naver Korean-Mongolian Dictionary (몽골어 사전)
-* `namy ...` : Naver Korean-Burmese Dictionary (미안마어 사전)
-* `nasw ...` : Naver Korean-Swahili Dictionary (스와힐리어 사전)
-* `naar ...` : Naver Korean-Aramaic Dictionary (아랍어 사전)
-* `nakm ...` : Naver Korean-Cambodian Dictionary (캄보디아어 사전)
-* `nafa ...` : Naver Korean-Persian Dictionary (페르시아어 사전)
-* `nahi ...` : Naver Korean-Hindi Dictionary (힌디어 사전)
-* `nanl ...` : Naver Korean-Dutch Dictionary (네덜란드어 사전)
-* `nasv ...` : Naver Korean-Swedish Dictionary (스웨덴어 사전)
-* `nauk ...` : Naver Korean-Ukrainian Dictionary (우크라이나어 사전)
-* `naka ...` : Naver Korean-Gruziya Dictionary (조지아어 사전)
-* `nacs ...` : Naver Korean-Czech Dictionary (체코어 사전)
-* `nahr ...` : Naver Korean-Croatian Dictionary (크로아티아어 사전)
-* `natr ...` : Naver Korean-Turkish Dictionary (터키어 사전)
-* `napt ...` : Naver Korean-Portuguese Dictionary (포르투갈어 사전)
-* `napl ...` : Naver Korean-Polish Dictionary (폴란드어 사전)
-* `nafi ...` : Naver Korean-Finnish Dictionary (핀란드어 사전)
-* `nahu ...` : Naver Korean-Hungarian Dictionary (헝가리어 사전)
-* `nasq ...` : Naver Korean-Albanian Dictionary (알바니아어 사전)
-* `naro ...` : Naver Korean-Rumanian Dictionary (루마니아어 사전)
-* `nala ...` : Naver Korean-Latin Dictionary (라틴어 사전)
-* `nael ...` : Naver Korean-Greek Dictionary (그리스어 사전)
+* `nm ...` : Naver Map(네이버 지도 검색) - Configure 위치 설정값 기반
+* `nmi ...` : Naver Map(네이버 지도 검색) - IP 위치 기반
+
+Dictionary Usage
+--------------
+* `nk ...` : Naver Korean Dictionary (국어 사전)
+* `ne ...` : Naver Korean-English Dictionary (영어 사전)
+* `nee ...` : Naver English-English Dictionary (영영 사전)
+* `nj ...` : Naver Korean-Japanese Dictionary (일본어 사전)
+* `nc ...` : Naver Korean-Chinese Dictionary (중국어 사전)
+* `nh ...` : Naver Hanja Dictionary (한자 사전)
+* `nd ...` : Naver Korean-German Dictionary (독일어 사전)
+* `nf ...` : Naver Korean-French Dictionary (프랑스어 사전)
+* `ni ...` : Naver Korean-Italian Dictionary (이탈리아어 사전)
+* `nr ...` : Naver Korean-Russian Dictionary (러시아어 사전)
+* `ns ...` : Naver Korean-Spanish Dictionary (스페인어 사전)
+* `nt ...` : Naver Korean-Thai Dictionary (태국어 사전)
+* `nv ...` : Naver Korean-Vietnamese Dictionary (베트남어 사전)
+* `nn ...` : Naver Korean-Indonesian Dictionary (인도네시아어 사전)
+* `nu ...` : Naver Korean-Uzbekistan Dictionary (우즈베키스탄어 사전)
+* `nne ...` : Naver Korean-Nepali Dictionary (네팔어 사전)
+* `nmn ...` : Naver Korean-Mongolian Dictionary (몽골어 사전)
+* `nmy ...` : Naver Korean-Burmese Dictionary (미안마어 사전)
+* `nsw ...` : Naver Korean-Swahili Dictionary (스와힐리어 사전)
+* `nar ...` : Naver Korean-Aramaic Dictionary (아랍어 사전)
+* `nkm ...` : Naver Korean-Cambodian Dictionary (캄보디아어 사전)
+* `nfa ...` : Naver Korean-Persian Dictionary (페르시아어 사전)
+* `nhi ...` : Naver Korean-Hindi Dictionary (힌디어 사전)
+* `nnl ...` : Naver Korean-Dutch Dictionary (네덜란드어 사전)
+* `nsv ...` : Naver Korean-Swedish Dictionary (스웨덴어 사전)
+* `nuk ...` : Naver Korean-Ukrainian Dictionary (우크라이나어 사전)
+* `nka ...` : Naver Korean-Gruziya Dictionary (조지아어 사전)
+* `ncs ...` : Naver Korean-Czech Dictionary (체코어 사전)
+* `nhr ...` : Naver Korean-Croatian Dictionary (크로아티아어 사전)
+* `ntr ...` : Naver Korean-Turkish Dictionary (터키어 사전)
+* `npt ...` : Naver Korean-Portuguese Dictionary (포르투갈어 사전)
+* `npl ...` : Naver Korean-Polish Dictionary (폴란드어 사전)
+* `nfi ...` : Naver Korean-Finnish Dictionary (핀란드어 사전)
+* `nhu ...` : Naver Korean-Hungarian Dictionary (헝가리어 사전)
+* `nsq ...` : Naver Korean-Albanian Dictionary (알바니아어 사전)
+* `nro ...` : Naver Korean-Rumanian Dictionary (루마니아어 사전)
+* `nla ...` : Naver Korean-Latin Dictionary (라틴어 사전)
+* `nel ...` : Naver Korean-Greek Dictionary (그리스어 사전)
 
 
-단축키 관련 기능 추가
+### 단축키 관련 기능 추가
+* **Cmd + C** : 상세 내용이 클립보드에 복사
+* **Cmd + N, C** 혹은 **Cmd + Enter** : 자동완성 텍스트가 클립보드로 복사
+* **Cmd + Y** 혹은 **Shift** : 검색결과 미리 보기 웹브라우져 출력
 
-* Cmd + C : 상세 내용이 클립보드에 복사
-* Cmd + N, C 혹은 Cmd + Enter : 자동완성 텍스트가 클립보드로 복사
-* Cmd + Y 혹은 Shift : 검색결과 미리 보기 웹브라우져 출력
+### Configure Workflow 추가
+- **위도 및 경도** : `nm...` 네이버 지도검색시 사용자의 정확한 위치값 입력
+  - 미입력시 기본값은 서울시청
+  - https://www.findlatlng.org 에서 위치값을 정확히 찾을 수 있습니다. 
+  - (추후 Alfred workflow 내에서 자동화 추가예정)
+- **IP 주소 캐쉬 유효시간** : `nmi...` 네이버 지도검색시 사용되는 IP 주소의 캐쉬 저장 시간(단위: 초)으로 해당 시간 이후 키워드 재호출시 새로운 값을 불러옵니다. 
+- **자동완성 검색어 캐쉬 유효시간** : `nm...`, `nmi...` 호출을 연이어 할 때, 이전 위치 기반의 검색어 결과가 캐쉬로 남아 이후 키워드 호출시 영향을 미침으로 추가
+  - 미입력시 기본값은 5초   
+
 
 Externel Module
 --------------
