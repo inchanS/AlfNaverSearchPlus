@@ -28,13 +28,31 @@ from workflow import web, Workflow
 
 default_latitude = os.environ.get('latitude')
 default_longitude = os.environ.get('longitude')
-query_cache_age = int(os.environ.get('query_cache_age'))
+cache_age = int(os.environ.get('cache_age'))
 
-def get_data(word):
+def get_ip_location():
+    try:
+        r = web.get('https://map.naver.com/p/api/location')
+        r.raise_for_status()
+        data = r.json()
+        return data["lngLat"]
+    except Exception as e:
+        # 위치 정보를 가져오는 데 실패할 경우 기본값 반환
+        print(f"위치 정보를 가져오는 데 실패했습니다: {e}")
+        return default_latitude, default_longitude
+
+def get_data(word, use_ip):
+    if use_ip.get('use', True):
+        locate = wf.cached_data('location_data', get_ip_location, max_age=cache_age)
+        lat = locate['lat']
+        lng = locate['lng']
+    else:
+        lat, lng = default_latitude, default_longitude
+
     url = 'https://map.naver.com/p/api/search/instant-search'
     params = dict(query=word,
                   type="all",
-                  coords= f'{default_latitude},{default_longitude}',
+                  coords= f"{lat},{lng}",
                   lang="ko",
                   caller="pcweb"
                   )
@@ -53,14 +71,20 @@ def main(wf):
                 quicklookurl=f"https://map.naver.com/p/search/{args}",
                 valid=True)
     
-    def wrapper():
-        return get_data(args)
+    use_ip = wf.cached_data('use_ip', None)
 
-    res_json = wf.cached_data(f"navaddress_{args}", wrapper, max_age=query_cache_age)
+    def wrapper():
+        return get_data(args, use_ip)
+
+    if use_ip.get('use', True):
+        res_json = wf.cached_data(f"navaddressip_{args}", wrapper, max_age=cache_age)
+    else:
+        res_json = wf.cached_data(f"navaddress_{args}", wrapper, max_age=cache_age)
 
     if not res_json:  
         wf.add_item(
                     title=f"No search results for '{args}'",
+                    icon='noresults.png',
                     valid=False)
 
     for item in res_json:

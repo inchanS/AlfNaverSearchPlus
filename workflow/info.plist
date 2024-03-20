@@ -3616,7 +3616,9 @@ naver map 검색시, 워크플로우 설정에서 위도와 경도를 현재 사
 입력하지 않을 시, 기본값으로 서울시청의 주소값이 사용됩니다.  
 
 Alfred 호출창에서 nmi를 입력하면 IP address로부터 유사 위치를 가져올 수 있습니다.  
-nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로 근처 지도 정보를 사용합니다.</string>
+nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로 근처 지도 정보를 사용합니다.
+
+- 사용자 설정의 위도와 경도는 https://www.findlatlng.org 에서 정확히 찾을 수 있습니다.</string>
 	<key>uidata</key>
 	<dict>
 		<key>05A74B62-31BF-4237-AEC1-8BC3521CBE82</key>
@@ -3888,9 +3890,9 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		<key>A05931C8-0499-4564-B273-EC17BD9DA70B</key>
 		<dict>
 			<key>xpos</key>
-			<real>2580</real>
+			<real>2520</real>
 			<key>ypos</key>
-			<real>200</real>
+			<real>190</real>
 		</dict>
 		<key>A2A09CFD-D064-4F31-8B61-0630286D7365</key>
 		<dict>
@@ -4031,7 +4033,7 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 				<key>required</key>
 				<false/>
 				<key>trim</key>
-				<true/>
+				<false/>
 			</dict>
 			<key>description</key>
 			<string>위도 설정(없으면 서울시청을 기준으로 합니다.)</string>
@@ -4052,7 +4054,7 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 				<key>required</key>
 				<false/>
 				<key>trim</key>
-				<true/>
+				<false/>
 			</dict>
 			<key>description</key>
 			<string>경도 설정(없으면 서울시청을 기준으로 합니다.)</string>
@@ -4076,40 +4078,17 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 				<true/>
 			</dict>
 			<key>description</key>
-			<string>IP 주소의 캐쉬데이터의 유효시간 (단위: 초) - 만료하면 새로 불러옵니다.(기본값 30초)</string>
+			<string>IP 주소 및 검색결과의 캐쉬데이터의 유효시간 (단위: 초) - 만료하면 새로 불러옵니다.(기본값 30초)</string>
 			<key>label</key>
-			<string>IP 주소 캐쉬 유효시간</string>
+			<string>캐쉬 유효시간</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
-			<string>ip_cache_age</string>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>default</key>
-				<string>5</string>
-				<key>placeholder</key>
-				<string></string>
-				<key>required</key>
-				<false/>
-				<key>trim</key>
-				<true/>
-			</dict>
-			<key>description</key>
-			<string>자동완성 검색어의 캐쉬데이터의 유효시간 (단위: 초) - 만료하면 새로 불러옵니다. (기본값 5초)</string>
-			<key>label</key>
-			<string>자동완성 검색어 캐쉬 유효시간</string>
-			<key>type</key>
-			<string>textfield</string>
-			<key>variable</key>
-			<string>query_cache_age</string>
+			<string>cache_age</string>
 		</dict>
 	</array>
-	<key>variablesdontexport</key>
-	<array/>
 	<key>version</key>
-	<string>0.0.8</string>
+	<string>0.1.0</string>
 	<key>webaddress</key>
 	<string>https://github.com/inchanS/alfnaversearch</string>
 </dict>
