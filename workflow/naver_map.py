@@ -25,11 +25,15 @@ import sys
 
 from workflow import web, Workflow
 
+# 기본 위치 정보: 서울 시청의 좌표
+default_latitude = 37.5665
+default_longitude = 126.9780
+
 def get_data(word):
     url = 'https://map.naver.com/v5/api/search/instant-search'
     params = dict(query=word,
                   type="all",
-                  coords= '37.5664056,126.9778222',
+                  coords= f'{default_latitude},{default_longitude}',
                   lang="ko",
                   caller="pcweb"
                   )
