@@ -10,6 +10,7 @@ import hanja_naver_search
 import endic_naver_search
 import enendic_naver_search
 import common_naver_search
+import naver_finance
 
 
 class MyTestCase(unittest.TestCase):
@@ -64,6 +65,11 @@ class MyTestCase(unittest.TestCase):
             res = common_naver_search.get_dictionary_data(lang + 'ko', '한글')
 
             self.assertTrue(len(res['items']) > 0)
+
+    def test_naver_finance(self):
+        res = naver_finance.get_data('삼성')
+
+        self.assertTrue(len(res['items']) > 0)
 
 
 if __name__ == '__main__':
