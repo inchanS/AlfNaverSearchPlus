@@ -4033,7 +4033,7 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 				<key>required</key>
 				<false/>
 				<key>trim</key>
-				<false/>
+				<true/>
 			</dict>
 			<key>description</key>
 			<string>위도 설정(없으면 서울시청을 기준으로 합니다.)</string>
@@ -4054,7 +4054,7 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 				<key>required</key>
 				<false/>
 				<key>trim</key>
-				<false/>
+				<true/>
 			</dict>
 			<key>description</key>
 			<string>경도 설정(없으면 서울시청을 기준으로 합니다.)</string>
