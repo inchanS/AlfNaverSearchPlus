@@ -27,18 +27,15 @@ import re
 
 from workflow import web, Workflow
 
-default_latitude = os.environ.get('latitude')
-default_longitude = os.environ.get('longitude')
-cache_age = int(os.environ.get('cache_age'))
+default_latitude = os.environ.get('latitude', '37.5665')
+default_longitude = os.environ.get('longitude', '37.5665')
+cache_age = int(os.environ.get('cache_age', '30'))
 
 def get_data(word):
-    data_to_cache = {'use': False}
-    wf.cache_data('use_ip', data_to_cache)
-    
     url = 'https://map.naver.com/p/api/search/instant-search'
     params = dict(query=word,
                   type="all",
-                  coords= f'{default_latitude},{default_longitude}',
+                  coords=f'{default_latitude},{default_longitude}',
                   lang="ko",
                   caller="pcweb"
                   )
@@ -56,13 +53,13 @@ def main(wf):
                 arg=f"https://map.naver.com/p/search/{args}",
                 quicklookurl=f"https://map.naver.com/p/search/{args}",
                 valid=True)
-    
+
     wf.add_item(title=f"Search only Place for '{args}'",
                 autocomplete=args,
                 arg=f"place: {args}",
                 icon='7FBDB33A-E342-411C-B00B-8B797AE8C19A.png',
                 valid=True)
-    
+
     wf.add_item(title=f"Search only Address for '{args}'",
                 autocomplete=args,
                 arg=f"address: {args}",
@@ -77,12 +74,15 @@ def main(wf):
                     icon='845B46E7-61FB-43CD-A287-FCB4C075A4A6.png',
                     valid=True)
 
+    data_to_cache = {'use': False}
+    wf.cache_data('use_ip', data_to_cache)
+
     def wrapper():
         return get_data(args)
 
     res_json = wf.cached_data(f"navmap_{args}", wrapper, max_age=cache_age)
 
-    if not res_json:  
+    if not res_json:
         wf.add_item(
                     title=f"No search results for '{args}'",
                     icon='noresults.png',
@@ -140,7 +140,7 @@ def main(wf):
                 largetext=txt,
                 quicklookurl=f"https://map.naver.com/p/search/{txt}/{type}/{_id}",
                 valid=True)
-    
+
     wf.send_feedback()
 
 if __name__ == '__main__':

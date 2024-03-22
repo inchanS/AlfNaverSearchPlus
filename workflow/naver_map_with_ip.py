@@ -27,9 +27,9 @@ import re
 
 from workflow import web, Workflow
 
-default_latitude = os.environ.get('latitude')
-default_longitude = os.environ.get('longitude')
-cache_age = int(os.environ.get('cache_age'))
+default_latitude = os.environ.get('latitude', '37.5665')
+default_longitude = os.environ.get('longitude', '37.5665')
+cache_age = int(os.environ.get('cache_age', '30'))
 
 def get_ip_location():
     try:
@@ -42,16 +42,11 @@ def get_ip_location():
         print(f"위치 정보를 가져오는 데 실패했습니다: {e}")
         return default_latitude, default_longitude
 
-def get_data(word):
-    locate = wf.cached_data('location_data', get_ip_location, max_age=cache_age)
-
-    data_to_cache = {'use': True}
-    wf.cache_data('use_ip', data_to_cache)
-
+def get_data(word, locate):
     url = 'https://map.naver.com/p/api/search/instant-search'
     params = dict(query=word,
                   type="all",
-                  coords= f"{locate['lat']},{locate['lng']}",
+                  coords=f"{locate['lat']},{locate['lng']}",
                   lang="ko",
                   caller="pcweb"
                   )
@@ -69,13 +64,13 @@ def main(wf):
                 arg=f"https://map.naver.com/v5/search/{args}",
                 quicklookurl=f"https://map.naver.com/v5/search/{args}",
                 valid=True)
-    
+
     wf.add_item(title=f"Search only Place for '{args}'",
                 autocomplete=args,
                 arg=f"place: {args}",
                 icon='7FBDB33A-E342-411C-B00B-8B797AE8C19A.png',
                 valid=True)
-    
+
     wf.add_item(title=f"Search only Address for '{args}'",
                 autocomplete=args,
                 arg=f"address: {args}",
@@ -89,13 +84,17 @@ def main(wf):
                     arg=f"bus: {args}",
                     icon='845B46E7-61FB-43CD-A287-FCB4C075A4A6.png',
                     valid=True)
-        
+
+    data_to_cache = {'use': True}
+    wf.cache_data('use_ip', data_to_cache)
+    locate = wf.cached_data('location_data', get_ip_location, max_age=cache_age)
+
     def wrapper():
-        return get_data(args)
+        return get_data(args, locate)
 
     res_json = wf.cached_data(f"navmapip_{args}", wrapper, max_age=cache_age)
 
-    if not res_json:  
+    if not res_json:
         wf.add_item(
                     title=f"No search results for '{args}'",
                     icon='noresults.png',

@@ -4,6 +4,8 @@ import unittest
 import naver_search
 import naver_shopping
 import naver_terms
+import naver_map
+import naver_map_with_ip
 import krdic_naver_search
 import hanja_naver_search
 import endic_naver_search
@@ -26,6 +28,17 @@ class MyTestCase(unittest.TestCase):
         res = naver_terms.get_data('한글')
 
         self.assertTrue(len(res['items']) > 0)
+
+    def test_naver_map(self):
+        res = naver_map.get_data('서울')
+
+        self.assertTrue(len(res) > 0)
+
+    def test_naver_map_with_ip(self):
+        locate = {'lat': '37.5665', 'lng': '126.9780'}
+        res = naver_map_with_ip.get_data('서울', locate)
+
+        self.assertTrue((len(res) > 0))
 
     def test_krdic(self):
         res = krdic_naver_search.get_dictionary_data('한글')
