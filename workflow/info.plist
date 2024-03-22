@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>bundleid</key>
-	<string>com.inchanS.alfnaversearch</string>
+	<string>com.inchans.alfnaversearch</string>
 	<key>category</key>
 	<string>Internet</string>
 	<key>connections</key>
@@ -1078,13 +1078,13 @@
 		</array>
 	</dict>
 	<key>createdby</key>
-	<string>inchanS</string>
+	<string>inchans</string>
 	<key>description</key>
-	<string>Naver Search Kit</string>
+	<string>Naver Search Plus Kit</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Naver Search</string>
+	<string>Naver Search Plus</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -4088,7 +4088,7 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		</dict>
 	</array>
 	<key>version</key>
-	<string>0.1.0</string>
+	<string>{{VERSION_INFO}}</string>
 	<key>webaddress</key>
 	<string>https://github.com/inchanS/alfnaversearch</string>
 </dict>
