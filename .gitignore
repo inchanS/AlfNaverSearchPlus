@@ -39,4 +39,6 @@ nosetests.xml
 NaverSearch.alfredworkflow
 
 # IDE file
-/.idea
+.idea
+
+workflow/prefs.plist
