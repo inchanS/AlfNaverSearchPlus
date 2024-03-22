@@ -37,3 +37,6 @@ nosetests.xml
 
 # output file
 NaverSearch.alfredworkflow
+
+# IDE file
+/.idea
