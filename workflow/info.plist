@@ -1498,7 +1498,7 @@
 				<key>runningsubtext</key>
 				<string>Running</string>
 				<key>script</key>
-				<string>/usr/bin/env python3 naver_map.py "{query}"</string>
+				<string>/usr/bin/env python3 naver_map.py doNotUseIP "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -1920,7 +1920,7 @@
 				<key>runningsubtext</key>
 				<string>Running</string>
 				<key>script</key>
-				<string>/usr/bin/env python3 naver_map_with_ip.py "{query}" </string>
+				<string>/usr/bin/env python3 naver_map.py useIP "{query}" </string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>

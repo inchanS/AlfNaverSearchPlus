@@ -31,11 +31,22 @@ default_latitude = os.environ.get('latitude', '37.5665')
 default_longitude = os.environ.get('longitude', '37.5665')
 cache_age = int(os.environ.get('cache_age', '30'))
 
-def get_data(word):
+def get_ip_location():
+    try:
+        r = web.get('https://map.naver.com/p/api/location')
+        r.raise_for_status()
+        data = r.json()
+        return data["lngLat"]
+    except Exception as e:
+        # 위치 정보를 가져오는 데 실패할 경우 기본값 반환
+        print(f"위치 정보를 가져오는 데 실패했습니다: {e}")
+        return default_latitude, default_longitude
+
+def get_data(locate, word):
     url = 'https://map.naver.com/p/api/search/instant-search'
     params = dict(query=word,
                   type="all",
-                  coords=f'{default_latitude},{default_longitude}',
+                  coords=f"{locate['lat']},{locate['lng']}",
                   lang="ko",
                   caller="pcweb"
                   )
@@ -46,7 +57,8 @@ def get_data(word):
 
 
 def main(wf):
-    args = wf.args[0]
+    use_ip = wf.args[0]
+    args = wf.args[1]
 
     wf.add_item(title=f"Search Naver Map for '{args}'",
                 autocomplete=args,
@@ -74,13 +86,24 @@ def main(wf):
                     icon='845B46E7-61FB-43CD-A287-FCB4C075A4A6.png',
                     valid=True)
 
-    data_to_cache = {'use': False}
-    wf.cache_data('use_ip', data_to_cache)
+    if use_ip == 'useIP':
+        data_to_cache = {'use': True}
+        wf.cache_data('use_ip', data_to_cache)
+        locate = wf.cached_data('location_data', get_ip_location, max_age=cache_age)
 
-    def wrapper():
-        return get_data(args)
+        def wrapper():
+            return get_data(locate, args)
 
-    res_json = wf.cached_data(f"navmap_{args}", wrapper, max_age=cache_age)
+        res_json = wf.cached_data(f"navmapip_{args}", wrapper, max_age=cache_age)
+    else:
+        data_to_cache = {'use': False}
+        wf.cache_data('use_ip', data_to_cache)
+        locate = {'lat': default_latitude, 'lng': default_longitude}
+
+        def wrapper():
+            return get_data(locate, args)
+
+        res_json = wf.cached_data(f"navmap_{args}", wrapper, max_age=cache_age)
 
     if not res_json:
         wf.add_item(
