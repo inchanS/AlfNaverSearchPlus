@@ -241,6 +241,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>30E2814B-0A6E-4E98-BA4C-F264B74D172C</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>7B16E69C-81B9-444C-8242-40BF239C94C2</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>389A9D17-0ADA-494C-B4A9-D9D9B9832B22</key>
 		<array>
 			<dict>
@@ -2035,6 +2048,78 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>open "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>7B16E69C-81B9-444C-8242-40BF239C94C2</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>keyword</key>
+				<string>nst</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Running</string>
+				<key>script</key>
+				<string>/usr/bin/env python3 naver_finance.py "{query}" </string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Search Naver for {query}</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>30E2814B-0A6E-4E98-BA4C-F264B74D172C</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>alfredfiltersresults</key>
 				<false/>
 				<key>alfredfiltersresultsmatchmode</key>
@@ -3712,6 +3797,13 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 			<key>ypos</key>
 			<real>375</real>
 		</dict>
+		<key>30E2814B-0A6E-4E98-BA4C-F264B74D172C</key>
+		<dict>
+			<key>xpos</key>
+			<real>40</real>
+			<key>ypos</key>
+			<real>255</real>
+		</dict>
 		<key>389A9D17-0ADA-494C-B4A9-D9D9B9832B22</key>
 		<dict>
 			<key>xpos</key>
@@ -3851,6 +3943,13 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 			<real>650</real>
 			<key>ypos</key>
 			<real>490</real>
+		</dict>
+		<key>7B16E69C-81B9-444C-8242-40BF239C94C2</key>
+		<dict>
+			<key>xpos</key>
+			<real>240</real>
+			<key>ypos</key>
+			<real>255</real>
 		</dict>
 		<key>7EAD80AF-0D87-4FBD-AAAD-5A4BD8237EEC</key>
 		<dict>
