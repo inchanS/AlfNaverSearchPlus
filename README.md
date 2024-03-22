@@ -1,13 +1,17 @@
-alfnaversearch : Naver Search Workflow for Alfred ![Test](../../actions/workflows/test-naver-ac.yml/badge.svg) ![Release](../../actions/workflows/release.yml/badge.svg)
+AlfNaverSearchPlus : Naver Search Workflow for Alfred ![Test](../../actions/workflows/test-naver-ac.yml/badge.svg) ![Release](../../actions/workflows/release.yml/badge.svg)
 ==============
 
 Naver Search Workflow for Alfred
+---------------------------------
 
 Alfred에서 네이버 검색, 네이버 쇼핑, 네이버 지식백과, 네이버 지도,  
-그리고 각종 네이버 사전 검색이 자동완성 되는 워크플로우  
-Naver is a most famous search engine in Korea.
-This workflow finds words in dictonaries of Naver dictionary and searches contents by Naver search engine. 
-You can use easily to discover Korean contents with the this Alfred workflow.
+그리고 각종 네이버 사전 검색이 자동완성 되는 워크플로우
+<br>  
+<br>  
+### **Acknowledgments**
+[@Kuniz](https://github.com/Kuniz)님의 [alfnaversearch 워크플로우](https://github.com/Kuniz/alfnaversearch)를 따로이 개인적인 용도에 맞게 부분적으로 수정 및 개선한 워크플로우입니다.  
+**alfnaversearch** 워크플로우의 코드기여는 [forked repository](https://github.com/inchanS/alfnaversearch)에서 진행하였습니다.    
+<br>  
 
 Install workflow
 --------------
