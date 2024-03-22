@@ -4,7 +4,7 @@ AlfNaverSearchPlus : Naver Search Workflow for Alfred ![Test](../../actions/work
 Naver Search Workflow for Alfred
 ---------------------------------
 
-Alfred에서 네이버 검색, 네이버 쇼핑, 네이버 지식백과, 네이버 지도,  
+Alfred에서 네이버 검색, 네이버 쇼핑, 네이버 지식백과, 네이버 지도, 네이버 증권    
 그리고 각종 네이버 사전 검색이 자동완성 되는 워크플로우
 <br>  
 <br>  
@@ -32,8 +32,9 @@ General Usage
 * `na ...`  : Naver Search(일반 네이버 검색)
 * `ns ...`  : Naver Shopping(네이버 쇼핑 검색)
 * `nt ...`  : Naver Terms(네이버 지식백과 검색)
-* `nm ...` : Naver Map(네이버 지도 검색) - Configure 위치 설정값 기반
-* `nmi ...` : Naver Map(네이버 지도 검색) - IP 위치 기반
+* `nm ...` : Naver Map(네이버 지도 검색) - Configure 위치 설정값 기반 - **New**
+* `nmi ...` : Naver Map(네이버 지도 검색) - IP 위치 기반 - **New**
+* `nst ...` : Naver Finance - 증권 검색 - **New**
 
 Dictionary Usage
 --------------
