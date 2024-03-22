@@ -29,7 +29,7 @@ from workflow import web, Workflow
 cache_age = int(os.getenv('cache_age', '30'))
 
 def get_data(word):
-    url = 'https://ac.stock.naver.com/ac?q=nf&target=index%2Cstock%2Cmarketindicator'
+    url = 'https://ac.stock.naver.com/ac'
     params = dict(q=word,
                   target="index,stock,marketindicator",
                   lang="ko",
