@@ -26,9 +26,9 @@ import os
 
 from workflow import web, Workflow
 
-default_latitude = os.environ.get('latitude')
-default_longitude = os.environ.get('longitude')
-cache_age = int(os.environ.get('cache_age'))
+default_latitude = os.getenv('latitude')
+default_longitude = os.getenv('longitude')
+cache_age = int(os.getenv('cache_age'))
 
 def get_ip_location():
     try:
