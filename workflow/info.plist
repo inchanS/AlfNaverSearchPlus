@@ -8,6 +8,19 @@
 	<string>Internet</string>
 	<key>connections</key>
 	<dict>
+		<key>0166BD8D-0775-422A-B4A9-6C7EBE6B407C</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>1ED036DD-F4FD-400F-A03F-00F5079A6560</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>05A74B62-31BF-4237-AEC1-8BC3521CBE82</key>
 		<array>
 			<dict>
@@ -26,19 +39,6 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>A9C03E0E-7AEF-4CB4-9F0D-98F80DA20014</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>0F06A832-60AD-450A-BD53-54B2DBB23526</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>7FBDB33A-E342-411C-B00B-8B797AE8C19A</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -138,6 +138,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>2EED1D5A-97A2-44A6-AC04-23ABD15655A5</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>58425307-D5A4-469E-83F8-E75EAAB98FBF</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>30875AA6-9F14-4A9D-B5A9-AD3B9401027D</key>
 		<array>
 			<dict>
@@ -177,11 +190,11 @@
 				<false/>
 			</dict>
 		</array>
-		<key>3F6E3BB6-64CC-481E-990D-F3823D3616A8</key>
+		<key>414A7934-07FC-44EE-A78F-84302AC6A91C</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>A05931C8-0499-4564-B273-EC17BD9DA70B</string>
+				<string>E826FC0B-9013-4581-A657-937AAE3A2F1F</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -221,19 +234,6 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>A9C03E0E-7AEF-4CB4-9F0D-98F80DA20014</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>4C4BDAA8-2440-459E-8DEB-AC70450F25DD</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>845B46E7-61FB-43CD-A287-FCB4C075A4A6</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -320,19 +320,6 @@
 				<false/>
 			</dict>
 		</array>
-		<key>60E42ADE-3506-4888-9A8D-405226968796</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>3F6E3BB6-64CC-481E-990D-F3823D3616A8</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
 		<key>6180FE46-B2AE-4954-91BD-F638E67A8E3F</key>
 		<array>
 			<dict>
@@ -411,11 +398,23 @@
 				<false/>
 			</dict>
 		</array>
-		<key>7EAD80AF-0D87-4FBD-AAAD-5A4BD8237EEC</key>
+		<key>7D258252-5FB7-4DF7-9BFC-12D6C84F56E9</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>A9C03E0E-7AEF-4CB4-9F0D-98F80DA20014</string>
+				<string>10B6E0F1-445E-4B9B-A77A-CBF888A104F1</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>sourceoutputuid</key>
+				<string>95BD5A7C-A4AA-4751-B7B3-EAB23A4D3B5B</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>BF3A4497-4080-4E06-A40C-AF8DDC73F23F</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -424,11 +423,11 @@
 				<false/>
 			</dict>
 		</array>
-		<key>7FBDB33A-E342-411C-B00B-8B797AE8C19A</key>
+		<key>7EAD80AF-0D87-4FBD-AAAD-5A4BD8237EEC</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>A05931C8-0499-4564-B273-EC17BD9DA70B</string>
+				<string>A9C03E0E-7AEF-4CB4-9F0D-98F80DA20014</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -455,19 +454,6 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>A9C03E0E-7AEF-4CB4-9F0D-98F80DA20014</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>845B46E7-61FB-43CD-A287-FCB4C075A4A6</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>A05931C8-0499-4564-B273-EC17BD9DA70B</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -599,7 +585,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>0F06A832-60AD-450A-BD53-54B2DBB23526</string>
+				<string>414A7934-07FC-44EE-A78F-84302AC6A91C</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -611,35 +597,11 @@
 			</dict>
 			<dict>
 				<key>destinationuid</key>
-				<string>60E42ADE-3506-4888-9A8D-405226968796</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>sourceoutputuid</key>
-				<string>467E4D84-5126-4C3C-BEFA-FF8C625CFC54</string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
 				<string>A05931C8-0499-4564-B273-EC17BD9DA70B</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>4C4BDAA8-2440-459E-8DEB-AC70450F25DD</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>sourceoutputuid</key>
-				<string>B745614F-488C-4E55-863E-152E0E8956CD</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -696,6 +658,31 @@
 				<false/>
 			</dict>
 		</array>
+		<key>E826FC0B-9013-4581-A657-937AAE3A2F1F</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>7D258252-5FB7-4DF7-9BFC-12D6C84F56E9</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>sourceoutputuid</key>
+				<string>0CA4422F-89BF-4361-AC45-56EF6E35E749</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>A05931C8-0499-4564-B273-EC17BD9DA70B</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>E8953233-9708-4079-BF77-6135BA0AC3EF</key>
 		<array>
 			<dict>
@@ -733,74 +720,6 @@
 	<string>Naver Search Plus</string>
 	<key>objects</key>
 	<array>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>alfredfiltersresults</key>
-				<false/>
-				<key>alfredfiltersresultsmatchmode</key>
-				<integer>0</integer>
-				<key>argumenttreatemptyqueryasnil</key>
-				<false/>
-				<key>argumenttrimmode</key>
-				<integer>0</integer>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>68</integer>
-				<key>queuedelaycustom</key>
-				<integer>1</integer>
-				<key>queuedelayimmediatelyinitially</key>
-				<false/>
-				<key>queuedelaymode</key>
-				<integer>0</integer>
-				<key>queuemode</key>
-				<integer>1</integer>
-				<key>runningsubtext</key>
-				<string>Running</string>
-				<key>script</key>
-				<string>/usr/bin/env python3 search_place.py "{query}"</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>subtext</key>
-				<string></string>
-				<key>title</key>
-				<string>Search Place for {query}</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>7FBDB33A-E342-411C-B00B-8B797AE8C19A</string>
-			<key>version</key>
-			<integer>3</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>matchmode</key>
-				<integer>1</integer>
-				<key>matchstring</key>
-				<string>place:\s*</string>
-				<key>regexcaseinsensitive</key>
-				<false/>
-				<key>regexmultiline</key>
-				<false/>
-				<key>replacestring</key>
-				<string></string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.utility.replace</string>
-			<key>uid</key>
-			<string>0F06A832-60AD-450A-BD53-54B2DBB23526</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -870,395 +789,6 @@
 			<string>BC091CE6-E547-49F4-B4DF-3F4FF9FFD098</string>
 			<key>version</key>
 			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>alfredfiltersresults</key>
-				<false/>
-				<key>alfredfiltersresultsmatchmode</key>
-				<integer>0</integer>
-				<key>argumenttreatemptyqueryasnil</key>
-				<false/>
-				<key>argumenttrimmode</key>
-				<integer>0</integer>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>68</integer>
-				<key>keyword</key>
-				<string>nm</string>
-				<key>queuedelaycustom</key>
-				<integer>1</integer>
-				<key>queuedelayimmediatelyinitially</key>
-				<false/>
-				<key>queuedelaymode</key>
-				<integer>0</integer>
-				<key>queuemode</key>
-				<integer>1</integer>
-				<key>runningsubtext</key>
-				<string>Running</string>
-				<key>script</key>
-				<string>/usr/bin/env python3 naver_map.py doNotUseIP "{query}"</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>subtext</key>
-				<string></string>
-				<key>title</key>
-				<string>Search Naver Map for {query}</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>58425307-D5A4-469E-83F8-E75EAAB98FBF</string>
-			<key>version</key>
-			<integer>3</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>conditions</key>
-				<array>
-					<dict>
-						<key>inputstring</key>
-						<string></string>
-						<key>matchcasesensitive</key>
-						<false/>
-						<key>matchmode</key>
-						<integer>4</integer>
-						<key>matchstring</key>
-						<string>^place:</string>
-						<key>outputlabel</key>
-						<string>place</string>
-						<key>uid</key>
-						<string>0CA4422F-89BF-4361-AC45-56EF6E35E749</string>
-					</dict>
-					<dict>
-						<key>inputstring</key>
-						<string></string>
-						<key>matchcasesensitive</key>
-						<false/>
-						<key>matchmode</key>
-						<integer>4</integer>
-						<key>matchstring</key>
-						<string>^address:</string>
-						<key>outputlabel</key>
-						<string>address</string>
-						<key>uid</key>
-						<string>467E4D84-5126-4C3C-BEFA-FF8C625CFC54</string>
-					</dict>
-					<dict>
-						<key>inputstring</key>
-						<string></string>
-						<key>matchcasesensitive</key>
-						<false/>
-						<key>matchmode</key>
-						<integer>4</integer>
-						<key>matchstring</key>
-						<string>^bus:</string>
-						<key>outputlabel</key>
-						<string>bus</string>
-						<key>uid</key>
-						<string>B745614F-488C-4E55-863E-152E0E8956CD</string>
-					</dict>
-				</array>
-				<key>elselabel</key>
-				<string>else</string>
-				<key>hideelse</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.utility.conditional</string>
-			<key>uid</key>
-			<string>CF42F42C-DFFA-4482-8B77-0D195DE4F8A0</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>alfredfiltersresults</key>
-				<false/>
-				<key>alfredfiltersresultsmatchmode</key>
-				<integer>0</integer>
-				<key>argumenttreatemptyqueryasnil</key>
-				<false/>
-				<key>argumenttrimmode</key>
-				<integer>0</integer>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>68</integer>
-				<key>queuedelaycustom</key>
-				<integer>1</integer>
-				<key>queuedelayimmediatelyinitially</key>
-				<false/>
-				<key>queuedelaymode</key>
-				<integer>0</integer>
-				<key>queuemode</key>
-				<integer>1</integer>
-				<key>runningsubtext</key>
-				<string>Running</string>
-				<key>script</key>
-				<string>/usr/bin/env python3 search_address.py "{query}"</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>subtext</key>
-				<string></string>
-				<key>title</key>
-				<string>Search Address for {query}</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>3F6E3BB6-64CC-481E-990D-F3823D3616A8</string>
-			<key>version</key>
-			<integer>3</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>matchmode</key>
-				<integer>1</integer>
-				<key>matchstring</key>
-				<string>address:\s*</string>
-				<key>regexcaseinsensitive</key>
-				<false/>
-				<key>regexmultiline</key>
-				<false/>
-				<key>replacestring</key>
-				<string></string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.utility.replace</string>
-			<key>uid</key>
-			<string>60E42ADE-3506-4888-9A8D-405226968796</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>alfredfiltersresults</key>
-				<false/>
-				<key>alfredfiltersresultsmatchmode</key>
-				<integer>0</integer>
-				<key>argumenttreatemptyqueryasnil</key>
-				<false/>
-				<key>argumenttrimmode</key>
-				<integer>0</integer>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>68</integer>
-				<key>keyword</key>
-				<string>nmi</string>
-				<key>queuedelaycustom</key>
-				<integer>1</integer>
-				<key>queuedelayimmediatelyinitially</key>
-				<false/>
-				<key>queuedelaymode</key>
-				<integer>0</integer>
-				<key>queuemode</key>
-				<integer>1</integer>
-				<key>runningsubtext</key>
-				<string>Running</string>
-				<key>script</key>
-				<string>/usr/bin/env python3 naver_map.py useIP "{query}" </string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>subtext</key>
-				<string></string>
-				<key>title</key>
-				<string>Search Naver Map in IP location for {query}</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>1ED036DD-F4FD-400F-A03F-00F5079A6560</string>
-			<key>version</key>
-			<integer>3</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
-				<string>open "{query}"</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>A05931C8-0499-4564-B273-EC17BD9DA70B</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>alfredfiltersresults</key>
-				<false/>
-				<key>alfredfiltersresultsmatchmode</key>
-				<integer>0</integer>
-				<key>argumenttreatemptyqueryasnil</key>
-				<false/>
-				<key>argumenttrimmode</key>
-				<integer>0</integer>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>68</integer>
-				<key>queuedelaycustom</key>
-				<integer>1</integer>
-				<key>queuedelayimmediatelyinitially</key>
-				<false/>
-				<key>queuedelaymode</key>
-				<integer>0</integer>
-				<key>queuemode</key>
-				<integer>1</integer>
-				<key>runningsubtext</key>
-				<string>Running</string>
-				<key>script</key>
-				<string>/usr/bin/env python3 search_bus.py "{query}"</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>subtext</key>
-				<string></string>
-				<key>title</key>
-				<string>Search Bus for {query}</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>845B46E7-61FB-43CD-A287-FCB4C075A4A6</string>
-			<key>version</key>
-			<integer>3</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>matchmode</key>
-				<integer>1</integer>
-				<key>matchstring</key>
-				<string>bus:\s*</string>
-				<key>regexcaseinsensitive</key>
-				<false/>
-				<key>regexmultiline</key>
-				<false/>
-				<key>replacestring</key>
-				<string></string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.utility.replace</string>
-			<key>uid</key>
-			<string>4C4BDAA8-2440-459E-8DEB-AC70450F25DD</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
-				<string>open "{query}"</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>7B16E69C-81B9-444C-8242-40BF239C94C2</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>alfredfiltersresults</key>
-				<false/>
-				<key>alfredfiltersresultsmatchmode</key>
-				<integer>0</integer>
-				<key>argumenttreatemptyqueryasnil</key>
-				<false/>
-				<key>argumenttrimmode</key>
-				<integer>0</integer>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>68</integer>
-				<key>keyword</key>
-				<string>nst</string>
-				<key>queuedelaycustom</key>
-				<integer>1</integer>
-				<key>queuedelayimmediatelyinitially</key>
-				<false/>
-				<key>queuedelaymode</key>
-				<integer>0</integer>
-				<key>queuemode</key>
-				<integer>1</integer>
-				<key>runningsubtext</key>
-				<string>Running</string>
-				<key>script</key>
-				<string>/usr/bin/env python3 naver_finance.py "{query}" </string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>subtext</key>
-				<string></string>
-				<key>title</key>
-				<string>Search Naver for {query}</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>30E2814B-0A6E-4E98-BA4C-F264B74D172C</string>
-			<key>version</key>
-			<integer>3</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -1399,6 +929,410 @@
 			<string>4CE6D24F-8B0E-4DEE-B0B3-22CDA12434C8</string>
 			<key>version</key>
 			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>open "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>7B16E69C-81B9-444C-8242-40BF239C94C2</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>keyword</key>
+				<string>nst</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Running</string>
+				<key>script</key>
+				<string>/usr/bin/env python3 naver_finance.py "{query}" </string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Search Naver for {query}</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>30E2814B-0A6E-4E98-BA4C-F264B74D172C</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>externaltriggerid</key>
+				<string>nmi</string>
+				<key>passinputasargument</key>
+				<true/>
+				<key>passvariables</key>
+				<true/>
+				<key>workflowbundleid</key>
+				<string>self</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.callexternaltrigger</string>
+			<key>uid</key>
+			<string>10B6E0F1-445E-4B9B-A77A-CBF888A104F1</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>conditions</key>
+				<array>
+					<dict>
+						<key>inputstring</key>
+						<string>{var:useIP}</string>
+						<key>matchcasesensitive</key>
+						<false/>
+						<key>matchmode</key>
+						<integer>5</integer>
+						<key>matchstring</key>
+						<string></string>
+						<key>outputlabel</key>
+						<string>nmi</string>
+						<key>uid</key>
+						<string>95BD5A7C-A4AA-4751-B7B3-EAB23A4D3B5B</string>
+					</dict>
+				</array>
+				<key>elselabel</key>
+				<string>else</string>
+				<key>hideelse</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.conditional</string>
+			<key>uid</key>
+			<string>7D258252-5FB7-4DF7-9BFC-12D6C84F56E9</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>externaltriggerid</key>
+				<string>nm</string>
+				<key>passinputasargument</key>
+				<true/>
+				<key>passvariables</key>
+				<true/>
+				<key>workflowbundleid</key>
+				<string>self</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.callexternaltrigger</string>
+			<key>uid</key>
+			<string>BF3A4497-4080-4E06-A40C-AF8DDC73F23F</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>/usr/bin/env python3 map_search_hub.py "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>search_map_type</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>414A7934-07FC-44EE-A78F-84302AC6A91C</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>conditions</key>
+				<array>
+					<dict>
+						<key>inputstring</key>
+						<string>{var:return}</string>
+						<key>matchcasesensitive</key>
+						<false/>
+						<key>matchmode</key>
+						<integer>5</integer>
+						<key>matchstring</key>
+						<string></string>
+						<key>outputlabel</key>
+						<string>return</string>
+						<key>uid</key>
+						<string>0CA4422F-89BF-4361-AC45-56EF6E35E749</string>
+					</dict>
+				</array>
+				<key>elselabel</key>
+				<string>else</string>
+				<key>hideelse</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.conditional</string>
+			<key>uid</key>
+			<string>E826FC0B-9013-4581-A657-937AAE3A2F1F</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>availableviaurlhandler</key>
+				<false/>
+				<key>triggerid</key>
+				<string>nm</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>2EED1D5A-97A2-44A6-AC04-23ABD15655A5</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>keyword</key>
+				<string>nm</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Running</string>
+				<key>script</key>
+				<string>/usr/bin/env python3 naver_map.py doNotUseIP "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Search Naver Map for {query}</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>58425307-D5A4-469E-83F8-E75EAAB98FBF</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>conditions</key>
+				<array>
+					<dict>
+						<key>inputstring</key>
+						<string>{var:map_type}</string>
+						<key>matchcasesensitive</key>
+						<false/>
+						<key>matchmode</key>
+						<integer>4</integer>
+						<key>matchstring</key>
+						<string>\b\w+\b</string>
+						<key>outputlabel</key>
+						<string>hub</string>
+						<key>uid</key>
+						<string>0CA4422F-89BF-4361-AC45-56EF6E35E749</string>
+					</dict>
+				</array>
+				<key>elselabel</key>
+				<string>else</string>
+				<key>hideelse</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.conditional</string>
+			<key>uid</key>
+			<string>CF42F42C-DFFA-4482-8B77-0D195DE4F8A0</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>keyword</key>
+				<string>nmi</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Running</string>
+				<key>script</key>
+				<string>/usr/bin/env python3 naver_map.py useIP "{query}" </string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Search Naver Map in IP location for {query}</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>1ED036DD-F4FD-400F-A03F-00F5079A6560</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>open "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>A05931C8-0499-4564-B273-EC17BD9DA70B</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>availableviaurlhandler</key>
+				<false/>
+				<key>triggerid</key>
+				<string>nmi</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>0166BD8D-0775-422A-B4A9-6C7EBE6B407C</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -3328,47 +3262,54 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 - 사용자 설정의 위도와 경도는 https://www.findlatlng.org 에서 정확히 찾을 수 있습니다.</string>
 	<key>uidata</key>
 	<dict>
+		<key>0166BD8D-0775-422A-B4A9-6C7EBE6B407C</key>
+		<dict>
+			<key>xpos</key>
+			<real>170</real>
+			<key>ypos</key>
+			<real>1385</real>
+		</dict>
 		<key>05A74B62-31BF-4237-AEC1-8BC3521CBE82</key>
 		<dict>
 			<key>xpos</key>
-			<real>745</real>
+			<real>750</real>
 			<key>ypos</key>
-			<real>1370</real>
+			<real>1915</real>
 		</dict>
 		<key>0646CD52-AE77-4906-8668-742E45B94BE5</key>
 		<dict>
 			<key>xpos</key>
-			<real>1590</real>
+			<real>1595</real>
 			<key>ypos</key>
-			<real>1525</real>
+			<real>2070</real>
 		</dict>
 		<key>0A025052-E6F9-4447-93F6-0DD35C9FBA79</key>
 		<dict>
 			<key>xpos</key>
-			<real>965</real>
+			<real>970</real>
 			<key>ypos</key>
-			<real>1370</real>
+			<real>1915</real>
 		</dict>
-		<key>0F06A832-60AD-450A-BD53-54B2DBB23526</key>
+		<key>10B6E0F1-445E-4B9B-A77A-CBF888A104F1</key>
 		<dict>
 			<key>xpos</key>
-			<real>1210</real>
+			<real>1015</real>
 			<key>ypos</key>
-			<real>355</real>
+			<real>1100</real>
 		</dict>
 		<key>11EF3787-61F8-4279-B5C0-27E3DC3D57CF</key>
 		<dict>
 			<key>xpos</key>
-			<real>965</real>
+			<real>970</real>
 			<key>ypos</key>
-			<real>1140</real>
+			<real>1685</real>
 		</dict>
 		<key>15AD7695-458C-4BCB-BE50-C4CA57D1FF0C</key>
 		<dict>
 			<key>xpos</key>
-			<real>745</real>
+			<real>750</real>
 			<key>ypos</key>
-			<real>1720</real>
+			<real>2265</real>
 		</dict>
 		<key>1B0D6B30-392C-409C-BD4B-B27BD6835743</key>
 		<dict>
@@ -3380,93 +3321,93 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		<key>1B83C3ED-14C2-429A-9081-6E816DA31FEB</key>
 		<dict>
 			<key>xpos</key>
-			<real>965</real>
+			<real>970</real>
 			<key>ypos</key>
-			<real>1840</real>
+			<real>2385</real>
 		</dict>
 		<key>1DAA96FB-4015-411A-8962-531AED3DD057</key>
 		<dict>
 			<key>xpos</key>
-			<real>1160</real>
+			<real>1165</real>
 			<key>ypos</key>
-			<real>1485</real>
+			<real>2030</real>
 		</dict>
 		<key>1ED036DD-F4FD-400F-A03F-00F5079A6560</key>
 		<dict>
 			<key>xpos</key>
-			<real>815</real>
+			<real>340</real>
 			<key>ypos</key>
-			<real>500</real>
+			<real>1385</real>
 		</dict>
 		<key>2944DDB4-6E49-40D2-A3D8-FF27A0C636F3</key>
 		<dict>
 			<key>xpos</key>
-			<real>545</real>
+			<real>550</real>
 			<key>ypos</key>
-			<real>1370</real>
+			<real>1915</real>
 		</dict>
 		<key>2B52F815-CDFD-40A3-84C4-9F6387608763</key>
 		<dict>
 			<key>xpos</key>
-			<real>340</real>
+			<real>345</real>
 			<key>ypos</key>
-			<real>1600</real>
+			<real>2145</real>
+		</dict>
+		<key>2EED1D5A-97A2-44A6-AC04-23ABD15655A5</key>
+		<dict>
+			<key>xpos</key>
+			<real>170</real>
+			<key>ypos</key>
+			<real>1275</real>
 		</dict>
 		<key>30875AA6-9F14-4A9D-B5A9-AD3B9401027D</key>
 		<dict>
 			<key>xpos</key>
-			<real>545</real>
+			<real>550</real>
 			<key>ypos</key>
-			<real>1485</real>
+			<real>2030</real>
 		</dict>
 		<key>30E2814B-0A6E-4E98-BA4C-F264B74D172C</key>
 		<dict>
 			<key>xpos</key>
 			<real>340</real>
 			<key>ypos</key>
-			<real>645</real>
+			<real>1055</real>
 		</dict>
 		<key>389A9D17-0ADA-494C-B4A9-D9D9B9832B22</key>
 		<dict>
 			<key>xpos</key>
-			<real>340</real>
+			<real>345</real>
 			<key>ypos</key>
-			<real>1255</real>
+			<real>1800</real>
 		</dict>
-		<key>3F6E3BB6-64CC-481E-990D-F3823D3616A8</key>
+		<key>414A7934-07FC-44EE-A78F-84302AC6A91C</key>
 		<dict>
 			<key>xpos</key>
-			<real>1290</real>
+			<real>660</real>
 			<key>ypos</key>
-			<real>435</real>
+			<real>1230</real>
 		</dict>
 		<key>4286DE0E-6B20-4815-BAF6-4F62F4BA107C</key>
 		<dict>
 			<key>xpos</key>
-			<real>1160</real>
+			<real>1165</real>
 			<key>ypos</key>
-			<real>2190</real>
+			<real>2735</real>
 		</dict>
 		<key>45F0BF0D-EE1D-4545-92E4-4B2B160F0365</key>
 		<dict>
 			<key>xpos</key>
-			<real>965</real>
+			<real>970</real>
 			<key>ypos</key>
-			<real>1720</real>
+			<real>2265</real>
 		</dict>
 		<key>4B149B1B-D05E-43DD-9036-17FD11D2D4AF</key>
 		<dict>
 			<key>xpos</key>
-			<real>965</real>
+			<real>970</real>
 			<key>ypos</key>
-			<real>1255</real>
-		</dict>
-		<key>4C4BDAA8-2440-459E-8DEB-AC70450F25DD</key>
-		<dict>
-			<key>xpos</key>
-			<real>1210</real>
-			<key>ypos</key>
-			<real>575</real>
+			<real>1800</real>
 		</dict>
 		<key>4CE6D24F-8B0E-4DEE-B0B3-22CDA12434C8</key>
 		<dict>
@@ -3478,79 +3419,72 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		<key>4D057C63-9417-40FC-8236-01FAE5092837</key>
 		<dict>
 			<key>xpos</key>
-			<real>965</real>
+			<real>970</real>
 			<key>ypos</key>
-			<real>1960</real>
+			<real>2505</real>
 		</dict>
 		<key>4D9A09F4-847E-4C17-B75E-8ED5A3150DD0</key>
 		<dict>
 			<key>xpos</key>
-			<real>965</real>
+			<real>970</real>
 			<key>ypos</key>
-			<real>1485</real>
+			<real>2030</real>
 		</dict>
 		<key>569FED3F-205A-4FC4-98F9-4A357CEEDF3C</key>
 		<dict>
 			<key>xpos</key>
-			<real>745</real>
+			<real>750</real>
 			<key>ypos</key>
-			<real>1485</real>
+			<real>2030</real>
 		</dict>
 		<key>58425307-D5A4-469E-83F8-E75EAAB98FBF</key>
 		<dict>
 			<key>xpos</key>
-			<real>815</real>
+			<real>340</real>
 			<key>ypos</key>
-			<real>390</real>
+			<real>1275</real>
 		</dict>
 		<key>5D8CC2B4-1E85-48E8-9063-FD9895DE9E3A</key>
 		<dict>
 			<key>xpos</key>
-			<real>340</real>
+			<real>345</real>
 			<key>ypos</key>
-			<real>1370</real>
-		</dict>
-		<key>60E42ADE-3506-4888-9A8D-405226968796</key>
-		<dict>
-			<key>xpos</key>
-			<real>1210</real>
-			<key>ypos</key>
-			<real>465</real>
+			<real>1915</real>
 		</dict>
 		<key>6180FE46-B2AE-4954-91BD-F638E67A8E3F</key>
 		<dict>
 			<key>xpos</key>
-			<real>745</real>
+			<real>750</real>
 			<key>ypos</key>
-			<real>1840</real>
+			<real>2385</real>
 		</dict>
 		<key>67767187-B62A-4B5F-8EEB-B12013A65641</key>
 		<dict>
 			<key>xpos</key>
-			<real>745</real>
+			<real>750</real>
 			<key>ypos</key>
-			<real>1600</real>
+			<real>2145</real>
 		</dict>
 		<key>6C9DD7FC-9BE6-4D47-9675-207A56A9B896</key>
 		<dict>
 			<key>xpos</key>
-			<real>745</real>
+			<real>750</real>
 			<key>ypos</key>
-			<real>1960</real>
+			<real>2505</real>
 		</dict>
 		<key>6E9A95B5-2F00-46D4-9393-B396023CD829</key>
 		<dict>
 			<key>xpos</key>
-			<real>1160</real>
+			<real>1165</real>
 			<key>ypos</key>
-			<real>1255</real>
+			<real>1800</real>
 		</dict>
 		<key>7381EFB0-D4A3-4994-A6B1-99D0B508233D</key>
 		<dict>
 			<key>xpos</key>
-			<real>340</real>
+			<real>345</real>
 			<key>ypos</key>
-			<real>1140</real>
+			<real>1685</real>
 		</dict>
 		<key>74EA9379-B5A0-4226-BE3E-A5078579509A</key>
 		<dict>
@@ -3562,114 +3496,114 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		<key>79B417DB-5D88-49FE-B9E1-62893333EAAC</key>
 		<dict>
 			<key>xpos</key>
-			<real>545</real>
+			<real>550</real>
 			<key>ypos</key>
-			<real>1600</real>
+			<real>2145</real>
 		</dict>
 		<key>7B16E69C-81B9-444C-8242-40BF239C94C2</key>
 		<dict>
 			<key>xpos</key>
 			<real>540</real>
 			<key>ypos</key>
-			<real>645</real>
+			<real>1055</real>
+		</dict>
+		<key>7D258252-5FB7-4DF7-9BFC-12D6C84F56E9</key>
+		<dict>
+			<key>xpos</key>
+			<real>930</real>
+			<key>ypos</key>
+			<real>1175</real>
 		</dict>
 		<key>7EAD80AF-0D87-4FBD-AAAD-5A4BD8237EEC</key>
 		<dict>
 			<key>xpos</key>
-			<real>340</real>
+			<real>345</real>
 			<key>ypos</key>
-			<real>1840</real>
-		</dict>
-		<key>7FBDB33A-E342-411C-B00B-8B797AE8C19A</key>
-		<dict>
-			<key>xpos</key>
-			<real>1290</real>
-			<key>ypos</key>
-			<real>325</real>
+			<real>2385</real>
 		</dict>
 		<key>8019FF8C-2F8E-45DA-87DB-30334962EEA2</key>
 		<dict>
 			<key>xpos</key>
-			<real>340</real>
+			<real>345</real>
 			<key>ypos</key>
-			<real>1960</real>
+			<real>2505</real>
 		</dict>
 		<key>82043255-095F-4323-A1FD-ECB21C74092E</key>
 		<dict>
 			<key>xpos</key>
-			<real>545</real>
+			<real>550</real>
 			<key>ypos</key>
-			<real>1840</real>
-		</dict>
-		<key>845B46E7-61FB-43CD-A287-FCB4C075A4A6</key>
-		<dict>
-			<key>xpos</key>
-			<real>1290</real>
-			<key>ypos</key>
-			<real>545</real>
+			<real>2385</real>
 		</dict>
 		<key>A05931C8-0499-4564-B273-EC17BD9DA70B</key>
 		<dict>
 			<key>xpos</key>
-			<real>1505</real>
+			<real>1015</real>
 			<key>ypos</key>
-			<real>500</real>
+			<real>1385</real>
 		</dict>
 		<key>A2A09CFD-D064-4F31-8B61-0630286D7365</key>
 		<dict>
 			<key>xpos</key>
-			<real>965</real>
+			<real>970</real>
 			<key>ypos</key>
-			<real>1600</real>
+			<real>2145</real>
 		</dict>
 		<key>A9389239-3478-4060-A649-4E2B4EE1CA28</key>
 		<dict>
 			<key>xpos</key>
-			<real>745</real>
+			<real>750</real>
 			<key>ypos</key>
-			<real>1140</real>
+			<real>1685</real>
 		</dict>
 		<key>A9C03E0E-7AEF-4CB4-9F0D-98F80DA20014</key>
 		<dict>
 			<key>xpos</key>
-			<real>1430</real>
+			<real>1435</real>
 			<key>ypos</key>
-			<real>1555</real>
+			<real>2100</real>
 		</dict>
 		<key>AC7BCE49-D6D1-40D5-A731-A1C1A771FE7F</key>
 		<dict>
 			<key>xpos</key>
-			<real>1160</real>
+			<real>1165</real>
 			<key>ypos</key>
-			<real>1370</real>
+			<real>1915</real>
 		</dict>
 		<key>AFE7AE5A-8A0B-4C63-BA7E-5D7163107DD5</key>
 		<dict>
 			<key>xpos</key>
-			<real>545</real>
+			<real>550</real>
 			<key>ypos</key>
-			<real>1255</real>
+			<real>1800</real>
 		</dict>
 		<key>B9672078-14EF-4548-BD23-D94EB66D31AF</key>
 		<dict>
 			<key>xpos</key>
-			<real>1160</real>
+			<real>1165</real>
 			<key>ypos</key>
-			<real>1600</real>
+			<real>2145</real>
 		</dict>
 		<key>BC091CE6-E547-49F4-B4DF-3F4FF9FFD098</key>
 		<dict>
 			<key>xpos</key>
 			<real>540</real>
 			<key>ypos</key>
-			<real>390</real>
+			<real>635</real>
+		</dict>
+		<key>BF3A4497-4080-4E06-A40C-AF8DDC73F23F</key>
+		<dict>
+			<key>xpos</key>
+			<real>1015</real>
+			<key>ypos</key>
+			<real>1210</real>
 		</dict>
 		<key>C0857B57-D07D-4748-83A0-507A2D7786D7</key>
 		<dict>
 			<key>xpos</key>
-			<real>545</real>
+			<real>550</real>
 			<key>ypos</key>
-			<real>1960</real>
+			<real>2505</real>
 		</dict>
 		<key>C86F07EE-EF6A-4CAD-AD5D-562FCC5E74F0</key>
 		<dict>
@@ -3681,65 +3615,72 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		<key>C906E725-412D-486E-A134-85EA2D903DA5</key>
 		<dict>
 			<key>xpos</key>
-			<real>545</real>
+			<real>550</real>
 			<key>ypos</key>
-			<real>1720</real>
+			<real>2265</real>
 		</dict>
 		<key>CF42F42C-DFFA-4482-8B77-0D195DE4F8A0</key>
 		<dict>
 			<key>xpos</key>
-			<real>1010</real>
+			<real>555</real>
 			<key>ypos</key>
-			<real>395</real>
+			<real>1340</real>
 		</dict>
 		<key>D4063FD6-BB03-4B36-A5C7-3AD7811E115E</key>
 		<dict>
 			<key>xpos</key>
-			<real>340</real>
+			<real>345</real>
 			<key>ypos</key>
-			<real>1485</real>
+			<real>2030</real>
 		</dict>
 		<key>DC4D542D-78AF-4C55-B273-E467FF3F7E7B</key>
 		<dict>
 			<key>xpos</key>
-			<real>745</real>
+			<real>750</real>
 			<key>ypos</key>
-			<real>1255</real>
+			<real>1800</real>
 		</dict>
 		<key>DD0C8D6D-B28E-48FE-8FC6-AA34F74BB3D0</key>
 		<dict>
 			<key>xpos</key>
-			<real>1160</real>
+			<real>1165</real>
 			<key>ypos</key>
-			<real>1140</real>
+			<real>1685</real>
 		</dict>
 		<key>E0DD7A1D-529B-4804-A314-5309D341E4FB</key>
 		<dict>
 			<key>xpos</key>
-			<real>545</real>
+			<real>550</real>
 			<key>ypos</key>
-			<real>1140</real>
+			<real>1685</real>
+		</dict>
+		<key>E826FC0B-9013-4581-A657-937AAE3A2F1F</key>
+		<dict>
+			<key>xpos</key>
+			<real>825</real>
+			<key>ypos</key>
+			<real>1250</real>
 		</dict>
 		<key>E8953233-9708-4079-BF77-6135BA0AC3EF</key>
 		<dict>
 			<key>xpos</key>
-			<real>340</real>
+			<real>345</real>
 			<key>ypos</key>
-			<real>1720</real>
+			<real>2265</real>
 		</dict>
 		<key>ED7ADA66-8BF2-4877-A51A-71B5F004E305</key>
 		<dict>
 			<key>xpos</key>
 			<real>340</real>
 			<key>ypos</key>
-			<real>390</real>
+			<real>635</real>
 		</dict>
 		<key>FB49BC51-DA24-451E-AE0B-904499ACFB27</key>
 		<dict>
 			<key>xpos</key>
-			<real>1590</real>
+			<real>1595</real>
 			<key>ypos</key>
-			<real>2190</real>
+			<real>2735</real>
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
