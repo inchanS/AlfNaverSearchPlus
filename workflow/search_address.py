@@ -65,7 +65,7 @@ def get_data(word, use_ip):
 def main(wf):
     args = wf.args[0]
 
-    wf.add_item(title=f"Search Bus for '{args}'",
+    wf.add_item(title=f"Search Address for '{args}'",
                 autocomplete=args,
                 arg=f"https://map.naver.com/p/search/{args}",
                 quicklookurl=f"https://map.naver.com/p/search/{args}",
