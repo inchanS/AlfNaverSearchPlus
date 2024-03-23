@@ -100,25 +100,28 @@ def main(wf):
                     valid=False)
 
     if isinstance(place_list, list) and len(place_list) > 0:
-        wf.add_item(title=f"Search only Place for '{args}'",
+        it = wf.add_item(title=f"Search only Place for '{args}'",
                     autocomplete=args,
-                    arg=f"place: {args}",
+                    arg=args,
                     icon='7FBDB33A-E342-411C-B00B-8B797AE8C19A.png',
                     valid=True)
+        it.setvar('map_type', 'place')
 
     if isinstance(address_list, list) and len(address_list) > 0:
-        wf.add_item(title=f"Search only Address for '{args}'",
+        it = wf.add_item(title=f"Search only Address for '{args}'",
                     autocomplete=args,
-                    arg=f"address: {args}",
+                    arg=args,
                     icon='3F6E3BB6-64CC-481E-990D-F3823D3616A8.png',
                     valid=True)
+        it.setvar('map_type', 'address')
 
     if isinstance(bus_list, list) and len(bus_list) > 0:
-        wf.add_item(title=f"Search only Bus for '{args}'",
+        it = wf.add_item(title=f"Search only Bus for '{args}'",
                     autocomplete=args,
-                    arg=f"bus: {args}",
+                    arg=args,
                     icon='845B46E7-61FB-43CD-A287-FCB4C075A4A6.png',
                     valid=True)
+        it.setvar('map_type', 'bus')
 
     for item in res_json['all']:
         if item.get("address"):
