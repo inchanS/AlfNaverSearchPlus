@@ -13,6 +13,27 @@ Alfred에서 네이버 검색, 네이버 쇼핑, 네이버 지식백과, 네이�
 **alfnaversearch** 워크플로우의 코드기여는 [forked repository](https://github.com/inchanS/alfnaversearch)에서 진행하였습니다.    
 <br>  
 
+Preview
+--------
+**네이버 검색, 쇼핑, 지식백과, 증권 등**  
+
+![](images/snp.gif)  
+<br>  
+
+**네이버 지도 검색시 IP address를 통한 위치기반 검색**  
+
+![](images/snpmapip.gif)
+<br>  
+
+**네이버 지도 검색시 설정한 위치를 통한 위치기반 검색 (추천!!)**  
+
+![](images/snpmap.gif)
+
+Configure Workflow...에서 사용자의 위치를 정확하게 입력하면,  
+**IP 위치 기반보다 훨씬 더 자세한 근처 정보를** 얻을 수 있습니다!!   
+
+<br>  
+
 Install workflow
 --------------
 
