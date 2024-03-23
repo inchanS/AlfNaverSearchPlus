@@ -23,7 +23,6 @@ SOFTWARE.
 
 import sys
 import os
-import re
 
 from workflow import web, Workflow
 
@@ -53,38 +52,12 @@ def get_data(locate, word):
     headers = {"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15"}
     r = web.get(url, params, headers=headers)
     r.raise_for_status()
-    return r.json().get("all")
+    return r.json()
 
 
 def main(wf):
     use_ip = wf.args[0]
     args = wf.args[1]
-
-    wf.add_item(title=f"Search Naver Map for '{args}'",
-                autocomplete=args,
-                arg=f"https://map.naver.com/p/search/{args}",
-                quicklookurl=f"https://map.naver.com/p/search/{args}",
-                valid=True)
-
-    wf.add_item(title=f"Search only Place for '{args}'",
-                autocomplete=args,
-                arg=f"place: {args}",
-                icon='7FBDB33A-E342-411C-B00B-8B797AE8C19A.png',
-                valid=True)
-
-    wf.add_item(title=f"Search only Address for '{args}'",
-                autocomplete=args,
-                arg=f"address: {args}",
-                icon='3F6E3BB6-64CC-481E-990D-F3823D3616A8.png',
-                valid=True)
-
-
-    if re.match(r'^\d+$', args):
-        wf.add_item(title=f"Search only Bus for '{args}'",
-                    autocomplete=args,
-                    arg=f"bus: {args}",
-                    icon='845B46E7-61FB-43CD-A287-FCB4C075A4A6.png',
-                    valid=True)
 
     if use_ip == 'useIP':
         data_to_cache = {'use': True}
@@ -95,6 +68,7 @@ def main(wf):
             return get_data(locate, args)
 
         res_json = wf.cached_data(f"navmapip_{args}", wrapper, max_age=cache_age)
+
     else:
         data_to_cache = {'use': False}
         wf.cache_data('use_ip', data_to_cache)
@@ -105,13 +79,48 @@ def main(wf):
 
         res_json = wf.cached_data(f"navmap_{args}", wrapper, max_age=cache_age)
 
-    if not res_json:
+    wf.add_item(title=f"Search Naver Map for '{args}'",
+                autocomplete=args,
+                arg=f"https://map.naver.com/p/search/{args}",
+                quicklookurl=f"https://map.naver.com/p/search/{args}",
+                valid=True)
+
+    place_list = res_json.get('place')
+    address_list = res_json.get('address')
+    bus_list = res_json.get('bus')
+
+    is_place_empty = not res_json.get('place')
+    is_address_empty = not res_json.get('address')
+    is_bus_empty = not res_json.get('bus')
+
+    if is_place_empty and is_address_empty and is_bus_empty:
         wf.add_item(
                     title=f"No search results for '{args}'",
                     icon='noresults.png',
                     valid=False)
 
-    for item in res_json:
+    if isinstance(place_list, list) and len(place_list) > 0:
+        wf.add_item(title=f"Search only Place for '{args}'",
+                    autocomplete=args,
+                    arg=f"place: {args}",
+                    icon='7FBDB33A-E342-411C-B00B-8B797AE8C19A.png',
+                    valid=True)
+
+    if isinstance(address_list, list) and len(address_list) > 0:
+        wf.add_item(title=f"Search only Address for '{args}'",
+                    autocomplete=args,
+                    arg=f"address: {args}",
+                    icon='3F6E3BB6-64CC-481E-990D-F3823D3616A8.png',
+                    valid=True)
+
+    if isinstance(bus_list, list) and len(bus_list) > 0:
+        wf.add_item(title=f"Search only Bus for '{args}'",
+                    autocomplete=args,
+                    arg=f"bus: {args}",
+                    icon='845B46E7-61FB-43CD-A287-FCB4C075A4A6.png',
+                    valid=True)
+
+    for item in res_json['all']:
         if item.get("address"):
             ltxt = item["address"]
             address_key = "fullAddress"
