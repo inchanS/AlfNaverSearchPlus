@@ -1010,7 +1010,7 @@
 				<key>passinputasargument</key>
 				<true/>
 				<key>passvariables</key>
-				<true/>
+				<false/>
 				<key>workflowbundleid</key>
 				<string>self</string>
 			</dict>
@@ -1061,7 +1061,7 @@
 				<key>passinputasargument</key>
 				<true/>
 				<key>passvariables</key>
-				<true/>
+				<false/>
 				<key>workflowbundleid</key>
 				<string>self</string>
 			</dict>

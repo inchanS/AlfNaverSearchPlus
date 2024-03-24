@@ -11,26 +11,29 @@ Alfred에서 네이버 검색, 네이버 쇼핑, 네이버 지식백과, 네이�
 ### **Acknowledgments**
 [@Kuniz](https://github.com/Kuniz)님의 [alfnaversearch 워크플로우](https://github.com/Kuniz/alfnaversearch)를 따로이 개인적인 용도에 맞게 부분적으로 수정 및 개선한 워크플로우입니다.  
 **alfnaversearch** 워크플로우의 코드기여는 [forked repository](https://github.com/inchanS/alfnaversearch)에서 진행하였습니다.    
+
+변경부분
+- 일부 script 호출 keyword 변경 
+- 네이버 **지도 검색 기능 추가 및 개선** (사용자 위치 설정 및 장소, 주소, 버스 전용보기 추가 )
+- 네이버 **주식 검색 추가**
 <br>  
 
 Preview
 --------
 **네이버 검색, 쇼핑, 지식백과, 증권 등**  
 
-![](images/snp.gif)  
+<img src="images/nsp.gif" width="600">
+
 <br>  
 
-**네이버 지도 검색시 IP address를 통한 위치기반 검색**  
+**네이버 지도 검색**  
 
-![](images/snpmapip.gif)
+<img src="images/nspmap.gif" width="600">
+
 <br>  
 
-**네이버 지도 검색시 설정한 위치를 통한 위치기반 검색 (추천!!)**  
-
-![](images/snpmap.gif)
-
-Configure Workflow...에서 사용자의 위치를 정확하게 입력하면,  
-**IP 위치 기반보다 훨씬 더 자세한 근처 정보를** 얻을 수 있습니다!!   
+Configure Workflow...에서 사용자의 위치를 정확하게 입력후 `nm...`를 사용하시면,  
+**IP 위치 기반(`nmi...`)보다 훨씬 더 자세한 근처 정보를** 얻을 수 있습니다!!   
 
 <br>  
 
@@ -105,6 +108,11 @@ Dictionary Usage
 * **Cmd + Y** 혹은 **Shift** : 검색결과 미리 보기 웹브라우져 출력
 
 ### Configure Workflow 추가
+
+<img src="images/configure.png" width="600">  
+
+<img src="images/configure2.png" width="600">
+
 - **위도 및 경도** : `nm...` 네이버 지도검색시 사용자의 정확한 위치값 입력
   - 미입력시 기본값은 서울시청
   - https://www.findlatlng.org 에서 위치값을 정확히 찾을 수 있습니다. 
