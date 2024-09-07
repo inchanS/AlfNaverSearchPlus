@@ -57,7 +57,9 @@ def get_data(word, use_ip):
                   lang="ko",
                   caller="pcweb"
                   )
-    headers = {"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15"}
+    headers = {
+                "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15",
+                 "Referer": "https://map.naver.com/"}
     r = web.get(url, params, headers=headers)
     r.raise_for_status()
     return r.json().get(map_type)
@@ -86,8 +88,8 @@ def main(wf):
         res_cache_name_ip = ''
 
     res_json = wf.cached_data(f"{res_cache_name}{res_cache_name_ip}_{args}", wrapper, max_age=cache_age)
-    
-    if not res_json:  
+
+    if not res_json:
         wf.add_item(
                     title=f"No search results for '{args}'",
                     icon='noresults.png',
@@ -98,7 +100,7 @@ def main(wf):
                 arg=f"https://map.naver.com/p/search/{args}",
                 quicklookurl=f"https://map.naver.com/p/search/{args}",
                 valid=True)
-        
+
     it = wf.add_item(title=f"Return... search naver map for '{args}'",
                 autocomplete=args,
                 arg=args,
@@ -158,7 +160,7 @@ def main(wf):
                 quicklookurl=f"https://map.naver.com/p/search/{txt}/{type}/{_id}",
                 icon='845B46E7-61FB-43CD-A287-FCB4C075A4A6.png',
                 valid=True)
-    
+
     wf.send_feedback()
 
 if __name__ == '__main__':

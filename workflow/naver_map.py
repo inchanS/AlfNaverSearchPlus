@@ -26,8 +26,9 @@ import os
 
 from workflow import web, Workflow
 
-default_latitude = os.getenv('latitude', '37.5665')
-default_longitude = os.getenv('longitude', '37.5665')
+# 위치 기본좌표는 서울시청
+default_latitude = os.getenv('latitude', '37.5665851')
+default_longitude = os.getenv('longitude', '126.9782038')
 cache_age = int(os.getenv('cache_age', '30'))
 
 def get_ip_location():
@@ -49,7 +50,9 @@ def get_data(locate, word):
                   lang="ko",
                   caller="pcweb"
                   )
-    headers = {"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15"}
+    headers = {
+                "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.6 Safari/605.1.15",
+                "Referer": "https://map.naver.com/"}
     r = web.get(url, params, headers=headers)
     r.raise_for_status()
     return r.json()
