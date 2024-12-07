@@ -66,6 +66,7 @@ def main(wf):
         data_to_cache = {'use': True}
         wf.cache_data('use_ip', data_to_cache)
         locate = wf.cached_data('location_data', get_ip_location, max_age=cache_age)
+        phrase = "Search Naver Map(ip) for"
 
         def wrapper():
             return get_data(locate, args)
@@ -76,13 +77,14 @@ def main(wf):
         data_to_cache = {'use': False}
         wf.cache_data('use_ip', data_to_cache)
         locate = {'lat': default_latitude, 'lng': default_longitude}
+        phrase = "Search Naver Map for"
 
         def wrapper():
             return get_data(locate, args)
 
         res_json = wf.cached_data(f"navmap_{args}", wrapper, max_age=cache_age)
 
-    wf.add_item(title=f"Search Naver Map for '{args}'",
+    wf.add_item(title=f"{phrase} '{args}'",
                 autocomplete=args,
                 arg=f"https://map.naver.com/p/search/{args}",
                 quicklookurl=f"https://map.naver.com/p/search/{args}",
@@ -104,26 +106,26 @@ def main(wf):
 
     if isinstance(place_list, list) and len(place_list) > 0:
         it = wf.add_item(title=f"Search only Place for '{args}'",
-                    autocomplete=args,
-                    arg=args,
-                    icon='7FBDB33A-E342-411C-B00B-8B797AE8C19A.png',
-                    valid=True)
+                         autocomplete=args,
+                         arg=args,
+                         icon='7FBDB33A-E342-411C-B00B-8B797AE8C19A.png',
+                         valid=True)
         it.setvar('map_type', 'place')
 
     if isinstance(address_list, list) and len(address_list) > 0:
         it = wf.add_item(title=f"Search only Address for '{args}'",
-                    autocomplete=args,
-                    arg=args,
-                    icon='3F6E3BB6-64CC-481E-990D-F3823D3616A8.png',
-                    valid=True)
+                         autocomplete=args,
+                         arg=args,
+                         icon='3F6E3BB6-64CC-481E-990D-F3823D3616A8.png',
+                         valid=True)
         it.setvar('map_type', 'address')
 
     if isinstance(bus_list, list) and len(bus_list) > 0:
         it = wf.add_item(title=f"Search only Bus for '{args}'",
-                    autocomplete=args,
-                    arg=args,
-                    icon='845B46E7-61FB-43CD-A287-FCB4C075A4A6.png',
-                    valid=True)
+                         autocomplete=args,
+                         arg=args,
+                         icon='845B46E7-61FB-43CD-A287-FCB4C075A4A6.png',
+                         valid=True)
         it.setvar('map_type', 'bus')
 
     for item in res_json['all']:
