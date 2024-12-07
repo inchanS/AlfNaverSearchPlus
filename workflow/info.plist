@@ -12,7 +12,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>1ED036DD-F4FD-400F-A03F-00F5079A6560</string>
+				<string>723A44EF-3CC7-4350-B513-496DE5BF70E1</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -142,7 +142,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>58425307-D5A4-469E-83F8-E75EAAB98FBF</string>
+				<string>568D990B-0059-4F96-9455-0F3904E77502</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -281,6 +281,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>568D990B-0059-4F96-9455-0F3904E77502</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>58425307-D5A4-469E-83F8-E75EAAB98FBF</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>569FED3F-205A-4FC4-98F9-4A357CEEDF3C</key>
 		<array>
 			<dict>
@@ -372,6 +385,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>723A44EF-3CC7-4350-B513-496DE5BF70E1</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>1ED036DD-F4FD-400F-A03F-00F5079A6560</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>7381EFB0-D4A3-4994-A6B1-99D0B508233D</key>
 		<array>
 			<dict>
@@ -454,6 +480,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>A9C03E0E-7AEF-4CB4-9F0D-98F80DA20014</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>8C37AB16-AEF0-493A-B61E-464BE3E552DE</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>414A7934-07FC-44EE-A78F-84302AC6A91C</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -585,7 +624,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>414A7934-07FC-44EE-A78F-84302AC6A91C</string>
+				<string>8C37AB16-AEF0-493A-B61E-464BE3E552DE</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -1122,6 +1161,31 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>query="{query}"
+
+echo -n $query</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>8C37AB16-AEF0-493A-B61E-464BE3E552DE</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>conditions</key>
 				<array>
 					<dict>
@@ -1150,6 +1214,31 @@
 			<string>E826FC0B-9013-4581-A657-937AAE3A2F1F</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>query="{query}"
+
+echo -n $query</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>568D990B-0059-4F96-9455-0F3904E77502</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -1184,7 +1273,7 @@
 				<key>keyword</key>
 				<string>nm</string>
 				<key>queuedelaycustom</key>
-				<integer>1</integer>
+				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
 				<false/>
 				<key>queuedelaymode</key>
@@ -1250,6 +1339,29 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>open "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>A05931C8-0499-4564-B273-EC17BD9DA70B</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>alfredfiltersresults</key>
 				<false/>
 				<key>alfredfiltersresultsmatchmode</key>
@@ -1304,7 +1416,9 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>open "{query}"</string>
+				<string>query="{query}"
+
+echo -n $query</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -1315,7 +1429,7 @@
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>A05931C8-0499-4564-B273-EC17BD9DA70B</string>
+			<string>723A44EF-3CC7-4350-B513-496DE5BF70E1</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
@@ -3265,9 +3379,9 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		<key>0166BD8D-0775-422A-B4A9-6C7EBE6B407C</key>
 		<dict>
 			<key>xpos</key>
-			<real>170</real>
+			<real>90</real>
 			<key>ypos</key>
-			<real>1385</real>
+			<real>1420</real>
 		</dict>
 		<key>05A74B62-31BF-4237-AEC1-8BC3521CBE82</key>
 		<dict>
@@ -3293,9 +3407,9 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		<key>10B6E0F1-445E-4B9B-A77A-CBF888A104F1</key>
 		<dict>
 			<key>xpos</key>
-			<real>1015</real>
+			<real>1205</real>
 			<key>ypos</key>
-			<real>1100</real>
+			<real>1130</real>
 		</dict>
 		<key>11EF3787-61F8-4279-B5C0-27E3DC3D57CF</key>
 		<dict>
@@ -3335,9 +3449,9 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		<key>1ED036DD-F4FD-400F-A03F-00F5079A6560</key>
 		<dict>
 			<key>xpos</key>
-			<real>340</real>
+			<real>405</real>
 			<key>ypos</key>
-			<real>1385</real>
+			<real>1420</real>
 		</dict>
 		<key>2944DDB4-6E49-40D2-A3D8-FF27A0C636F3</key>
 		<dict>
@@ -3356,9 +3470,9 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		<key>2EED1D5A-97A2-44A6-AC04-23ABD15655A5</key>
 		<dict>
 			<key>xpos</key>
-			<real>170</real>
+			<real>90</real>
 			<key>ypos</key>
-			<real>1275</real>
+			<real>1310</real>
 		</dict>
 		<key>30875AA6-9F14-4A9D-B5A9-AD3B9401027D</key>
 		<dict>
@@ -3384,9 +3498,9 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		<key>414A7934-07FC-44EE-A78F-84302AC6A91C</key>
 		<dict>
 			<key>xpos</key>
-			<real>660</real>
+			<real>850</real>
 			<key>ypos</key>
-			<real>1230</real>
+			<real>1260</real>
 		</dict>
 		<key>4286DE0E-6B20-4815-BAF6-4F62F4BA107C</key>
 		<dict>
@@ -3430,6 +3544,13 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 			<key>ypos</key>
 			<real>2030</real>
 		</dict>
+		<key>568D990B-0059-4F96-9455-0F3904E77502</key>
+		<dict>
+			<key>xpos</key>
+			<real>245</real>
+			<key>ypos</key>
+			<real>1310</real>
+		</dict>
 		<key>569FED3F-205A-4FC4-98F9-4A357CEEDF3C</key>
 		<dict>
 			<key>xpos</key>
@@ -3440,9 +3561,9 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		<key>58425307-D5A4-469E-83F8-E75EAAB98FBF</key>
 		<dict>
 			<key>xpos</key>
-			<real>340</real>
+			<real>405</real>
 			<key>ypos</key>
-			<real>1275</real>
+			<real>1310</real>
 		</dict>
 		<key>5D8CC2B4-1E85-48E8-9063-FD9895DE9E3A</key>
 		<dict>
@@ -3479,6 +3600,13 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 			<key>ypos</key>
 			<real>1800</real>
 		</dict>
+		<key>723A44EF-3CC7-4350-B513-496DE5BF70E1</key>
+		<dict>
+			<key>xpos</key>
+			<real>245</real>
+			<key>ypos</key>
+			<real>1420</real>
+		</dict>
 		<key>7381EFB0-D4A3-4994-A6B1-99D0B508233D</key>
 		<dict>
 			<key>xpos</key>
@@ -3510,9 +3638,9 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		<key>7D258252-5FB7-4DF7-9BFC-12D6C84F56E9</key>
 		<dict>
 			<key>xpos</key>
-			<real>930</real>
+			<real>1120</real>
 			<key>ypos</key>
-			<real>1175</real>
+			<real>1205</real>
 		</dict>
 		<key>7EAD80AF-0D87-4FBD-AAAD-5A4BD8237EEC</key>
 		<dict>
@@ -3535,12 +3663,19 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 			<key>ypos</key>
 			<real>2385</real>
 		</dict>
+		<key>8C37AB16-AEF0-493A-B61E-464BE3E552DE</key>
+		<dict>
+			<key>xpos</key>
+			<real>705</real>
+			<key>ypos</key>
+			<real>1260</real>
+		</dict>
 		<key>A05931C8-0499-4564-B273-EC17BD9DA70B</key>
 		<dict>
 			<key>xpos</key>
-			<real>1015</real>
+			<real>1205</real>
 			<key>ypos</key>
-			<real>1385</real>
+			<real>1415</real>
 		</dict>
 		<key>A2A09CFD-D064-4F31-8B61-0630286D7365</key>
 		<dict>
@@ -3594,9 +3729,9 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		<key>BF3A4497-4080-4E06-A40C-AF8DDC73F23F</key>
 		<dict>
 			<key>xpos</key>
-			<real>1015</real>
+			<real>1205</real>
 			<key>ypos</key>
-			<real>1210</real>
+			<real>1240</real>
 		</dict>
 		<key>C0857B57-D07D-4748-83A0-507A2D7786D7</key>
 		<dict>
@@ -3622,9 +3757,9 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		<key>CF42F42C-DFFA-4482-8B77-0D195DE4F8A0</key>
 		<dict>
 			<key>xpos</key>
-			<real>555</real>
+			<real>620</real>
 			<key>ypos</key>
-			<real>1340</real>
+			<real>1375</real>
 		</dict>
 		<key>D4063FD6-BB03-4B36-A5C7-3AD7811E115E</key>
 		<dict>
@@ -3657,9 +3792,9 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		<key>E826FC0B-9013-4581-A657-937AAE3A2F1F</key>
 		<dict>
 			<key>xpos</key>
-			<real>825</real>
+			<real>1015</real>
 			<key>ypos</key>
-			<real>1250</real>
+			<real>1280</real>
 		</dict>
 		<key>E8953233-9708-4079-BF77-6135BA0AC3EF</key>
 		<dict>
