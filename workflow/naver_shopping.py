@@ -26,24 +26,16 @@ import sys
 from workflow import web, Workflow
 
 def get_data(word):
-    url = 'https://ac.shopping.naver.com/ac'
+    url = 'https://m.shopping.naver.com/api/modules/gnb/auto-complete'
 
     params = dict(
-        frm='shopping',
-        q_enc='UTF-8',
-        st=111111,
-        r_lt=111111,
-        r_format='json',
-        r_enc='UTF-8',
-        r_unicode=0,
-        t_koreng=1,
-        q=word
+        keyword=word,
+        personalizeYn= "n"
     )
 
     r = web.get(url, params)
     r.raise_for_status()
-    return r.json()
-
+    return r.json()['result']['keywordList']
 
 def main(wf):
     args = wf.args[0]
@@ -51,7 +43,7 @@ def main(wf):
     wf.add_item(title='Search Naver Shopping for \'%s\'' % args,
                 autocomplete=args,
                 arg=args,
-                quicklookurl='https://search.shopping.naver.com/search/all?query=%s' % args,
+                quicklookurl='https://search.shopping.naver.com/ns/search?query=%s' % args,
                 valid=True)
 
     def wrapper():
@@ -59,16 +51,16 @@ def main(wf):
 
     res_json = wf.cached_data('navs_%s' % args, wrapper, max_age=30)
 
-    for ltxt in res_json['items'][1]:
-        if len(ltxt) > 0:
-            txt = ltxt[0][0]
+    for item in res_json:
+        txt = item.get('keywordName')
+        if txt:
             wf.add_item(
-                title=txt,
+                title='Search Naver Shopping for \'%s\'' % txt,
                 autocomplete=txt,
                 arg=txt,
                 copytext=txt,
                 largetext=txt,
-                quicklookurl='https://search.shopping.naver.com/search/all?query=%s' % txt,
+                quicklookurl='https://search.shopping.naver.com/ns/search?query=%s' % txt,
                 valid=True)
 
     wf.send_feedback()

@@ -19,10 +19,12 @@ class MyTestCase(unittest.TestCase):
 
         self.assertTrue(len(res['items']) > 0)
 
-    def test_shopping(self):
-        res = naver_shopping.get_data('한글')
-
-        self.assertTrue(len(res['items']) > 0)
+    # FIXME 250224 - naver shopping API 변경 이후,
+    #  로컬에서는 테스트가 통과하지만 github action 서버에서는 API에 정상적인 접근이 안되고 있다.
+    # def test_shopping(self):
+    #     res = naver_shopping.get_data('한글')
+    #
+    #     self.assertTrue(len(res) > 0)
 
     def test_terms(self):
         res = naver_terms.get_data('한글')
@@ -61,7 +63,6 @@ class MyTestCase(unittest.TestCase):
                  'la', 'el']
 
         for lang in langs:
-            print('Test of %s\n' % lang)
             res = common_naver_search.get_dictionary_data(lang + 'ko', '한글')
 
             self.assertTrue(len(res['items']) > 0)
