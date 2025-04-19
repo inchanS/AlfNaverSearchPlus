@@ -25,6 +25,8 @@ import sys
 
 from workflow import web, Workflow
 
+QUICK_LOOK_URL = 'https://search.shopping.naver.com/ns/search?query=%s'
+
 def get_data(word):
     url = 'https://m.shopping.naver.com/api/modules/gnb/auto-complete'
 
@@ -43,7 +45,7 @@ def main(wf):
     wf.add_item(title='Search Naver Shopping for \'%s\'' % args,
                 autocomplete=args,
                 arg=args,
-                quicklookurl='https://search.shopping.naver.com/ns/search?query=%s' % args,
+                quicklookurl=QUICK_LOOK_URL % args,
                 valid=True)
 
     def wrapper():
@@ -60,7 +62,7 @@ def main(wf):
                 arg=txt,
                 copytext=txt,
                 largetext=txt,
-                quicklookurl='https://search.shopping.naver.com/ns/search?query=%s' % txt,
+                quicklookurl=QUICK_LOOK_URL % txt,
                 valid=True)
 
     wf.send_feedback()
