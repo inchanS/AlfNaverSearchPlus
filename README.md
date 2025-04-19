@@ -14,8 +14,9 @@ Alfred에서 네이버 검색, 네이버 쇼핑, 네이버 지식백과, 네이�
 
 변경부분
 - 일부 script 호출 keyword 변경 
-- 네이버 **지도 검색 기능 추가 및 개선** (사용자 위치 설정 및 장소, 주소, 버스 전용보기 추가 )
-- 네이버 **주식 검색 추가**
+- 네이버 **지도 검색 기능 추가 및 개선** (updated v0.0.2)
+  - 사용자 위치 설정 및 장소, 주소, 버스 전용보기 추가 
+- 네이버 **주식 검색 추가** (updated v0.0.4)
 <br>  
 
 Preview
@@ -54,7 +55,8 @@ Install workflow
 General Usage
 --------------
 * `na ...`  : Naver Search(일반 네이버 검색)
-* `ns ...`  : Naver Shopping(네이버 쇼핑 검색)
+* `ns ...`  : Naver Shopping(네이버 쇼핑 검색) - 네이버 가격비교 검색
+  * `ns ...` + `shift`키 : 네이버플러스 스토어 검색 (updated v0.2.0) 
 * `nt ...`  : Naver Terms(네이버 지식백과 검색)
 * `nm ...` : Naver Map(네이버 지도 검색) - Configure 위치 설정값 기반 - **New**
 * `nmi ...` : Naver Map(네이버 지도 검색) - IP 위치 기반 - **New**
