@@ -250,7 +250,17 @@
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
-				<string></string>
+				<string>네이버 가격비교 검색</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>207A5F6F-62FF-4259-ACDA-98AF511D989B</string>
+				<key>modifiers</key>
+				<integer>131072</integer>
+				<key>modifiersubtext</key>
+				<string>NaverPlus Store에서 검색</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -902,6 +912,78 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>open "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>7B16E69C-81B9-444C-8242-40BF239C94C2</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>keyword</key>
+				<string>nst</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Running</string>
+				<key>script</key>
+				<string>/usr/bin/env python3 naver_finance.py "{query}" </string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Search Naver for {query}</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>30E2814B-0A6E-4E98-BA4C-F264B74D172C</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>browser</key>
 				<string></string>
 				<key>skipqueryencode</key>
@@ -972,74 +1054,23 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
-				<string>open "{query}"</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
+				<key>browser</key>
 				<string></string>
-				<key>type</key>
-				<integer>0</integer>
+				<key>skipqueryencode</key>
+				<false/>
+				<key>skipvarencode</key>
+				<false/>
+				<key>spaces</key>
+				<string></string>
+				<key>url</key>
+				<string>https://search.shopping.naver.com/ns/search?query={query}</string>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.script</string>
+			<string>alfred.workflow.action.openurl</string>
 			<key>uid</key>
-			<string>7B16E69C-81B9-444C-8242-40BF239C94C2</string>
+			<string>207A5F6F-62FF-4259-ACDA-98AF511D989B</string>
 			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>alfredfiltersresults</key>
-				<false/>
-				<key>alfredfiltersresultsmatchmode</key>
-				<integer>0</integer>
-				<key>argumenttreatemptyqueryasnil</key>
-				<false/>
-				<key>argumenttrimmode</key>
-				<integer>0</integer>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>68</integer>
-				<key>keyword</key>
-				<string>nst</string>
-				<key>queuedelaycustom</key>
-				<integer>1</integer>
-				<key>queuedelayimmediatelyinitially</key>
-				<false/>
-				<key>queuedelaymode</key>
-				<integer>0</integer>
-				<key>queuemode</key>
-				<integer>1</integer>
-				<key>runningsubtext</key>
-				<string>Running</string>
-				<key>script</key>
-				<string>/usr/bin/env python3 naver_finance.py "{query}" </string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>subtext</key>
-				<string></string>
-				<key>title</key>
-				<string>Search Naver for {query}</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>30E2814B-0A6E-4E98-BA4C-F264B74D172C</string>
-			<key>version</key>
-			<integer>3</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -2150,7 +2181,7 @@ echo -n $query</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>nak</string>
+				<string>nk</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -3385,443 +3416,450 @@ nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로
 		<key>0166BD8D-0775-422A-B4A9-6C7EBE6B407C</key>
 		<dict>
 			<key>xpos</key>
-			<real>90</real>
+			<real>30</real>
 			<key>ypos</key>
-			<real>1420</real>
+			<real>1080</real>
 		</dict>
 		<key>05A74B62-31BF-4237-AEC1-8BC3521CBE82</key>
 		<dict>
 			<key>xpos</key>
-			<real>750</real>
+			<real>690</real>
 			<key>ypos</key>
-			<real>1915</real>
+			<real>1575</real>
 		</dict>
 		<key>0646CD52-AE77-4906-8668-742E45B94BE5</key>
 		<dict>
 			<key>xpos</key>
-			<real>1595</real>
+			<real>1535</real>
 			<key>ypos</key>
-			<real>2070</real>
+			<real>1730</real>
 		</dict>
 		<key>0A025052-E6F9-4447-93F6-0DD35C9FBA79</key>
 		<dict>
 			<key>xpos</key>
-			<real>970</real>
+			<real>910</real>
 			<key>ypos</key>
-			<real>1915</real>
+			<real>1575</real>
 		</dict>
 		<key>10B6E0F1-445E-4B9B-A77A-CBF888A104F1</key>
 		<dict>
 			<key>xpos</key>
-			<real>1205</real>
+			<real>1145</real>
 			<key>ypos</key>
-			<real>1130</real>
+			<real>790</real>
 		</dict>
 		<key>11EF3787-61F8-4279-B5C0-27E3DC3D57CF</key>
 		<dict>
 			<key>xpos</key>
-			<real>970</real>
+			<real>910</real>
 			<key>ypos</key>
-			<real>1685</real>
+			<real>1345</real>
 		</dict>
 		<key>15AD7695-458C-4BCB-BE50-C4CA57D1FF0C</key>
 		<dict>
 			<key>xpos</key>
-			<real>750</real>
+			<real>690</real>
 			<key>ypos</key>
-			<real>2265</real>
+			<real>1925</real>
 		</dict>
 		<key>1B0D6B30-392C-409C-BD4B-B27BD6835743</key>
 		<dict>
 			<key>xpos</key>
-			<real>540</real>
+			<real>405</real>
 			<key>ypos</key>
-			<real>780</real>
+			<real>235</real>
 		</dict>
 		<key>1B83C3ED-14C2-429A-9081-6E816DA31FEB</key>
 		<dict>
 			<key>xpos</key>
-			<real>970</real>
+			<real>910</real>
 			<key>ypos</key>
-			<real>2385</real>
+			<real>2045</real>
 		</dict>
 		<key>1DAA96FB-4015-411A-8962-531AED3DD057</key>
 		<dict>
 			<key>xpos</key>
-			<real>1165</real>
+			<real>1105</real>
 			<key>ypos</key>
-			<real>2030</real>
+			<real>1690</real>
 		</dict>
 		<key>1ED036DD-F4FD-400F-A03F-00F5079A6560</key>
 		<dict>
 			<key>xpos</key>
+			<real>345</real>
+			<key>ypos</key>
+			<real>1080</real>
+		</dict>
+		<key>207A5F6F-62FF-4259-ACDA-98AF511D989B</key>
+		<dict>
+			<key>xpos</key>
 			<real>405</real>
 			<key>ypos</key>
-			<real>1420</real>
+			<real>665</real>
 		</dict>
 		<key>2944DDB4-6E49-40D2-A3D8-FF27A0C636F3</key>
 		<dict>
 			<key>xpos</key>
-			<real>550</real>
+			<real>490</real>
 			<key>ypos</key>
-			<real>1915</real>
+			<real>1575</real>
 		</dict>
 		<key>2B52F815-CDFD-40A3-84C4-9F6387608763</key>
 		<dict>
 			<key>xpos</key>
-			<real>345</real>
+			<real>285</real>
 			<key>ypos</key>
-			<real>2145</real>
+			<real>1805</real>
 		</dict>
 		<key>2EED1D5A-97A2-44A6-AC04-23ABD15655A5</key>
 		<dict>
 			<key>xpos</key>
-			<real>90</real>
+			<real>30</real>
 			<key>ypos</key>
-			<real>1310</real>
+			<real>970</real>
 		</dict>
 		<key>30875AA6-9F14-4A9D-B5A9-AD3B9401027D</key>
 		<dict>
 			<key>xpos</key>
-			<real>550</real>
+			<real>490</real>
 			<key>ypos</key>
-			<real>2030</real>
+			<real>1690</real>
 		</dict>
 		<key>30E2814B-0A6E-4E98-BA4C-F264B74D172C</key>
 		<dict>
 			<key>xpos</key>
-			<real>340</real>
+			<real>205</real>
 			<key>ypos</key>
-			<real>1055</real>
+			<real>375</real>
 		</dict>
 		<key>389A9D17-0ADA-494C-B4A9-D9D9B9832B22</key>
 		<dict>
 			<key>xpos</key>
-			<real>345</real>
+			<real>285</real>
 			<key>ypos</key>
-			<real>1800</real>
+			<real>1460</real>
 		</dict>
 		<key>414A7934-07FC-44EE-A78F-84302AC6A91C</key>
 		<dict>
 			<key>xpos</key>
-			<real>850</real>
+			<real>790</real>
 			<key>ypos</key>
-			<real>1260</real>
+			<real>920</real>
 		</dict>
 		<key>4286DE0E-6B20-4815-BAF6-4F62F4BA107C</key>
 		<dict>
 			<key>xpos</key>
-			<real>1165</real>
+			<real>1105</real>
 			<key>ypos</key>
-			<real>2735</real>
+			<real>2395</real>
 		</dict>
 		<key>45F0BF0D-EE1D-4545-92E4-4B2B160F0365</key>
 		<dict>
 			<key>xpos</key>
-			<real>970</real>
+			<real>910</real>
 			<key>ypos</key>
-			<real>2265</real>
+			<real>1925</real>
 		</dict>
 		<key>4B149B1B-D05E-43DD-9036-17FD11D2D4AF</key>
 		<dict>
 			<key>xpos</key>
-			<real>970</real>
+			<real>910</real>
 			<key>ypos</key>
-			<real>1800</real>
+			<real>1460</real>
 		</dict>
 		<key>4CE6D24F-8B0E-4DEE-B0B3-22CDA12434C8</key>
 		<dict>
 			<key>xpos</key>
-			<real>340</real>
+			<real>205</real>
 			<key>ypos</key>
-			<real>915</real>
+			<real>525</real>
 		</dict>
 		<key>4D057C63-9417-40FC-8236-01FAE5092837</key>
 		<dict>
 			<key>xpos</key>
-			<real>970</real>
+			<real>910</real>
 			<key>ypos</key>
-			<real>2505</real>
+			<real>2165</real>
 		</dict>
 		<key>4D9A09F4-847E-4C17-B75E-8ED5A3150DD0</key>
 		<dict>
 			<key>xpos</key>
-			<real>970</real>
+			<real>910</real>
 			<key>ypos</key>
-			<real>2030</real>
+			<real>1690</real>
 		</dict>
 		<key>568D990B-0059-4F96-9455-0F3904E77502</key>
 		<dict>
 			<key>xpos</key>
-			<real>245</real>
+			<real>185</real>
 			<key>ypos</key>
-			<real>1310</real>
+			<real>970</real>
 		</dict>
 		<key>569FED3F-205A-4FC4-98F9-4A357CEEDF3C</key>
 		<dict>
 			<key>xpos</key>
-			<real>750</real>
+			<real>690</real>
 			<key>ypos</key>
-			<real>2030</real>
+			<real>1690</real>
 		</dict>
 		<key>58425307-D5A4-469E-83F8-E75EAAB98FBF</key>
 		<dict>
 			<key>xpos</key>
-			<real>405</real>
+			<real>345</real>
 			<key>ypos</key>
-			<real>1310</real>
+			<real>970</real>
 		</dict>
 		<key>5D8CC2B4-1E85-48E8-9063-FD9895DE9E3A</key>
 		<dict>
 			<key>xpos</key>
-			<real>345</real>
+			<real>285</real>
 			<key>ypos</key>
-			<real>1915</real>
+			<real>1575</real>
 		</dict>
 		<key>6180FE46-B2AE-4954-91BD-F638E67A8E3F</key>
 		<dict>
 			<key>xpos</key>
-			<real>750</real>
+			<real>690</real>
 			<key>ypos</key>
-			<real>2385</real>
+			<real>2045</real>
 		</dict>
 		<key>67767187-B62A-4B5F-8EEB-B12013A65641</key>
 		<dict>
 			<key>xpos</key>
-			<real>750</real>
+			<real>690</real>
 			<key>ypos</key>
-			<real>2145</real>
+			<real>1805</real>
 		</dict>
 		<key>6C9DD7FC-9BE6-4D47-9675-207A56A9B896</key>
 		<dict>
 			<key>xpos</key>
-			<real>750</real>
+			<real>690</real>
 			<key>ypos</key>
-			<real>2505</real>
+			<real>2165</real>
 		</dict>
 		<key>6E9A95B5-2F00-46D4-9393-B396023CD829</key>
 		<dict>
 			<key>xpos</key>
-			<real>1165</real>
+			<real>1105</real>
 			<key>ypos</key>
-			<real>1800</real>
+			<real>1460</real>
 		</dict>
 		<key>723A44EF-3CC7-4350-B513-496DE5BF70E1</key>
 		<dict>
 			<key>xpos</key>
-			<real>245</real>
+			<real>185</real>
 			<key>ypos</key>
-			<real>1420</real>
+			<real>1080</real>
 		</dict>
 		<key>7381EFB0-D4A3-4994-A6B1-99D0B508233D</key>
 		<dict>
 			<key>xpos</key>
-			<real>345</real>
+			<real>285</real>
 			<key>ypos</key>
-			<real>1685</real>
+			<real>1345</real>
 		</dict>
 		<key>74EA9379-B5A0-4226-BE3E-A5078579509A</key>
 		<dict>
 			<key>xpos</key>
-			<real>540</real>
+			<real>405</real>
 			<key>ypos</key>
-			<real>915</real>
+			<real>525</real>
 		</dict>
 		<key>79B417DB-5D88-49FE-B9E1-62893333EAAC</key>
 		<dict>
 			<key>xpos</key>
-			<real>550</real>
+			<real>490</real>
 			<key>ypos</key>
-			<real>2145</real>
+			<real>1805</real>
 		</dict>
 		<key>7B16E69C-81B9-444C-8242-40BF239C94C2</key>
 		<dict>
 			<key>xpos</key>
-			<real>540</real>
+			<real>405</real>
 			<key>ypos</key>
-			<real>1055</real>
+			<real>375</real>
 		</dict>
 		<key>7D258252-5FB7-4DF7-9BFC-12D6C84F56E9</key>
 		<dict>
 			<key>xpos</key>
-			<real>1120</real>
+			<real>1060</real>
 			<key>ypos</key>
-			<real>1205</real>
+			<real>865</real>
 		</dict>
 		<key>7EAD80AF-0D87-4FBD-AAAD-5A4BD8237EEC</key>
 		<dict>
 			<key>xpos</key>
-			<real>345</real>
+			<real>285</real>
 			<key>ypos</key>
-			<real>2385</real>
+			<real>2045</real>
 		</dict>
 		<key>8019FF8C-2F8E-45DA-87DB-30334962EEA2</key>
 		<dict>
 			<key>xpos</key>
-			<real>345</real>
+			<real>285</real>
 			<key>ypos</key>
-			<real>2505</real>
+			<real>2165</real>
 		</dict>
 		<key>82043255-095F-4323-A1FD-ECB21C74092E</key>
 		<dict>
 			<key>xpos</key>
-			<real>550</real>
+			<real>490</real>
 			<key>ypos</key>
-			<real>2385</real>
+			<real>2045</real>
 		</dict>
 		<key>8C37AB16-AEF0-493A-B61E-464BE3E552DE</key>
 		<dict>
 			<key>xpos</key>
-			<real>705</real>
+			<real>645</real>
 			<key>ypos</key>
-			<real>1260</real>
+			<real>920</real>
 		</dict>
 		<key>A05931C8-0499-4564-B273-EC17BD9DA70B</key>
 		<dict>
 			<key>xpos</key>
-			<real>1205</real>
+			<real>1145</real>
 			<key>ypos</key>
-			<real>1415</real>
+			<real>1075</real>
 		</dict>
 		<key>A2A09CFD-D064-4F31-8B61-0630286D7365</key>
 		<dict>
 			<key>xpos</key>
-			<real>970</real>
+			<real>910</real>
 			<key>ypos</key>
-			<real>2145</real>
+			<real>1805</real>
 		</dict>
 		<key>A9389239-3478-4060-A649-4E2B4EE1CA28</key>
 		<dict>
 			<key>xpos</key>
-			<real>750</real>
+			<real>690</real>
 			<key>ypos</key>
-			<real>1685</real>
+			<real>1345</real>
 		</dict>
 		<key>A9C03E0E-7AEF-4CB4-9F0D-98F80DA20014</key>
 		<dict>
 			<key>xpos</key>
-			<real>1435</real>
+			<real>1375</real>
 			<key>ypos</key>
-			<real>2100</real>
+			<real>1760</real>
 		</dict>
 		<key>AC7BCE49-D6D1-40D5-A731-A1C1A771FE7F</key>
 		<dict>
 			<key>xpos</key>
-			<real>1165</real>
+			<real>1105</real>
 			<key>ypos</key>
-			<real>1915</real>
+			<real>1575</real>
 		</dict>
 		<key>AFE7AE5A-8A0B-4C63-BA7E-5D7163107DD5</key>
 		<dict>
 			<key>xpos</key>
-			<real>550</real>
+			<real>490</real>
 			<key>ypos</key>
-			<real>1800</real>
+			<real>1460</real>
 		</dict>
 		<key>B9672078-14EF-4548-BD23-D94EB66D31AF</key>
 		<dict>
 			<key>xpos</key>
-			<real>1165</real>
+			<real>1105</real>
 			<key>ypos</key>
-			<real>2145</real>
+			<real>1805</real>
 		</dict>
 		<key>BC091CE6-E547-49F4-B4DF-3F4FF9FFD098</key>
 		<dict>
 			<key>xpos</key>
-			<real>540</real>
+			<real>405</real>
 			<key>ypos</key>
-			<real>635</real>
+			<real>90</real>
 		</dict>
 		<key>BF3A4497-4080-4E06-A40C-AF8DDC73F23F</key>
 		<dict>
 			<key>xpos</key>
-			<real>1205</real>
+			<real>1145</real>
 			<key>ypos</key>
-			<real>1240</real>
+			<real>900</real>
 		</dict>
 		<key>C0857B57-D07D-4748-83A0-507A2D7786D7</key>
 		<dict>
 			<key>xpos</key>
-			<real>550</real>
+			<real>490</real>
 			<key>ypos</key>
-			<real>2505</real>
+			<real>2165</real>
 		</dict>
 		<key>C86F07EE-EF6A-4CAD-AD5D-562FCC5E74F0</key>
 		<dict>
 			<key>xpos</key>
-			<real>340</real>
+			<real>205</real>
 			<key>ypos</key>
-			<real>780</real>
+			<real>235</real>
 		</dict>
 		<key>C906E725-412D-486E-A134-85EA2D903DA5</key>
 		<dict>
 			<key>xpos</key>
-			<real>550</real>
+			<real>490</real>
 			<key>ypos</key>
-			<real>2265</real>
+			<real>1925</real>
 		</dict>
 		<key>CF42F42C-DFFA-4482-8B77-0D195DE4F8A0</key>
 		<dict>
 			<key>xpos</key>
-			<real>620</real>
+			<real>560</real>
 			<key>ypos</key>
-			<real>1375</real>
+			<real>1035</real>
 		</dict>
 		<key>D4063FD6-BB03-4B36-A5C7-3AD7811E115E</key>
 		<dict>
 			<key>xpos</key>
-			<real>345</real>
+			<real>285</real>
 			<key>ypos</key>
-			<real>2030</real>
+			<real>1690</real>
 		</dict>
 		<key>DC4D542D-78AF-4C55-B273-E467FF3F7E7B</key>
 		<dict>
 			<key>xpos</key>
-			<real>750</real>
+			<real>690</real>
 			<key>ypos</key>
-			<real>1800</real>
+			<real>1460</real>
 		</dict>
 		<key>DD0C8D6D-B28E-48FE-8FC6-AA34F74BB3D0</key>
 		<dict>
 			<key>xpos</key>
-			<real>1165</real>
+			<real>1105</real>
 			<key>ypos</key>
-			<real>1685</real>
+			<real>1345</real>
 		</dict>
 		<key>E0DD7A1D-529B-4804-A314-5309D341E4FB</key>
 		<dict>
 			<key>xpos</key>
-			<real>550</real>
+			<real>490</real>
 			<key>ypos</key>
-			<real>1685</real>
+			<real>1345</real>
 		</dict>
 		<key>E826FC0B-9013-4581-A657-937AAE3A2F1F</key>
 		<dict>
 			<key>xpos</key>
-			<real>1015</real>
+			<real>955</real>
 			<key>ypos</key>
-			<real>1280</real>
+			<real>940</real>
 		</dict>
 		<key>E8953233-9708-4079-BF77-6135BA0AC3EF</key>
 		<dict>
 			<key>xpos</key>
-			<real>345</real>
+			<real>285</real>
 			<key>ypos</key>
-			<real>2265</real>
+			<real>1925</real>
 		</dict>
 		<key>ED7ADA66-8BF2-4877-A51A-71B5F004E305</key>
 		<dict>
 			<key>xpos</key>
-			<real>340</real>
+			<real>205</real>
 			<key>ypos</key>
-			<real>635</real>
+			<real>90</real>
 		</dict>
 		<key>FB49BC51-DA24-451E-AE0B-904499ACFB27</key>
 		<dict>
 			<key>xpos</key>
-			<real>1595</real>
+			<real>1535</real>
 			<key>ypos</key>
-			<real>2735</real>
+			<real>2395</real>
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
