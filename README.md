@@ -1,9 +1,7 @@
-AlfNaverSearchPlus : Naver Search Workflow for Alfred  
+# AlfNaverSearchPlus : Naver Search Workflow for Alfred  
 ![Test](../../actions/workflows/test-naver-ac.yml/badge.svg) ![Release](../../actions/workflows/release.yml/badge.svg)  
 ![GitHub stars](https://img.shields.io/github/stars/inchans/Alfnaversearchplus?style=flat&logo=apachespark)
-![GitHub all releases](https://img.shields.io/github/downloads/inchanS/Alfnaversearchplus/total?logo=github) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/inchanS/Alfnaversearchplus?logo=rocket)  ![GitHub](https://img.shields.io/github/license/inchanS/Alfnaversearchplus)  
-
-==============
+![GitHub all releases](https://img.shields.io/github/downloads/inchanS/Alfnaversearchplus/total?logo=github) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/inchanS/Alfnaversearchplus?logo=rocket)  ![GitHub](https://img.shields.io/github/license/inchanS/Alfnaversearchplus)
 
 Naver Search Workflow for Alfred
 ---------------------------------
