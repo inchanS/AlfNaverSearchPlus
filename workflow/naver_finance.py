@@ -92,8 +92,8 @@ def process_finance_item(wf, item):
     nation_code = item["nationCode"]
     nation_name = item["nationName"]
     
-    subtitle = format_item_subtitle(code, type_code, nation_name, txt)
-    copy_text = f"{code}, {txt}"
+    subtitle = format_item_subtitle(txt, code, type_code, nation_name)
+    copy_text = subtitle
     url = FINANCE_ITEM_URL.format(code)
     
     wf.add_item(
