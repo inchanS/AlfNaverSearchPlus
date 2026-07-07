@@ -24,6 +24,47 @@ SOFTWARE.
 import hashlib
 from urllib.parse import quote
 
+from workflow import Workflow, ICON_SYNC
+
+# GitHub 릴리스 기반 자동 업데이트 설정
+UPDATE_SETTINGS = {
+    'github_slug': 'inchanS/AlfNaverSearchPlus',
+    'frequency': 1,  # 확인 주기 (일)
+}
+
+
+def create_workflow():
+    """
+    자동 업데이트 설정이 적용된 Workflow 객체를 생성합니다.
+
+    wf.run() 실행 시 frequency 주기마다 백그라운드에서
+    GitHub 릴리스의 새 버전 여부를 확인합니다.
+
+    Returns:
+        Workflow: Alfred 워크플로우 객체
+    """
+    return Workflow(update_settings=UPDATE_SETTINGS)
+
+
+def add_update_item(wf):
+    """
+    새 버전이 확인된 경우 업데이트 안내 항목을 추가합니다.
+
+    항목을 선택하면 검색어가 'workflow:update'로 자동완성되고,
+    라이브러리가 이를 매직 인자로 인식하여 새 버전을 내려받아 설치합니다.
+
+    Args:
+        wf (Workflow): Alfred 워크플로우 객체
+    """
+    if wf.update_available:
+        wf.add_item(
+            title='New version of NaverSearchPlus is available!',
+            subtitle='Press Enter to install the update',
+            autocomplete='workflow:update',
+            icon=ICON_SYNC,
+            valid=False
+        )
+
 
 def make_cache_key(prefix, word):
     """
