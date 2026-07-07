@@ -3410,7 +3410,19 @@ naver map 검색시, 워크플로우 설정에서 위도와 경도를 현재 사
 Alfred 호출창에서 nmi를 입력하면 IP address로부터 유사 위치를 가져올 수 있습니다.
 nmi 이후 주소 검색시 IP address로부터 가져온 주소를 기반으로 근처 지도 정보를 사용합니다.
 
-- 사용자 설정의 위도와 경도는 https://www.findlatlng.org 에서 정확히 찾을 수 있습니다.</string>
+- 사용자 설정의 위도와 경도는 https://www.findlatlng.org 에서 정확히 찾을 수 있습니다.
+
+Auto Update
+--------------
+
+v0.3.1부터 자동 업데이트를 지원합니다.
+
+- 워크플로우 사용 시 하루 1회 백그라운드에서 새 릴리스를 확인하며, 검색 속도에는 영향이 없습니다.
+- 새 버전이 있으면 검색 결과 맨 위에 `New version of NaverSearchPlus is available!` 항목이 표시되고,
+  선택하면 새 버전을 내려받아 설치합니다.
+- 수동 명령어 (검색 keyword 뒤에 입력):
+  - `workflow:update` : 즉시 업데이트 확인 및 설치 (예: `n workflow:update`)
+  - `workflow:noautoupdate` / `workflow:autoupdate` : 자동 확인 끄기 / 켜기</string>
 	<key>uidata</key>
 	<dict>
 		<key>0166BD8D-0775-422A-B4A9-6C7EBE6B407C</key>
