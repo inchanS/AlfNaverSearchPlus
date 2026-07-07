@@ -23,6 +23,7 @@
 import sys
 
 from workflow import web, Workflow
+from search_utils import make_cache_key, url_quote
 
 def get_dictionary_data(word):
     url = 'https://ac-dict.naver.com/ccko/ac'
@@ -43,13 +44,13 @@ def main(wf):
     wf.add_item(title='Search Naver Hanja for \'%s\'' % args,
                 autocomplete=args,
                 arg=args,
-                quicklookurl='https://hanja.dict.naver.com/#/search?range=all&query=%s' % args,
+                quicklookurl='https://hanja.dict.naver.com/#/search?range=all&query=%s' % url_quote(args),
                 valid=True)
 
     def wrapper():
         return get_dictionary_data(args)
 
-    res_json = wf.cached_data("hanja_%s" % args, wrapper, max_age=600)
+    res_json = wf.cached_data(make_cache_key('hanja', args), wrapper, max_age=600)
 
     for item in res_json['items']:
         for ltxt in item:
@@ -64,7 +65,7 @@ def main(wf):
                             arg=txt,
                             copytext=r2txt,
                             largetext=txt,
-                            quicklookurl='https://hanja.dict.naver.com/#/search?range=all&query=%s' % txt,
+                            quicklookurl='https://hanja.dict.naver.com/#/search?range=all&query=%s' % url_quote(txt),
                             valid=True)
 
     wf.send_feedback()

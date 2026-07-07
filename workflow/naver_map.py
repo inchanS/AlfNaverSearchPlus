@@ -25,11 +25,12 @@ import sys
 import os
 
 from workflow import web, Workflow
+from search_utils import make_cache_key, url_quote
 
 # 환경 변수 및 기본값 설정
-DEFAULT_LATITUDE = os.getenv('latitude', '37.5665851')
-DEFAULT_LONGITUDE = os.getenv('longitude', '126.9782038')
-CACHE_AGE = int(os.getenv('cache_age', '30'))
+DEFAULT_LATITUDE = os.getenv('latitude') or '37.5665851'
+DEFAULT_LONGITUDE = os.getenv('longitude') or '126.9782038'
+CACHE_AGE = int(os.getenv('cache_age') or '30')
 
 # URL 및 API 설정
 API_LOCATION_URL = 'https://map.naver.com/p/api/location'
@@ -52,15 +53,10 @@ ICON_BUS = '845B46E7-61FB-43CD-A287-FCB4C075A4A6.png'
 
 def get_ip_location():
     """현재 IP 기반 위치 정보를 가져옵니다."""
-    try:
-        r = web.get(API_LOCATION_URL)
-        r.raise_for_status()
-        data = r.json()
-        return data["lngLat"]
-    except Exception as e:
-        # 위치 정보를 가져오는 데 실패할 경우 기본값 반환
-        print(f"위치 정보를 가져오는 데 실패했습니다: {e}")
-        return DEFAULT_LATITUDE, DEFAULT_LONGITUDE
+    r = web.get(API_LOCATION_URL)
+    r.raise_for_status()
+    data = r.json()
+    return data["lngLat"]
 
 def get_data(locate, word):
     """검색어에 대한 데이터를 가져옵니다."""
@@ -97,15 +93,16 @@ def process_address_item(wf, item):
     type = "address"
     x = ltxt["x"]
     y = ltxt["y"]
-    
+    url = NAVER_MAP_ENTRY_URL.format(type, y, x, url_quote(txt))
+
     wf.add_item(
         title=f"Search Naver Map for '{txt}'",
         subtitle=address,
         autocomplete=txt,
-        arg=NAVER_MAP_ENTRY_URL.format(type, y, x, txt),
+        arg=url,
         copytext=txt,
         largetext=txt,
-        quicklookurl=NAVER_MAP_ENTRY_URL.format(type, y, x, txt),
+        quicklookurl=url,
         valid=True
     )
 
@@ -119,15 +116,16 @@ def process_place_item(wf, item):
     address = ltxt[address_key]
     _id = ltxt["id"]
     type = ltxt["type"]
-    
+    url = NAVER_MAP_SEARCH_TYPE_URL.format(url_quote(txt), type, _id)
+
     wf.add_item(
         title=f"Search Naver Map for '{txt}'",
         subtitle=address,
         autocomplete=txt,
-        arg=NAVER_MAP_SEARCH_TYPE_URL.format(txt, type, _id),
+        arg=url,
         copytext=txt,
         largetext=txt,
-        quicklookurl=NAVER_MAP_SEARCH_TYPE_URL.format(txt, type, _id),
+        quicklookurl=url,
         valid=True
     )
 
@@ -139,15 +137,16 @@ def process_bus_item(wf, item):
     txt = ltxt["title"]
     address = address_key + "버스 " + txt
     _id = ltxt["id"]
-    
+    url = NAVER_MAP_SEARCH_TYPE_URL.format(url_quote(txt), type, _id)
+
     wf.add_item(
         title=f"Search Naver Map for '{txt}'",
         subtitle=address,
         autocomplete=txt,
-        arg=NAVER_MAP_SEARCH_TYPE_URL.format(txt, type, _id),
+        arg=url,
         copytext=txt,
         largetext=txt,
-        quicklookurl=NAVER_MAP_SEARCH_TYPE_URL.format(txt, type, _id),
+        quicklookurl=url,
         valid=True
     )
 
@@ -159,15 +158,21 @@ def main(wf):
     if use_ip == 'useIP':
         data_to_cache = {'use': True}
         wf.cache_data('use_ip', data_to_cache)
-        locate = wf.cached_data('location_data', get_ip_location, max_age=CACHE_AGE)
+        try:
+            locate = wf.cached_data('location_data', get_ip_location, max_age=CACHE_AGE)
+        except Exception as e:
+            # 위치 정보를 가져오는 데 실패할 경우 기본 좌표 사용
+            # (stdout은 Alfred 피드백 전용이므로 로그로만 남긴다)
+            wf.logger.error(f"위치 정보를 가져오는 데 실패했습니다: {e}")
+            locate = {'lat': DEFAULT_LATITUDE, 'lng': DEFAULT_LONGITUDE}
         phrase = "Search Naver Map(ip) for"
-        cache_key = f"navmapip_{args}"
+        cache_key = make_cache_key('navmapip', args)
     else:
         data_to_cache = {'use': False}
         wf.cache_data('use_ip', data_to_cache)
         locate = {'lat': DEFAULT_LATITUDE, 'lng': DEFAULT_LONGITUDE}
         phrase = "Search Naver Map for"
-        cache_key = f"navmap_{args}"
+        cache_key = make_cache_key('navmap', args)
 
     # 검색 결과 캐싱 및 가져오기
     def wrapper():
@@ -179,8 +184,8 @@ def main(wf):
     wf.add_item(
         title=f"{phrase} '{args}'",
         autocomplete=args,
-        arg=NAVER_MAP_SEARCH_URL.format(args),
-        quicklookurl=NAVER_MAP_SEARCH_URL.format(args),
+        arg=NAVER_MAP_SEARCH_URL.format(url_quote(args)),
+        quicklookurl=NAVER_MAP_SEARCH_URL.format(url_quote(args)),
         valid=True
     )
 

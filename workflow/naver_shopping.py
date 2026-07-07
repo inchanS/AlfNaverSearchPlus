@@ -24,6 +24,7 @@ SOFTWARE.
 import sys
 
 from workflow import web, Workflow
+from search_utils import make_cache_key, url_quote
 
 QUICK_LOOK_URL = 'https://search.shopping.naver.com/ns/search?query=%s'
 
@@ -45,13 +46,13 @@ def main(wf):
     wf.add_item(title='Search Naver Shopping for \'%s\'' % args,
                 autocomplete=args,
                 arg=args,
-                quicklookurl=QUICK_LOOK_URL % args,
+                quicklookurl=QUICK_LOOK_URL % url_quote(args),
                 valid=True)
 
     def wrapper():
         return get_data(args)
 
-    res_json = wf.cached_data('navs_%s' % args, wrapper, max_age=30)
+    res_json = wf.cached_data(make_cache_key('navs', args), wrapper, max_age=30)
 
     for item in res_json:
         txt = item.get('keywordName')
@@ -62,7 +63,7 @@ def main(wf):
                 arg=txt,
                 copytext=txt,
                 largetext=txt,
-                quicklookurl=QUICK_LOOK_URL % txt,
+                quicklookurl=QUICK_LOOK_URL % url_quote(txt),
                 valid=True)
 
     wf.send_feedback()

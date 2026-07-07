@@ -24,6 +24,7 @@ SOFTWARE.
 import sys
 
 from workflow import web, Workflow
+from search_utils import make_cache_key, url_quote
 
 # 상수 정의
 API_URL = 'https://ac-dict.naver.com/koko/ac'
@@ -70,7 +71,7 @@ def create_main_search_item(wf, query):
         title=f"Search Naver Krdic for '{query}'",
         autocomplete=query,
         arg=query,
-        quicklookurl=SEARCH_URL.format(query),
+        quicklookurl=SEARCH_URL.format(url_quote(query)),
         valid=True
     )
     item.setvar('lang', LANGUAGE_CODE)
@@ -95,7 +96,7 @@ def create_result_item(wf, text, query):
         arg=text,
         copytext=text,
         largetext=text,
-        quicklookurl=SEARCH_URL.format(text),
+        quicklookurl=SEARCH_URL.format(url_quote(text)),
         valid=True
     )
     item.setvar('lang', LANGUAGE_CODE)
@@ -130,7 +131,7 @@ def main(wf):
     create_main_search_item(wf, query)
     
     # 캐시 키 생성 및 결과 데이터 가져오기
-    cache_key = f"kr_{query}"
+    cache_key = make_cache_key('kr', query)
     
     def wrapper():
         return get_dictionary_data(query)

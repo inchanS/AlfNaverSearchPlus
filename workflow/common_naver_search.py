@@ -23,6 +23,7 @@
 import sys
 
 from workflow import web, Workflow
+from search_utils import make_cache_key, url_quote
 
 def get_dictionary_data(lang, word):
     url = 'https://ac-dict.naver.com/%s/ac' % lang
@@ -48,14 +49,14 @@ def main(wf):
     it = wf.add_item(title = 'Search Naver %sdic for \'%s\'' % (lang[0:2], word),
                 autocomplete=word,
                 arg=word,
-                quicklookurl='https://dict.naver.com/%sdict/#/search?query=%s' % (lang, word),
+                quicklookurl='https://dict.naver.com/%sdict/#/search?query=%s' % (lang, url_quote(word)),
                 valid=True)
     it.setvar('lang', lang)
 
     def wrapper():
         return get_dictionary_data(lang, word)
 
-    res_json = wf.cached_data("%s_%s" % (lang, word), wrapper, max_age=600)
+    res_json = wf.cached_data(make_cache_key(lang, word), wrapper, max_age=600)
 
     for item in res_json['items']:
         for ltxt in item:
@@ -69,7 +70,7 @@ def main(wf):
                             arg=txt,
                             copytext=rtxt,
                             largetext=txt,
-                            quicklookurl='https://dict.naver.com/%sdict/#/search?query=%s' % (lang, txt),
+                            quicklookurl='https://dict.naver.com/%sdict/#/search?query=%s' % (lang, url_quote(txt)),
                             valid=True)
                 it.setvar('lang', lang)
 

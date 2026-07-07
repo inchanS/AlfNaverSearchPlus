@@ -25,11 +25,12 @@ import sys
 import os
 
 from workflow import web, Workflow
+from search_utils import make_cache_key, url_quote
 
 # 환경 변수 및 상수 정의
-DEFAULT_LATITUDE = os.getenv('latitude')
-DEFAULT_LONGITUDE = os.getenv('longitude')
-CACHE_AGE = int(os.getenv('cache_age'))
+DEFAULT_LATITUDE = os.getenv('latitude') or '37.5665851'
+DEFAULT_LONGITUDE = os.getenv('longitude') or '126.9782038'
+CACHE_AGE = int(os.getenv('cache_age') or '30')
 MAP_TYPE = os.getenv('map_type')
 
 # URL 및 API 설정
@@ -61,45 +62,45 @@ CACHE_NAME_MAP = {
 def get_ip_location():
     """
     현재 IP 기반 위치 정보를 가져옵니다.
-    
+
     Returns:
-        tuple: 위도, 경도 튜플
+        dict: {'lat': 위도, 'lng': 경도} 형태의 위치 정보
     """
-    try:
-        r = web.get(API_LOCATION_URL)
-        r.raise_for_status()
-        data = r.json()
-        return data["lngLat"]
-    except Exception as e:
-        # 위치 정보를 가져오는 데 실패할 경우 기본값 반환
-        print(f"위치 정보를 가져오는 데 실패했습니다: {e}")
-        return DEFAULT_LATITUDE, DEFAULT_LONGITUDE
+    r = web.get(API_LOCATION_URL)
+    r.raise_for_status()
+    data = r.json()
+    return data["lngLat"]
 
 def get_location_coordinates(use_ip, wf):
     """
     사용자 위치 정보를 가져옵니다.
-    
+
     Args:
         use_ip (dict): IP 기반 위치 사용 여부 설정
         wf (Workflow): Alfred 워크플로우 객체
-        
+
     Returns:
         tuple: 위도, 경도 튜플
     """
     if use_ip.get('use', True):
-        locate = wf.cached_data('location_data', get_ip_location, max_age=CACHE_AGE)
-        return locate['lat'], locate['lng']
-    else:
-        return DEFAULT_LATITUDE, DEFAULT_LONGITUDE
+        try:
+            locate = wf.cached_data('location_data', get_ip_location, max_age=CACHE_AGE)
+            return locate['lat'], locate['lng']
+        except Exception as e:
+            # 위치 정보를 가져오는 데 실패할 경우 기본 좌표 사용
+            # (stdout은 Alfred 피드백 전용이므로 로그로만 남긴다)
+            wf.logger.error(f"위치 정보를 가져오는 데 실패했습니다: {e}")
+    return DEFAULT_LATITUDE, DEFAULT_LONGITUDE
 
-def get_data(word, use_ip):
+def get_data(wf, word, use_ip):
     """
     검색어에 대한 데이터를 가져옵니다.
-    
+
     Args:
+        wf (Workflow): Alfred 워크플로우 객체
         word (str): 검색할 단어
         use_ip (dict): IP 기반 위치 사용 여부 설정
-        
+
     Returns:
         list: 검색 결과 목록
     """
@@ -151,15 +152,16 @@ def process_place_item(wf, item, txt):
     address = item[address_key]
     _id = item["id"]
     type = item["type"]
-    
+    url = NAVER_MAP_SEARCH_TYPE_URL.format(url_quote(txt), type, _id)
+
     wf.add_item(
         title=f"Search Place for '{txt}'",
         subtitle=address,
         autocomplete=txt,
-        arg=NAVER_MAP_SEARCH_TYPE_URL.format(txt, type, _id),
+        arg=url,
         copytext=txt,
         largetext=txt,
-        quicklookurl=NAVER_MAP_SEARCH_TYPE_URL.format(txt, type, _id),
+        quicklookurl=url,
         icon=ICON_PLACE,
         valid=True
     )
@@ -179,15 +181,16 @@ def process_address_item(wf, item, txt):
     type = "address"
     x = item["x"]
     y = item["y"]
-    
+    url = NAVER_MAP_ENTRY_URL.format(type, y, x, url_quote(txt))
+
     wf.add_item(
         title=f"Search Address for '{txt}'",
         subtitle=address,
         autocomplete=txt,
-        arg=NAVER_MAP_ENTRY_URL.format(type, y, x, txt),
+        arg=url,
         copytext=txt,
         largetext=txt,
-        quicklookurl=NAVER_MAP_ENTRY_URL.format(type, y, x, txt),
+        quicklookurl=url,
         icon=ICON_ADDRESS,
         valid=True
     )
@@ -206,15 +209,16 @@ def process_bus_item(wf, item, txt):
     txt = item["title"]
     address = address_key + "버스 " + txt
     _id = item["id"]
-    
+    url = NAVER_MAP_SEARCH_TYPE_URL.format(url_quote(txt), type, _id)
+
     wf.add_item(
         title=f"Search Bus for '{txt}'",
         subtitle=address,
         autocomplete=txt,
-        arg=NAVER_MAP_SEARCH_TYPE_URL.format(txt, type, _id),
+        arg=url,
         copytext=txt,
         largetext=txt,
-        quicklookurl=NAVER_MAP_SEARCH_TYPE_URL.format(txt, type, _id),
+        quicklookurl=url,
         icon=ICON_BUS,
         valid=True
     )
@@ -227,15 +231,17 @@ def main(wf):
         wf (Workflow): Alfred 워크플로우 객체
     """
     args = wf.args[0]
-    use_ip = wf.cached_data('use_ip', None)
+    # max_age=0: 이전 단계(naver_map)에서 저장한 설정을 시간 제한 없이 읽는다.
+    # 캐시가 아예 없으면 기본 좌표를 사용하는 설정으로 동작한다.
+    use_ip = wf.cached_data('use_ip', None, max_age=0) or {'use': False}
 
     # 캐시 이름 생성
     res_cache_name, res_cache_name_ip, useIP = get_cache_name(MAP_TYPE, use_ip)
-    cache_key = f"{res_cache_name}{res_cache_name_ip}_{args}"
+    cache_key = make_cache_key(f"{res_cache_name}{res_cache_name_ip}", args)
 
     # 검색 결과 캐싱 및 가져오기
     def wrapper():
-        return get_data(args, use_ip)
+        return get_data(wf, args, use_ip)
 
     res_json = wf.cached_data(cache_key, wrapper, max_age=CACHE_AGE)
 
@@ -251,8 +257,8 @@ def main(wf):
     wf.add_item(
         title=f"Search Naver Map for '{args}'",
         autocomplete=args,
-        arg=NAVER_MAP_SEARCH_URL.format(args),
-        quicklookurl=NAVER_MAP_SEARCH_URL.format(args),
+        arg=NAVER_MAP_SEARCH_URL.format(url_quote(args)),
+        quicklookurl=NAVER_MAP_SEARCH_URL.format(url_quote(args)),
         valid=True
     )
 

@@ -25,9 +25,10 @@ import sys
 import os
 
 from workflow import web, Workflow
+from search_utils import make_cache_key, url_quote
 
 # 환경 변수 및 상수 정의
-CACHE_AGE = int(os.getenv('cache_age', '30'))
+CACHE_AGE = int(os.getenv('cache_age') or '30')
 
 # API 및 URL 설정
 API_SEARCH_URL = 'https://ac.stock.naver.com/ac'
@@ -62,20 +63,20 @@ def get_data(word):
     r.raise_for_status()
     return r.json()
 
-def format_item_subtitle(code, type_code, nation_name, name):
+def format_item_subtitle(name, code, type_code, nation_name):
     """
-    항목의 부제목을 형식화합니다.
-    
+    항목의 부제목을 형식화합니다. (종목명-코드-시장구분-국가 순)
+
     Args:
-        code (str): 주식 코드
-        type_code (str): 종류 코드
+        name (str): 종목 이름
+        code (str): 종목 코드
+        type_code (str): 시장 구분 코드
         nation_name (str): 국가 이름
-        name (str): 주식 이름
-        
+
     Returns:
         str: 형식화된 부제목
     """
-    return f"{code}, {type_code}, {nation_name}, {name}"
+    return f"{name}, {code}, {type_code}, {nation_name}"
 
 def process_finance_item(wf, item):
     """
@@ -94,7 +95,7 @@ def process_finance_item(wf, item):
     
     subtitle = format_item_subtitle(txt, code, type_code, nation_name)
     copy_text = subtitle
-    url = FINANCE_ITEM_URL.format(code)
+    url = FINANCE_ITEM_URL.format(url_quote(code))
     
     wf.add_item(
         title=f"Search Naver Finance for '{txt}'",
@@ -115,7 +116,7 @@ def main(wf):
         wf (Workflow): Alfred 워크플로우 객체
     """
     args = wf.args[0]
-    cache_key = f"navfinance_{args}"
+    cache_key = make_cache_key('navfinance', args)
 
     # 검색 결과를 캐싱하여 가져오기
     def wrapper():

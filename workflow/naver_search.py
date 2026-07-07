@@ -24,11 +24,12 @@ SOFTWARE.
 import sys
 
 from workflow import web, Workflow
+from search_utils import make_cache_key, url_quote
 
 QUICK_LOOK_URL = 'https://search.naver.com/search.naver?ie=utf8&sm=stp_hty&where=se&query=%s'
 
 def get_data(word):
-    url = 'http://ac.search.naver.com/nx/ac'
+    url = 'https://ac.search.naver.com/nx/ac'
 
     params = dict(q_enc='UTF-8',
                   st=100,
@@ -53,13 +54,13 @@ def main(wf):
     wf.add_item(title='Search Naver for \'%s\'' % args,
                 autocomplete=args,
                 arg=args,
-                quicklookurl=QUICK_LOOK_URL % args,
+                quicklookurl=QUICK_LOOK_URL % url_quote(args),
                 valid=True)
 
     def wrapper():
         return get_data(args)
 
-    res_json = wf.cached_data('nav_%s' % args, wrapper, max_age=30)
+    res_json = wf.cached_data(make_cache_key('nav', args), wrapper, max_age=30)
 
     for ltxt in res_json['items'][0]:
         if len(ltxt) > 0:
@@ -70,7 +71,7 @@ def main(wf):
                 arg=txt,
                 copytext=txt,
                 largetext=txt,
-                quicklookurl=QUICK_LOOK_URL % txt,
+                quicklookurl=QUICK_LOOK_URL % url_quote(txt),
                 valid=True)
 
     wf.send_feedback()
