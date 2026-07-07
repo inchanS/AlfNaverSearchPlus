@@ -22,8 +22,8 @@
 
 import sys
 
-from workflow import web, Workflow
-from search_utils import make_cache_key, url_quote
+from workflow import web
+from search_utils import make_cache_key, url_quote, create_workflow, add_update_item
 
 QUICK_LOOK_URL = 'https://dict.naver.com/{}dict/#/search?query={}'
 
@@ -44,6 +44,9 @@ def get_dictionary_data(lang, word):
 
 def main(wf):
     import html
+
+    # 새 버전이 확인된 경우 업데이트 안내 항목 추가
+    add_update_item(wf)
 
     lang = wf.args[0]
     word = wf.args[1]
@@ -80,5 +83,5 @@ def main(wf):
 
 
 if __name__ == '__main__':
-    wf = Workflow()
+    wf = create_workflow()
     sys.exit(wf.run(main))

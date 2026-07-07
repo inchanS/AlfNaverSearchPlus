@@ -23,8 +23,8 @@ SOFTWARE.
 
 import sys
 
-from workflow import web, Workflow
-from search_utils import make_cache_key, url_quote
+from workflow import web
+from search_utils import make_cache_key, url_quote, create_workflow, add_update_item
 
 QUICK_LOOK_URL = 'https://terms.naver.com/search.naver?query={}'
 
@@ -48,6 +48,9 @@ def get_data(word):
 
 
 def main(wf):
+    # 새 버전이 확인된 경우 업데이트 안내 항목 추가
+    add_update_item(wf)
+
     args = wf.args[0]
 
     wf.add_item(title=f"Search Naver Terms for '{args}'",
@@ -77,5 +80,5 @@ def main(wf):
 
 
 if __name__ == '__main__':
-    wf = Workflow()
+    wf = create_workflow()
     sys.exit(wf.run(main))

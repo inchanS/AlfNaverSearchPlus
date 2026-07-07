@@ -24,8 +24,7 @@ SOFTWARE.
 import sys
 import os
 
-from workflow import Workflow
-from search_utils import make_cache_key
+from search_utils import make_cache_key, create_workflow, add_update_item
 from naver_map_common import (
     ICON_PLACE, ICON_ADDRESS, ICON_BUS, CACHE_AGE,
     get_data, get_location,
@@ -73,6 +72,9 @@ def main(wf):
     Args:
         wf (Workflow): Alfred 워크플로우 객체
     """
+    # 새 버전이 확인된 경우 업데이트 안내 항목 추가
+    add_update_item(wf)
+
     args = wf.args[0]
     # max_age=0: 이전 단계(naver_map)에서 저장한 설정을 시간 제한 없이 읽는다.
     # 캐시가 아예 없으면 기본 좌표를 사용하는 설정으로 동작한다.
@@ -113,5 +115,5 @@ def main(wf):
     wf.send_feedback()
 
 if __name__ == '__main__':
-    wf = Workflow()
+    wf = create_workflow()
     sys.exit(wf.run(main))

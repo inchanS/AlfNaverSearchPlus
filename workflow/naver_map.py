@@ -23,8 +23,7 @@ SOFTWARE.
 
 import sys
 
-from workflow import Workflow
-from search_utils import make_cache_key
+from search_utils import make_cache_key, create_workflow, add_update_item
 from naver_map_common import (
     ICON_PLACE, ICON_ADDRESS, ICON_BUS, CACHE_AGE,
     get_data, get_location,
@@ -45,6 +44,9 @@ def create_item_for_category(wf, args, category_type, icon, title_prefix):
     return it
 
 def main(wf):
+    # 새 버전이 확인된 경우 업데이트 안내 항목 추가
+    add_update_item(wf)
+
     use_ip = wf.args[0] == 'useIP'
     args = wf.args[1]
 
@@ -99,5 +101,5 @@ def main(wf):
     wf.send_feedback()
 
 if __name__ == '__main__':
-    wf = Workflow()
+    wf = create_workflow()
     sys.exit(wf.run(main))

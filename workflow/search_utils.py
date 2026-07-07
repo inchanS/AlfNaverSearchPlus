@@ -1,6 +1,6 @@
 """
 Shared helpers for Naver Search Workflow scripts
-Copyright (c) 2024 Inchan Song
+Copyright (c) 2026 Inchan Song
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

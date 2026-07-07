@@ -23,8 +23,8 @@ SOFTWARE.
 
 import sys
 
-from workflow import web, Workflow
-from search_utils import make_cache_key, url_quote
+from workflow import web
+from search_utils import make_cache_key, url_quote, create_workflow, add_update_item
 
 # 상수 정의
 API_URL = 'https://ac-dict.naver.com/koko/ac'
@@ -124,6 +124,9 @@ def main(wf):
     Args:
         wf (Workflow): Alfred 워크플로우 객체
     """
+    # 새 버전이 확인된 경우 업데이트 안내 항목 추가
+    add_update_item(wf)
+
     # 검색 쿼리 가져오기
     query = wf.args[0]
     
@@ -145,5 +148,5 @@ def main(wf):
     wf.send_feedback()
 
 if __name__ == '__main__':
-    wf = Workflow()
+    wf = create_workflow()
     sys.exit(wf.run(main))
