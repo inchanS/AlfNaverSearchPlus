@@ -1,5 +1,5 @@
 """
-Naver Search Workflow for Alfred 2
+Naver Shopping Search Workflow for Alfred 5
 Copyright (c) 2021 Jinuk Baek
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,7 +26,7 @@ import sys
 from workflow import web, Workflow
 from search_utils import make_cache_key, url_quote
 
-QUICK_LOOK_URL = 'https://search.shopping.naver.com/ns/search?query=%s'
+QUICK_LOOK_URL = 'https://search.shopping.naver.com/ns/search?query={}'
 
 def get_data(word):
     url = 'https://m.shopping.naver.com/api/modules/gnb/auto-complete'
@@ -43,10 +43,10 @@ def get_data(word):
 def main(wf):
     args = wf.args[0]
 
-    wf.add_item(title='Search Naver Shopping for \'%s\'' % args,
+    wf.add_item(title=f"Search Naver Shopping for '{args}'",
                 autocomplete=args,
                 arg=args,
-                quicklookurl=QUICK_LOOK_URL % url_quote(args),
+                quicklookurl=QUICK_LOOK_URL.format(url_quote(args)),
                 valid=True)
 
     def wrapper():
@@ -58,12 +58,12 @@ def main(wf):
         txt = item.get('keywordName')
         if txt:
             wf.add_item(
-                title='Search Naver Shopping for \'%s\'' % txt,
+                title=f"Search Naver Shopping for '{txt}'",
                 autocomplete=txt,
                 arg=txt,
                 copytext=txt,
                 largetext=txt,
-                quicklookurl=QUICK_LOOK_URL % url_quote(txt),
+                quicklookurl=QUICK_LOOK_URL.format(url_quote(txt)),
                 valid=True)
 
     wf.send_feedback()

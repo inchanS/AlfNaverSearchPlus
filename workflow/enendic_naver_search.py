@@ -1,4 +1,4 @@
-# Naver Search Workflow for Alfred 2
+# Naver English-English Dictionary Search Workflow for Alfred 5
 # Copyright (c) 2021 Jinuk Baek
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,6 +25,8 @@ import sys
 from workflow import web, Workflow
 from search_utils import make_cache_key, url_quote
 
+QUICK_LOOK_URL = 'https://dict.naver.com/enendict/#/search?query={}'
+
 def get_dictionary_data(word):
     url = 'https://ac-dict.naver.com/enen3/ac'
     params = dict(st=11,
@@ -40,10 +42,10 @@ def get_dictionary_data(word):
 def main(wf):
     args = wf.args[0]
 
-    it = wf.add_item(title='Search Naver Endic for \'%s\'' % args,
+    it = wf.add_item(title=f"Search Naver Endic for '{args}'",
                 autocomplete=args,
                 arg=args,
-                quicklookurl='https://dict.naver.com/enendict/#/search?query=%s' % url_quote(args),
+                quicklookurl=QUICK_LOOK_URL.format(url_quote(args)),
                 valid=True)
     it.setvar('lang', 'enen')
 
@@ -57,13 +59,13 @@ def main(wf):
             txt = ltxt[0][0]
             rtxt = ltxt[1][0]
 
-            it = wf.add_item(title=u"%s     %s" % (txt, rtxt),
-                        subtitle='Search Naver Endic for \'%s\'' % txt,
+            it = wf.add_item(title=f"{txt}     {rtxt}",
+                        subtitle=f"Search Naver Endic for '{txt}'",
                         autocomplete=txt,
                         arg=txt,
                         copytext=rtxt,
                         largetext=txt,
-                        quicklookurl='https://dict.naver.com/enendict/#/search?query=%s' % url_quote(txt),
+                        quicklookurl=QUICK_LOOK_URL.format(url_quote(txt)),
                         valid=True)
             it.setvar('lang', 'enen')
 

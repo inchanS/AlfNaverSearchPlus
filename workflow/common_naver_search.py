@@ -1,4 +1,4 @@
-# Naver Search Workflow for Alfred 2
+# Naver Multilingual Dictionary Search Workflow for Alfred 5
 # Copyright (c) 2021 Jinuk Baek
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,8 +25,10 @@ import sys
 from workflow import web, Workflow
 from search_utils import make_cache_key, url_quote
 
+QUICK_LOOK_URL = 'https://dict.naver.com/{}dict/#/search?query={}'
+
 def get_dictionary_data(lang, word):
-    url = 'https://ac-dict.naver.com/%s/ac' % lang
+    url = f'https://ac-dict.naver.com/{lang}/ac'
     params = dict(q=word,
                   _callback='',
                   q_enc='UTF-8',
@@ -46,10 +48,10 @@ def main(wf):
     lang = wf.args[0]
     word = wf.args[1]
 
-    it = wf.add_item(title = 'Search Naver %sdic for \'%s\'' % (lang[0:2], word),
+    it = wf.add_item(title=f"Search Naver {lang[0:2]}dic for '{word}'",
                 autocomplete=word,
                 arg=word,
-                quicklookurl='https://dict.naver.com/%sdict/#/search?query=%s' % (lang, url_quote(word)),
+                quicklookurl=QUICK_LOOK_URL.format(lang, url_quote(word)),
                 valid=True)
     it.setvar('lang', lang)
 
@@ -64,13 +66,13 @@ def main(wf):
                 txt = ltxt[0][0]
                 rtxt = html.escape(ltxt[3][0])
 
-                it = wf.add_item(title = u"%s     %s" % (txt, rtxt) ,
-                            subtitle = 'Search Naver %sdic for \'%s\'' % (lang[0:2], txt),
+                it = wf.add_item(title=f"{txt}     {rtxt}",
+                            subtitle=f"Search Naver {lang[0:2]}dic for '{txt}'",
                             autocomplete=txt,
                             arg=txt,
                             copytext=rtxt,
                             largetext=txt,
-                            quicklookurl='https://dict.naver.com/%sdict/#/search?query=%s' % (lang, url_quote(txt)),
+                            quicklookurl=QUICK_LOOK_URL.format(lang, url_quote(txt)),
                             valid=True)
                 it.setvar('lang', lang)
 

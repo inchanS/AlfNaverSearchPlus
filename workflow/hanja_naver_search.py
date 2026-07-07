@@ -1,4 +1,4 @@
-# Naver Search Workflow for Alfred 2
+# Naver Hanja Dictionary Search Workflow for Alfred 5
 # Copyright (c) 2021 Jinuk Baek
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,6 +25,8 @@ import sys
 from workflow import web, Workflow
 from search_utils import make_cache_key, url_quote
 
+QUICK_LOOK_URL = 'https://hanja.dict.naver.com/#/search?range=all&query={}'
+
 def get_dictionary_data(word):
     url = 'https://ac-dict.naver.com/ccko/ac'
     params = dict(st=11,
@@ -41,10 +43,10 @@ def main(wf):
 
     args = wf.args[0]
 
-    wf.add_item(title='Search Naver Hanja for \'%s\'' % args,
+    wf.add_item(title=f"Search Naver Hanja for '{args}'",
                 autocomplete=args,
                 arg=args,
-                quicklookurl='https://hanja.dict.naver.com/#/search?range=all&query=%s' % url_quote(args),
+                quicklookurl=QUICK_LOOK_URL.format(url_quote(args)),
                 valid=True)
 
     def wrapper():
@@ -59,13 +61,13 @@ def main(wf):
                 rtxt = html.escape(ltxt[1][0])
                 r2txt = html.escape(ltxt[3][0])
 
-                wf.add_item(title=u"%s[%s] %s" % (txt, rtxt, r2txt),
-                            subtitle='Search Naver Hanja for \'%s\'' % txt,
+                wf.add_item(title=f"{txt}[{rtxt}] {r2txt}",
+                            subtitle=f"Search Naver Hanja for '{txt}'",
                             autocomplete=txt,
                             arg=txt,
                             copytext=r2txt,
                             largetext=txt,
-                            quicklookurl='https://hanja.dict.naver.com/#/search?range=all&query=%s' % url_quote(txt),
+                            quicklookurl=QUICK_LOOK_URL.format(url_quote(txt)),
                             valid=True)
 
     wf.send_feedback()

@@ -1,5 +1,5 @@
 """
-Naver Search Workflow for Alfred 2
+Naver Terms Search Workflow for Alfred 5
 Copyright (c) 2021 Jinuk Baek
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,6 +26,8 @@ import sys
 from workflow import web, Workflow
 from search_utils import make_cache_key, url_quote
 
+QUICK_LOOK_URL = 'https://terms.naver.com/search.naver?query={}'
+
 def get_data(word):
     url = 'https://ac.terms.naver.com/ac'
 
@@ -48,10 +50,10 @@ def get_data(word):
 def main(wf):
     args = wf.args[0]
 
-    wf.add_item(title='Search Naver Terms for \'%s\'' % args,
+    wf.add_item(title=f"Search Naver Terms for '{args}'",
                 autocomplete=args,
                 arg=args,
-                quicklookurl='https://terms.naver.com/search.naver?query=%s' % url_quote(args),
+                quicklookurl=QUICK_LOOK_URL.format(url_quote(args)),
                 valid=True)
 
     def wrapper():
@@ -68,7 +70,7 @@ def main(wf):
                 arg=txt,
                 copytext=txt,
                 largetext=txt,
-                quicklookurl='https://terms.naver.com/search.naver?query=%s' % url_quote(txt),
+                quicklookurl=QUICK_LOOK_URL.format(url_quote(txt)),
                 valid=True)
 
     wf.send_feedback()

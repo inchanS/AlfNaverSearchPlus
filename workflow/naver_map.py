@@ -22,58 +22,18 @@ SOFTWARE.
 """
 
 import sys
-import os
 
-from workflow import web, Workflow
-from search_utils import make_cache_key, url_quote
-
-# 환경 변수 및 기본값 설정
-DEFAULT_LATITUDE = os.getenv('latitude') or '37.5665851'
-DEFAULT_LONGITUDE = os.getenv('longitude') or '126.9782038'
-CACHE_AGE = int(os.getenv('cache_age') or '30')
-
-# URL 및 API 설정
-API_LOCATION_URL = 'https://map.naver.com/p/api/location'
-API_SEARCH_URL = 'https://map.naver.com/p/api/search/instant-search'
-NAVER_MAP_SEARCH_URL = 'https://map.naver.com/p/search/{}'
-NAVER_MAP_ENTRY_URL = 'https://map.naver.com/p/entry/{}/{},{},{}'
-NAVER_MAP_SEARCH_TYPE_URL = 'https://map.naver.com/p/search/{}/{}/{}'
-
-# HTTP 헤더 설정
-HTTP_HEADERS = {
-    "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.6 Safari/605.1.15",
-    "Referer": "https://map.naver.com/"
-}
-
-# 아이콘 파일 이름
-ICON_NO_RESULTS = 'noresults.png'
-ICON_PLACE = '7FBDB33A-E342-411C-B00B-8B797AE8C19A.png'
-ICON_ADDRESS = '3F6E3BB6-64CC-481E-990D-F3823D3616A8.png'
-ICON_BUS = '845B46E7-61FB-43CD-A287-FCB4C075A4A6.png'
-
-def get_ip_location():
-    """현재 IP 기반 위치 정보를 가져옵니다."""
-    r = web.get(API_LOCATION_URL)
-    r.raise_for_status()
-    data = r.json()
-    return data["lngLat"]
-
-def get_data(locate, word):
-    """검색어에 대한 데이터를 가져옵니다."""
-    params = dict(
-        query=word,
-        type="all",
-        coords=f"{locate['lat']},{locate['lng']}",
-        lang="ko",
-        caller="pcweb"
-    )
-    
-    r = web.get(API_SEARCH_URL, params, headers=HTTP_HEADERS)
-    r.raise_for_status()
-    return r.json()
+from workflow import Workflow
+from search_utils import make_cache_key
+from naver_map_common import (
+    ICON_PLACE, ICON_ADDRESS, ICON_BUS, CACHE_AGE,
+    get_data, get_location,
+    add_place_item, add_address_item, add_bus_item,
+    add_map_search_item, add_no_results_item,
+)
 
 def create_item_for_category(wf, args, category_type, icon, title_prefix):
-    """카테고리 항목을 생성합니다."""
+    """카테고리 전용 검색으로 이동하는 항목을 생성합니다."""
     it = wf.add_item(
         title=f"{title_prefix} '{args}'",
         autocomplete=args,
@@ -84,93 +44,18 @@ def create_item_for_category(wf, args, category_type, icon, title_prefix):
     it.setvar('map_type', category_type)
     return it
 
-def process_address_item(wf, item):
-    """주소 항목을 처리합니다."""
-    ltxt = item["address"]
-    address_key = "fullAddress"
-    txt = ltxt[address_key]
-    address = ltxt["title"]
-    type = "address"
-    x = ltxt["x"]
-    y = ltxt["y"]
-    url = NAVER_MAP_ENTRY_URL.format(type, y, x, url_quote(txt))
-
-    wf.add_item(
-        title=f"Search Naver Map for '{txt}'",
-        subtitle=address,
-        autocomplete=txt,
-        arg=url,
-        copytext=txt,
-        largetext=txt,
-        quicklookurl=url,
-        valid=True
-    )
-
-def process_place_item(wf, item):
-    """장소 항목을 처리합니다."""
-    ltxt = item["place"]
-    address_key = "roadAddress"
-    txt = ltxt["title"]
-    if not ltxt.get(address_key):
-        address_key = "jibunAddress"
-    address = ltxt[address_key]
-    _id = ltxt["id"]
-    type = ltxt["type"]
-    url = NAVER_MAP_SEARCH_TYPE_URL.format(url_quote(txt), type, _id)
-
-    wf.add_item(
-        title=f"Search Naver Map for '{txt}'",
-        subtitle=address,
-        autocomplete=txt,
-        arg=url,
-        copytext=txt,
-        largetext=txt,
-        quicklookurl=url,
-        valid=True
-    )
-
-def process_bus_item(wf, item):
-    """버스 항목을 처리합니다."""
-    ltxt = item["bus"]
-    type = "bus-route"
-    address_key = ltxt["cityName"]
-    txt = ltxt["title"]
-    address = address_key + "버스 " + txt
-    _id = ltxt["id"]
-    url = NAVER_MAP_SEARCH_TYPE_URL.format(url_quote(txt), type, _id)
-
-    wf.add_item(
-        title=f"Search Naver Map for '{txt}'",
-        subtitle=address,
-        autocomplete=txt,
-        arg=url,
-        copytext=txt,
-        largetext=txt,
-        quicklookurl=url,
-        valid=True
-    )
-
 def main(wf):
-    use_ip = wf.args[0]
+    use_ip = wf.args[0] == 'useIP'
     args = wf.args[1]
 
-    # IP 기반 위치 정보 사용 여부 설정
-    if use_ip == 'useIP':
-        data_to_cache = {'use': True}
-        wf.cache_data('use_ip', data_to_cache)
-        try:
-            locate = wf.cached_data('location_data', get_ip_location, max_age=CACHE_AGE)
-        except Exception as e:
-            # 위치 정보를 가져오는 데 실패할 경우 기본 좌표 사용
-            # (stdout은 Alfred 피드백 전용이므로 로그로만 남긴다)
-            wf.logger.error(f"위치 정보를 가져오는 데 실패했습니다: {e}")
-            locate = {'lat': DEFAULT_LATITUDE, 'lng': DEFAULT_LONGITUDE}
+    # IP 기반 위치 사용 여부를 저장하고 위치 정보 결정
+    wf.cache_data('use_ip', {'use': use_ip})
+    locate = get_location(wf, use_ip)
+
+    if use_ip:
         phrase = "Search Naver Map(ip) for"
         cache_key = make_cache_key('navmapip', args)
     else:
-        data_to_cache = {'use': False}
-        wf.cache_data('use_ip', data_to_cache)
-        locate = {'lat': DEFAULT_LATITUDE, 'lng': DEFAULT_LONGITUDE}
         phrase = "Search Naver Map for"
         cache_key = make_cache_key('navmap', args)
 
@@ -181,50 +66,35 @@ def main(wf):
     res_json = wf.cached_data(cache_key, wrapper, max_age=CACHE_AGE)
 
     # 기본 검색 항목 추가
-    wf.add_item(
-        title=f"{phrase} '{args}'",
-        autocomplete=args,
-        arg=NAVER_MAP_SEARCH_URL.format(url_quote(args)),
-        quicklookurl=NAVER_MAP_SEARCH_URL.format(url_quote(args)),
-        valid=True
-    )
+    add_map_search_item(wf, args, phrase)
 
     # 결과 카테고리 목록 가져오기
     place_list = res_json.get('place')
     address_list = res_json.get('address')
     bus_list = res_json.get('bus')
 
-    # 결과가 비어있는지 확인
-    is_place_empty = not place_list
-    is_address_empty = not address_list
-    is_bus_empty = not bus_list
-
     # 검색 결과가 없는 경우 메시지 표시
-    if is_place_empty and is_address_empty and is_bus_empty:
-        wf.add_item(
-            title=f"No search results for '{args}'",
-            icon=ICON_NO_RESULTS,
-            valid=False
-        )
+    if not place_list and not address_list and not bus_list:
+        add_no_results_item(wf, args)
 
     # 카테고리별 검색 옵션 추가
-    if isinstance(place_list, list) and len(place_list) > 0:
+    if place_list:
         create_item_for_category(wf, args, 'place', ICON_PLACE, "Search only Place for")
 
-    if isinstance(address_list, list) and len(address_list) > 0:
+    if address_list:
         create_item_for_category(wf, args, 'address', ICON_ADDRESS, "Search only Address for")
 
-    if isinstance(bus_list, list) and len(bus_list) > 0:
+    if bus_list:
         create_item_for_category(wf, args, 'bus', ICON_BUS, "Search only Bus for")
 
     # 검색 결과 항목 처리
     for item in res_json['all']:
         if item.get("address"):
-            process_address_item(wf, item)
+            add_address_item(wf, item["address"])
         elif item.get("place"):
-            process_place_item(wf, item)
+            add_place_item(wf, item["place"])
         elif item.get("bus"):
-            process_bus_item(wf, item)
+            add_bus_item(wf, item["bus"])
 
     wf.send_feedback()
 

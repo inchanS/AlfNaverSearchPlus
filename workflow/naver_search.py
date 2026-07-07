@@ -1,5 +1,5 @@
 """
-Naver Search Workflow for Alfred 2
+Naver Search Workflow for Alfred 5
 Copyright (c) 2021 Jinuk Baek
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,7 +26,7 @@ import sys
 from workflow import web, Workflow
 from search_utils import make_cache_key, url_quote
 
-QUICK_LOOK_URL = 'https://search.naver.com/search.naver?ie=utf8&sm=stp_hty&where=se&query=%s'
+QUICK_LOOK_URL = 'https://search.naver.com/search.naver?ie=utf8&sm=stp_hty&where=se&query={}'
 
 def get_data(word):
     url = 'https://ac.search.naver.com/nx/ac'
@@ -51,10 +51,10 @@ def get_data(word):
 def main(wf):
     args = wf.args[0]
 
-    wf.add_item(title='Search Naver for \'%s\'' % args,
+    wf.add_item(title=f"Search Naver for '{args}'",
                 autocomplete=args,
                 arg=args,
-                quicklookurl=QUICK_LOOK_URL % url_quote(args),
+                quicklookurl=QUICK_LOOK_URL.format(url_quote(args)),
                 valid=True)
 
     def wrapper():
@@ -66,12 +66,12 @@ def main(wf):
         if len(ltxt) > 0:
             txt = ltxt[0]
             wf.add_item(
-                title='Search Naver for \'%s\'' % txt,
+                title=f"Search Naver for '{txt}'",
                 autocomplete=txt,
                 arg=txt,
                 copytext=txt,
                 largetext=txt,
-                quicklookurl=QUICK_LOOK_URL % url_quote(txt),
+                quicklookurl=QUICK_LOOK_URL.format(url_quote(txt)),
                 valid=True)
 
     wf.send_feedback()
