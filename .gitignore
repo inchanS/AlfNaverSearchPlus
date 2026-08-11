@@ -47,3 +47,7 @@ workflow/prefs.plist
 workflow/.DS_Store
 .claude
 workflow/error.log
+
+# Go build artifacts (the universal binary is produced by build.sh / CI)
+/dist/
+/workflow/naversearch

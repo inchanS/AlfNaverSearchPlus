@@ -1,5 +1,5 @@
 # AlfNaverSearchPlus : Naver Search Workflow for Alfred  
-![Test](../../actions/workflows/test-naver-ac.yml/badge.svg) ![Release](../../actions/workflows/release.yml/badge.svg)  
+![Test](../../actions/workflows/test-go.yml/badge.svg) ![Release](../../actions/workflows/release.yml/badge.svg)  
 ![GitHub stars](https://img.shields.io/github/stars/inchans/Alfnaversearchplus?style=flat&logo=apachespark)
 ![GitHub all releases](https://img.shields.io/github/downloads/inchanS/Alfnaversearchplus/total?logo=github) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/inchanS/Alfnaversearchplus?logo=rocket)  ![GitHub](https://img.shields.io/github/license/inchanS/Alfnaversearchplus)
 
@@ -20,6 +20,9 @@ Alfred에서 네이버 검색, 네이버 쇼핑, 네이버 지식백과, 네이�
   - 사용자 위치 설정 및 장소, 주소, 버스 전용보기 추가 
 - 네이버 **주식 검색 추가** (updated v0.0.4)
 - **자동 업데이트 기능 추가** (updated v0.3.1)
+- **Go 단일 바이너리로 전면 재작성** (updated v1.1.0)
+  - Python 및 alfred-pyworkflow 의존 제거, 별도 런타임 설치 불필요
+  - Apple Silicon / Intel 유니버설 바이너리, 검색 기동 속도 향상
 <br>  
 
 Preview
@@ -44,27 +47,23 @@ Configure Workflow...에서 사용자의 위치를 정확하게 입력후 `nm...
 Install workflow
 --------------
 
-- [releases](../../releases/latest) 페이지의 `NaverSearch.alfredworkflow`를 다운로드 받아서 실행한다.
+- [releases](../../releases/latest) 페이지의 `NaverSearchPlus.alfredworkflow`를 다운로드 받아서 실행한다.
 
-- MacOS 12.3 이상의 경우
-  - python3 설치
-    - `brew install python`
-    - `xcode-select --install`
+- **별도의 런타임 설치가 필요 없습니다.** (Python 불필요)
+  - 워크플로우에 포함된 유니버설 바이너리(Apple Silicon / Intel)로 동작합니다.
+  - 다운로드 격리(Gatekeeper)는 워크플로우 내부의 `run` 스크립트가 최초 실행 시 자동으로 해제하므로, 별도 조치 없이 바로 사용할 수 있습니다.
 
 - Alfred 4.0 이상 지원
-- Python 2 사용 불가
 
 Auto Update
 --------------
 
 v0.3.1부터 자동 업데이트를 지원합니다.
 
-- 워크플로우 사용 시 하루 1회 백그라운드에서 새 릴리스를 확인하며, 검색 속도에는 영향이 없습니다.
+- 워크플로우 사용 시 **주 1회** 백그라운드에서 새 릴리스를 확인하며, 검색 속도에는 영향이 없습니다.
 - 새 버전이 있으면 검색 결과 맨 위에 `New version of NaverSearchPlus is available!` 항목이 표시되고,
   선택하면 새 버전을 내려받아 설치합니다.
-- 수동 명령어 (검색 keyword 뒤에 입력):
-  - `workflow:update` : 즉시 업데이트 확인 및 설치 (예: `n workflow:update`)
-  - `workflow:noautoupdate` / `workflow:autoupdate` : 자동 확인 끄기 / 켜기
+- 수동 명령어: 검색 keyword 뒤에 `workflow:update`를 입력하면 즉시 최신 버전을 내려받아 설치합니다. (예: `na workflow:update`)
 
 
 General Usage
@@ -139,11 +138,26 @@ Dictionary Usage
   - 미입력시 기본값은 5초   
 
 
-Externel Module
+Build from source
 --------------
- This workflow used alfred-workflow more than v0.0.2. Alfred-workflow can find there(https://github.com/deanishe/alfred-workflow).
- This workflow used alp(A Python Module for Alfred Workflows) module at v0.0.1. It created by Daniel Shannon. 
- Certifi : using ssl with default urllib
+`v1.1.0`부터 워크플로우 로직은 순수 Go로 작성되어 있으며 외부 의존성이 없습니다.
+
+```sh
+# 유니버설 바이너리 빌드 + ad-hoc 서명 (workflow/naversearch 생성)
+sh ./build.sh
+
+# .alfredworkflow 패키지 생성
+sh ./make.sh
+
+# 테스트
+go test ./...
+```
+
+- `cmd/naversearch` : 진입점 (서브커맨드 디스패치)
+- `internal/` : `alfred`(피드백 JSON), `httpx`(HTTP), `cache`(캐시), `update`(자동 업데이트), `handlers`(각 검색 기능)
+- `workflow/run` : 다운로드 격리 해제 후 바이너리를 실행하는 Script Filter 진입 스크립트
+
+이전 버전(~v1.0.x)은 Python 및 [alfred-pyworkflow](https://github.com/harrtho/alfred-pyworkflow)에 의존했으나, Intel 기반 헬퍼 및 런타임 의존성 문제로 Go로 전면 대체되었습니다.
 
 LICENSE
 --------------
