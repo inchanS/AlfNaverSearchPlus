@@ -20,9 +20,10 @@ Alfred에서 네이버 검색, 네이버 쇼핑, 네이버 지식백과, 네이�
   - 사용자 위치 설정 및 장소, 주소, 버스 전용보기 추가 
 - 네이버 **주식 검색 추가** (updated v0.0.4)
 - **자동 업데이트 기능 추가** (updated v0.3.1)
-- **Go 단일 바이너리로 전면 재작성** (updated v1.1.0)
-  - Python 및 alfred-pyworkflow 의존 제거, 별도 런타임 설치 불필요
-  - Apple Silicon / Intel 유니버설 바이너리, 검색 기동 속도 향상
+- **Go 단일 바이너리로 전면 재작성** (updated v2.0.0)
+  - **`v1.x.x`까지는 Python이 필요했지만, `v2.0.0`부터는 Python이 필요 없습니다.**
+  - Python 및 alfred-pyworkflow 의존을 완전히 제거하여 별도 런타임 설치가 불필요
+  - Apple Silicon / Intel 유니버설 바이너리, 검색 기동 속도 대폭 향상 (아래 [Performance](#performance) 참고)
 <br>  
 
 Preview
@@ -49,9 +50,10 @@ Install workflow
 
 - [releases](../../releases/latest) 페이지의 `NaverSearchPlus.alfredworkflow`를 다운로드 받아서 실행한다.
 
-- **별도의 런타임 설치가 필요 없습니다.** (Python 불필요)
+- **`v2.0.0`부터 별도의 런타임 설치가 필요 없습니다.** (Python 불필요)
   - 워크플로우에 포함된 유니버설 바이너리(Apple Silicon / Intel)로 동작합니다.
   - 다운로드 격리(Gatekeeper)는 워크플로우 내부의 `run` 스크립트가 최초 실행 시 자동으로 해제하므로, 별도 조치 없이 바로 사용할 수 있습니다.
+  - 참고: `v1.x.x` 이하 버전은 Python 3 설치가 필요했습니다. (`brew install python`, `xcode-select --install`)
 
 - Alfred 4.0 이상 지원
 
@@ -64,6 +66,26 @@ v0.3.1부터 자동 업데이트를 지원합니다.
 - 새 버전이 있으면 검색 결과 맨 위에 `New version of NaverSearchPlus is available!` 항목이 표시되고,
   선택하면 새 버전을 내려받아 설치합니다.
 - 수동 명령어: 검색 keyword 뒤에 `workflow:update`를 입력하면 즉시 최신 버전을 내려받아 설치합니다. (예: `na workflow:update`)
+
+
+Performance
+--------------
+
+`v2.0.0`에서 Python 기반 구현을 Go 단일 바이너리로 전면 재작성했습니다.
+
+Alfred의 Script Filter는 **키 입력 한 번마다 프로세스를 새로 실행**하므로, 매 실행의 콜드 스타트 시간이 체감 반응 속도를 좌우합니다. 동일 머신에서 20회씩 측정한 결과는 다음과 같습니다.
+
+| 구현 | 콜드 스타트(평균) | 비고 |
+|---|---|---|
+| **Go (`v2.0.0`, 전체 실행)** | **약 8 ms** | 프로세스 생성 + 실행 + JSON 출력 전체 |
+| Python 인터프리터 기동만 | 약 29 ms | 스크립트·라이브러리 로드 이전 단계 |
+| Python + 표준 라이브러리 로드 근사 | 약 70 ms | 기존 구현이 로드하던 비용의 하한선 |
+
+- Go 버전의 **전체 실행(~8ms)** 이 Python 인터프리터가 시작만 하는 시간(~29ms)보다도 **약 3.6배 빠릅니다.**
+- 실제 `v1.x.x`는 여기에 `alfred-pyworkflow` 라이브러리 로드까지 더해져 키 입력당 체감 지연이 더 컸으며, Go 전환으로 **타이핑 시 결과가 나타나는 지연이 눈에 띄게 감소**했습니다.
+- 그 외 이점: python3 런타임 의존 제거(Command Line Tools 없이도 동작), Apple Silicon / Intel 유니버설 지원.
+
+> 측정값은 실행 환경에 따라 달라질 수 있는 참고치입니다.
 
 
 General Usage
@@ -140,7 +162,7 @@ Dictionary Usage
 
 Build from source
 --------------
-`v1.1.0`부터 워크플로우 로직은 순수 Go로 작성되어 있으며 외부 의존성이 없습니다.
+`v2.0.0`부터 워크플로우 로직은 순수 Go로 작성되어 있습니다. (빌드 시 `golang.org/x/text`만 사용하며 바이너리에 정적 링크됩니다.)
 
 ```sh
 # 유니버설 바이너리 빌드 + ad-hoc 서명 (workflow/naversearch 생성)
@@ -157,7 +179,7 @@ go test ./...
 - `internal/` : `alfred`(피드백 JSON), `httpx`(HTTP), `cache`(캐시), `update`(자동 업데이트), `handlers`(각 검색 기능)
 - `workflow/run` : 다운로드 격리 해제 후 바이너리를 실행하는 Script Filter 진입 스크립트
 
-이전 버전(~v1.0.x)은 Python 및 [alfred-pyworkflow](https://github.com/harrtho/alfred-pyworkflow)에 의존했으나, Intel 기반 헬퍼 및 런타임 의존성 문제로 Go로 전면 대체되었습니다.
+`v1.x.x` 이하 버전은 Python 및 [alfred-pyworkflow](https://github.com/harrtho/alfred-pyworkflow)에 의존했으나, Intel 기반 헬퍼 및 런타임 의존성 문제로 `v2.0.0`에서 Go로 전면 대체되었습니다.
 
 LICENSE
 --------------
