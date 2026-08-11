@@ -11,6 +11,8 @@ package main
 import (
 	"os"
 
+	"golang.org/x/text/unicode/norm"
+
 	"github.com/inchanS/AlfNaverSearchPlus/internal/alfred"
 	"github.com/inchanS/AlfNaverSearchPlus/internal/handlers"
 	"github.com/inchanS/AlfNaverSearchPlus/internal/update"
@@ -21,6 +23,9 @@ func main() {
 	if len(args) == 0 {
 		return
 	}
+
+	normalizeArgs(args)
+
 	cmd := args[0]
 
 	// Detached background worker: refresh update info, no Alfred output.
@@ -37,4 +42,16 @@ func main() {
 	}
 
 	handlers.Dispatch(cmd, args[1:])
+}
+
+// normalizeArgs rewrites each argument to Unicode NFC in place. macOS delivers
+// argv in NFD (decomposed) form, but Naver's APIs expect NFC (composed) — e.g.
+// the Hangul "스타" must be composed syllables, not separate jamo. This
+// reproduces what the old Python library did and also fixes Japanese dakuten,
+// German umlauts, etc. ASCII arguments (handler names, "useIP", the update
+// magic) are unaffected.
+func normalizeArgs(args []string) {
+	for i, a := range args {
+		args[i] = norm.NFC.String(a)
+	}
 }
