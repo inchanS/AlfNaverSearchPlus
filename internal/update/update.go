@@ -66,7 +66,7 @@ func writeInfo(inf info) {
 // MaybeShow adds the update notice (when a newer version is known) and triggers
 // a weekly background check.
 func MaybeShow(fb *alfred.Feedback) {
-	if inf, ok := readInfo(); ok && inf.Available {
+	if inf, ok := readInfo(); ok && shouldNotify(inf, currentVersion()) {
 		fb.Add(alfred.ItemOpts{
 			Title:        "New version of NaverSearchPlus is available!",
 			Subtitle:     "Press Enter to install the update",
@@ -75,6 +75,17 @@ func MaybeShow(fb *alfred.Feedback) {
 		})
 	}
 	maybeBackgroundCheck()
+}
+
+// shouldNotify reports whether a cached release should surface an update notice
+// for the currently installed version. It recomputes from inf.Version against
+// current rather than trusting the stored Available flag: the cache directory
+// is keyed by bundleid and survives workflow updates, so it can hold a stale
+// Available:true written while an older version was installed. Recomputing here
+// makes the notice clear immediately after the user updates, without waiting
+// for the next (weekly) background check to refresh the cache.
+func shouldNotify(inf info, current string) bool {
+	return inf.Version != "" && isNewer(inf.Version, current)
 }
 
 // maybeBackgroundCheck spawns a detached "_update-check" process at most once
