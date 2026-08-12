@@ -35,6 +35,11 @@ const (
 
 	infoKey  = "__update_info"
 	stampKey = "__update_check"
+
+	// cacheMaxAge bounds how long stale query-cache files are kept. The detached
+	// background worker prunes anything older on each run, so the cache directory
+	// holds at most roughly this window of distinct queries.
+	cacheMaxAge = 24 * time.Hour
 )
 
 type info struct {
@@ -110,9 +115,13 @@ func maybeBackgroundCheck() {
 	// Intentionally not waited on; the process outlives this one.
 }
 
-// RunCheck queries the latest release and records the result. Invoked by the
-// detached background process.
+// RunCheck queries the latest release and records the result. It also prunes the
+// stale query cache, since this detached background process is the natural place
+// for housekeeping that must never block the foreground autocomplete path.
+// Invoked by the "_update-check" subcommand.
 func RunCheck() {
+	cache.Cleanup(cacheMaxAge)
+
 	inf, err := fetchLatest()
 	if err != nil {
 		return

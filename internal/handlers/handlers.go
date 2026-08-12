@@ -52,13 +52,15 @@ func Dispatch(cmd string, args []string) {
 }
 
 // run wraps a handler body with the update notice, panic/error recovery, and
-// final feedback emission. On error it shows a single error row, mirroring the
-// old wf.run behaviour.
+// final feedback emission. On error it appends an error row while KEEPING any
+// items already added — most handlers add a "Search Naver for 'word'" fallback
+// row before the network fetch, so a transient/offline failure must not wipe it:
+// the user can still press Enter to run the web search. When nothing was added,
+// the error row is all that remains, so the user still gets feedback.
 func run(body func(fb *alfred.Feedback) error) {
 	fb := alfred.New()
 	update.MaybeShow(fb)
 	if err := safe(fb, body); err != nil {
-		fb.Reset()
 		fb.Add(alfred.ItemOpts{
 			Title:    "Error",
 			Subtitle: err.Error(),

@@ -47,6 +47,48 @@ func TestReadWriteFreshness(t *testing.T) {
 	}
 }
 
+func TestCleanup(t *testing.T) {
+	t.Setenv("alfred_workflow_cache", t.TempDir())
+
+	// Seed four entries: a stale query file, a fresh query file, a stale internal
+	// bookkeeping file ("__" prefix), and a stale non-JSON file.
+	for _, k := range []string{"nav_stale", "nav_fresh", "__update_info"} {
+		if err := Write(k, []byte("{}")); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := os.WriteFile(path("nav_stale")[:len(path("nav_stale"))-len(".json")]+".txt", []byte("x"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	old := time.Now().Add(-48 * time.Hour)
+	for _, k := range []string{"nav_stale", "__update_info"} {
+		if err := os.Chtimes(path(k), old, old); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	Cleanup(24 * time.Hour)
+
+	// Stale query file pruned.
+	if _, ok := Read("nav_stale", 0); ok {
+		t.Error("stale query file should be removed")
+	}
+	// Fresh query file kept.
+	if _, ok := Read("nav_fresh", 0); !ok {
+		t.Error("fresh query file should be kept")
+	}
+	// Internal "__" file preserved even when stale.
+	if _, ok := Read("__update_info", 0); !ok {
+		t.Error("__-prefixed bookkeeping file should be preserved")
+	}
+	// Non-.json file untouched.
+	txt := path("nav_stale")[:len(path("nav_stale"))-len(".json")] + ".txt"
+	if _, err := os.Stat(txt); err != nil {
+		t.Error("non-.json file should be untouched")
+	}
+}
+
 func TestCachedUsesLoaderOnce(t *testing.T) {
 	t.Setenv("alfred_workflow_cache", t.TempDir())
 

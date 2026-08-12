@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -55,6 +56,34 @@ func Write(key string, data []byte) error {
 		return err
 	}
 	return os.WriteFile(path(key), data, 0o644)
+}
+
+// Cleanup deletes stale query-cache files whose mtime is older than maxAge,
+// bounding the cache directory's growth (each distinct search leaves a small
+// JSON file that is otherwise never removed). Internal bookkeeping entries whose
+// names start with "__" (e.g. the update info/stamp) are always preserved, so a
+// stale-but-current update notice survives pruning. Errors are ignored: cleanup
+// is best-effort housekeeping run from the background worker, never on the
+// foreground autocomplete path.
+func Cleanup(maxAge time.Duration) {
+	entries, err := os.ReadDir(dir())
+	if err != nil {
+		return
+	}
+	cutoff := time.Now().Add(-maxAge)
+	for _, e := range entries {
+		name := e.Name()
+		if e.IsDir() || strings.HasPrefix(name, "__") || !strings.HasSuffix(name, ".json") {
+			continue
+		}
+		info, err := e.Info()
+		if err != nil {
+			continue
+		}
+		if info.ModTime().Before(cutoff) {
+			_ = os.Remove(filepath.Join(dir(), name))
+		}
+	}
 }
 
 // Cached returns a fresh cached entry for key, or invokes loader, stores its

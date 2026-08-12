@@ -76,11 +76,6 @@ func (f *Feedback) Add(o ItemOpts) *Item {
 	return it
 }
 
-// Reset drops all accumulated items (used to show only an error row).
-func (f *Feedback) Reset() {
-	f.Items = f.Items[:0]
-}
-
 // SetVar attaches an Alfred workflow variable to the item. The value type is
 // preserved in JSON (string, bool, …) to match the previous library output that
 // info.plist conditionals were written against.
