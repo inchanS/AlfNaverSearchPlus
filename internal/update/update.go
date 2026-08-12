@@ -3,9 +3,10 @@
 //
 // Flow:
 //   - MaybeShow: if a newer release is already known, add a notice item; and at
-//     most once per checkFrequency, spawn a detached background check.
-//   - RunCheck (subcommand "_update-check"): query the latest release, record
-//     whether it is newer and the .alfredworkflow asset URL.
+//     most once per workerFrequency, spawn the detached background worker.
+//   - RunCheck (subcommand "_update-check"): the background worker — prune the
+//     stale query cache every run, and at most once per checkFrequency query the
+//     latest release and record whether it is newer plus its asset URL.
 //   - Install (magic query "workflow:update"): download that asset and open it
 //     so Alfred installs the new version.
 package update
@@ -30,15 +31,23 @@ const (
 	// previous library behaviour so the UX is unchanged.
 	Magic = "workflow:update"
 
-	githubSlug     = "inchanS/AlfNaverSearchPlus"
-	checkFrequency = 7 * 24 * time.Hour // weekly
+	githubSlug = "inchanS/AlfNaverSearchPlus"
 
-	infoKey  = "__update_info"
-	stampKey = "__update_check"
+	// checkFrequency gates the GitHub release lookup (rarely changes), while
+	// workerFrequency gates how often the background worker runs at all. The
+	// worker also prunes the query cache, which grows continuously, so it runs
+	// far more often than the release check: each spawn cleans up, but only
+	// fetches a new release once checkFrequency has elapsed.
+	checkFrequency  = 7 * 24 * time.Hour // GitHub release lookup: weekly
+	workerFrequency = 24 * time.Hour     // background worker (cleanup + maybe check): daily
 
-	// cacheMaxAge bounds how long stale query-cache files are kept. The detached
-	// background worker prunes anything older on each run, so the cache directory
-	// holds at most roughly this window of distinct queries.
+	infoKey   = "__update_info"
+	stampKey  = "__update_check" // weekly release-lookup stamp
+	workerKey = "__worker_run"   // daily background-worker stamp
+
+	// cacheMaxAge bounds how long stale query-cache files are kept. The worker
+	// prunes anything older on each (daily) run, so the cache directory holds at
+	// most roughly a day or two of distinct queries.
 	cacheMaxAge = 24 * time.Hour
 )
 
@@ -69,7 +78,7 @@ func writeInfo(inf info) {
 }
 
 // MaybeShow adds the update notice (when a newer version is known) and triggers
-// a weekly background check.
+// the daily background worker (cache cleanup plus a weekly release check).
 func MaybeShow(fb *alfred.Feedback) {
 	if inf, ok := readInfo(); ok && shouldNotify(inf, currentVersion()) {
 		fb.Add(alfred.ItemOpts{
@@ -79,7 +88,7 @@ func MaybeShow(fb *alfred.Feedback) {
 			Valid:        false,
 		})
 	}
-	maybeBackgroundCheck()
+	maybeSpawnWorker()
 }
 
 // shouldNotify reports whether a cached release should surface an update notice
@@ -93,13 +102,14 @@ func shouldNotify(inf info, current string) bool {
 	return inf.Version != "" && isNewer(inf.Version, current)
 }
 
-// maybeBackgroundCheck spawns a detached "_update-check" process at most once
-// per checkFrequency, tracked by the mtime of a stamp file.
-func maybeBackgroundCheck() {
-	if _, fresh := cache.Read(stampKey, checkFrequency); fresh {
+// maybeSpawnWorker spawns a detached "_update-check" process at most once per
+// workerFrequency, tracked by the mtime of a stamp file. The worker handles both
+// cache cleanup and the (less frequent) release lookup.
+func maybeSpawnWorker() {
+	if _, fresh := cache.Read(workerKey, workerFrequency); fresh {
 		return
 	}
-	_ = cache.Write(stampKey, []byte(time.Now().Format(time.RFC3339)))
+	_ = cache.Write(workerKey, []byte(time.Now().Format(time.RFC3339)))
 
 	exe, err := os.Executable()
 	if err != nil {
@@ -115,12 +125,17 @@ func maybeBackgroundCheck() {
 	// Intentionally not waited on; the process outlives this one.
 }
 
-// RunCheck queries the latest release and records the result. It also prunes the
-// stale query cache, since this detached background process is the natural place
-// for housekeeping that must never block the foreground autocomplete path.
-// Invoked by the "_update-check" subcommand.
+// RunCheck is the detached background worker (subcommand "_update-check"). It
+// always prunes the stale query cache — housekeeping kept off the foreground
+// autocomplete path — and additionally refreshes the release info at most once
+// per checkFrequency, so the daily worker does not hit the GitHub API every run.
 func RunCheck() {
 	cache.Cleanup(cacheMaxAge)
+
+	if _, fresh := cache.Read(stampKey, checkFrequency); fresh {
+		return
+	}
+	_ = cache.Write(stampKey, []byte(time.Now().Format(time.RFC3339)))
 
 	inf, err := fetchLatest()
 	if err != nil {
