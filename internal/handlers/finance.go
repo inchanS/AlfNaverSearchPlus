@@ -1,6 +1,9 @@
 package handlers
 
 import (
+	"net/url"
+	"strings"
+
 	"github.com/inchanS/AlfNaverSearchPlus/internal/alfred"
 	"github.com/inchanS/AlfNaverSearchPlus/internal/cache"
 	"github.com/inchanS/AlfNaverSearchPlus/internal/env"
@@ -10,8 +13,6 @@ import (
 
 // finance: Naver Finance ticker autocomplete.
 func finance(fb *alfred.Feedback, word string) error {
-	const itemURL = "https://finance.naver.com/item/main.naver?code=%s"
-
 	body, err := cache.Cached(cache.Key("navfinance", word), env.CacheAge(), func() ([]byte, error) {
 		return httpx.Get("https://ac.stock.naver.com/ac", map[string]string{
 			"q": word, "target": "index,stock,marketindicator",
@@ -46,18 +47,44 @@ func finance(fb *alfred.Feedback, word string) error {
 		nationName := jsonx.AsStr(jsonx.Get(el, "nationName"))
 
 		subtitle := name + ", " + code + ", " + typeCode + ", " + nationName
-		url := quick(itemURL, code)
+		itemURL := financeItemURL(jsonx.Str(jsonx.Get(el, "url")))
 
 		fb.Add(alfred.ItemOpts{
 			Title:        "Search Naver Finance for '" + name + "'",
 			Subtitle:     subtitle,
 			Autocomplete: name,
-			Arg:          url,
+			Arg:          itemURL,
 			Copy:         subtitle,
 			LargeType:    subtitle,
-			QuicklookURL: url,
-			Valid:        true,
+			QuicklookURL: itemURL,
+			Valid:        itemURL != "",
 		})
 	}
 	return nil
+}
+
+// financeItemURL uses the API's route, which includes the full exchange-specific
+// identifier (e.g. NVDA.O rather than NVDA). Only stock detail routes switch to
+// the price tab; indices and market indicators keep their original routes.
+// Missing or malformed routes leave the result visible but not actionable.
+func financeItemURL(route string) string {
+	u, err := url.Parse(route)
+	if err != nil || u.IsAbs() || u.Host != "" || u.User != nil ||
+		!strings.HasPrefix(u.Path, "/") || strings.HasPrefix(u.Path, "//") || u.Path == "/" {
+		return ""
+	}
+
+	parts := strings.Split(strings.TrimPrefix(u.Path, "/"), "/")
+	if len(parts) >= 2 && (parts[0] == "domestic" || parts[0] == "worldstock") && parts[1] == "stock" {
+		if len(parts) != 4 || parts[2] == "" || parts[3] == "" {
+			return ""
+		}
+		if parts[3] == "total" {
+			u.Path = strings.TrimSuffix(u.Path, "/total") + "/price"
+			u.RawPath = ""
+		}
+	}
+	u.Scheme = "https"
+	u.Host = "stock.naver.com"
+	return u.String()
 }
