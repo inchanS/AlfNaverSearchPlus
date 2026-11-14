@@ -151,12 +151,13 @@ func mapSearch(fb *alfred.Feedback, mode, word string) error {
 		_ = cache.Write("use_ip", data)
 	}
 
-	lat, lng := getLocation(useIP)
 	phrase, keyPrefix := "Search Naver Map for", "navmap"
 	if useIP {
 		phrase, keyPrefix = "Search Naver Map(ip) for", "navmapip"
 	}
+	addMapSearch(fb, word, phrase)
 
+	lat, lng := getLocation(useIP)
 	body, err := cache.Cached(cache.Key(keyPrefix, word), env.CacheAge(), func() ([]byte, error) {
 		return getData(lat, lng, word)
 	})
@@ -167,8 +168,6 @@ func mapSearch(fb *alfred.Feedback, mode, word string) error {
 	if err != nil {
 		return err
 	}
-
-	addMapSearch(fb, word, phrase)
 
 	place := jsonx.Arr(jsonx.Get(root, "place"))
 	address := jsonx.Arr(jsonx.Get(root, "address"))
@@ -237,6 +236,17 @@ func mapHub(fb *alfred.Feedback, word string) error {
 		}
 	}
 
+	// Keep navigation available even when fetching or decoding results fails.
+	addMapSearch(fb, word, "Search Naver Map for")
+	ret := fb.Add(alfred.ItemOpts{
+		Title:        "Return... search naver map for '" + word + "'",
+		Autocomplete: word,
+		Arg:          word,
+		Valid:        true,
+	})
+	ret.SetVar("useIP", useIP)
+	ret.SetVar("return", true)
+
 	name := hubCacheName[mapType]
 	if name == "" {
 		name = "nav" + mapType
@@ -261,26 +271,15 @@ func mapHub(fb *alfred.Feedback, word string) error {
 		return err
 	}
 
-	var cat any
-	if body != nil {
-		cat, _ = jsonx.Decode(body)
+	cat, err := jsonx.Decode(body)
+	if err != nil {
+		return err
 	}
 	results := jsonx.Arr(cat)
 
 	if len(results) == 0 {
 		addNoResults(fb, word)
 	}
-
-	addMapSearch(fb, word, "Search Naver Map for")
-
-	ret := fb.Add(alfred.ItemOpts{
-		Title:        "Return... search naver map for '" + word + "'",
-		Autocomplete: word,
-		Arg:          word,
-		Valid:        true,
-	})
-	ret.SetVar("useIP", useIP)
-	ret.SetVar("return", true)
 
 	for _, el := range results {
 		o := jsonx.Obj(el)

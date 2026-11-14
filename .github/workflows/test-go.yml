@@ -13,6 +13,9 @@ on:
       - "**.go"
       - "go.mod"
       - "go.sum"
+      - "*.sh"
+      - "workflow/info.plist"
+      - ".github/workflows/test-go.yml"
 
 jobs:
   test:

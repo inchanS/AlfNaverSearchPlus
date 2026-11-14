@@ -797,9 +797,9 @@
 				<key>runningsubtext</key>
 				<string>Running</string>
 				<key>script</key>
-				<string>bash ./run search "{query}" </string>
+				<string>bash ./run search "$1" </string>
 				<key>scriptargtype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
@@ -960,9 +960,9 @@
 				<key>runningsubtext</key>
 				<string>Running</string>
 				<key>script</key>
-				<string>bash ./run finance "{query}" </string>
+				<string>bash ./run finance "$1" </string>
 				<key>scriptargtype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
@@ -1314,9 +1314,9 @@ echo -n $query</string>
 				<key>runningsubtext</key>
 				<string>Running</string>
 				<key>script</key>
-				<string>bash ./run map doNotUseIP "{query}"</string>
+				<string>bash ./run map doNotUseIP "$1"</string>
 				<key>scriptargtype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
@@ -1418,9 +1418,9 @@ echo -n $query</string>
 				<key>runningsubtext</key>
 				<string>Running</string>
 				<key>script</key>
-				<string>bash ./run map useIP "{query}" </string>
+				<string>bash ./run map useIP "$1" </string>
 				<key>scriptargtype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>

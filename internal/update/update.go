@@ -135,13 +135,14 @@ func RunCheck() {
 	if _, fresh := cache.Read(stampKey, checkFrequency); fresh {
 		return
 	}
-	_ = cache.Write(stampKey, []byte(time.Now().Format(time.RFC3339)))
-
 	inf, err := fetchLatest()
 	if err != nil {
 		return
 	}
 	writeInfo(inf)
+	// Failed lookups are retried by the next daily worker, not suppressed for
+	// an entire week as if a release had been successfully checked.
+	_ = cache.Write(stampKey, []byte(time.Now().Format(time.RFC3339)))
 }
 
 // fetchLatest asks the GitHub API for the latest release and locates the
@@ -189,7 +190,9 @@ func fetchLatest() (info, error) {
 // rather than trusting the cached info: the background check runs only weekly,
 // so the cache can point at an older release than what is currently published
 // (and installing it would be a downgrade). The cache is used only as an
-// offline fallback when the fresh fetch fails.
+// offline fallback when the fresh fetch fails. Either source must identify a
+// newer release before anything is downloaded, so stale caches cannot downgrade
+// an installation that has already been updated.
 func Install(fb *alfred.Feedback) {
 	inf, err := fetchLatest()
 	if err != nil {
@@ -199,7 +202,7 @@ func Install(fb *alfred.Feedback) {
 	} else {
 		writeInfo(inf)
 	}
-	if inf.URL == "" {
+	if inf.URL == "" || !shouldNotify(inf, currentVersion()) {
 		fb.Add(alfred.ItemOpts{Title: "No update available", Valid: false})
 		fb.Send()
 		return

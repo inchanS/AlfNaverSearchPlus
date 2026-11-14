@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"html"
 	"time"
 
 	"github.com/inchanS/AlfNaverSearchPlus/internal/alfred"
@@ -47,7 +46,7 @@ func dictMulti(fb *alfred.Feedback, lang, word string) error {
 			if txt == "" {
 				continue
 			}
-			rtxt := html.EscapeString(jsonx.Str(jsonx.At(jsonx.At(ltxt, 3), 0)))
+			rtxt := jsonx.Str(jsonx.At(jsonx.At(ltxt, 3), 0))
 			it := fb.Add(alfred.ItemOpts{
 				Title:        txt + "     " + rtxt,
 				Subtitle:     label + " '" + txt + "'",
@@ -194,8 +193,8 @@ func hanja(fb *alfred.Feedback, word string) error {
 			if txt == "" {
 				continue
 			}
-			rtxt := html.EscapeString(jsonx.Str(jsonx.At(jsonx.At(ltxt, 1), 0)))
-			r2txt := html.EscapeString(jsonx.Str(jsonx.At(jsonx.At(ltxt, 3), 0)))
+			rtxt := jsonx.Str(jsonx.At(jsonx.At(ltxt, 1), 0))
+			r2txt := jsonx.Str(jsonx.At(jsonx.At(ltxt, 3), 0))
 			fb.Add(alfred.ItemOpts{
 				Title:        txt + "[" + rtxt + "] " + r2txt,
 				Subtitle:     "Search Naver Hanja for '" + txt + "'",
@@ -242,7 +241,7 @@ func enendic(fb *alfred.Feedback, word string) error {
 		if txt == "" {
 			continue
 		}
-		rtxt := jsonx.Str(jsonx.At(jsonx.At(ltxt, 1), 0))
+		rtxt := jsonx.Str(jsonx.At(jsonx.At(ltxt, 3), 0))
 		it := fb.Add(alfred.ItemOpts{
 			Title:        txt + "     " + rtxt,
 			Subtitle:     "Search Naver Endic for '" + txt + "'",
