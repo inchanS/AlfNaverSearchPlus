@@ -7,6 +7,8 @@ package jsonx
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"io"
 )
 
 // Decode parses JSON bytes into a generic value, keeping numbers as
@@ -18,7 +20,23 @@ func Decode(data []byte) (any, error) {
 	if err := dec.Decode(&v); err != nil {
 		return nil, err
 	}
+	if err := dec.Decode(new(any)); err != io.EOF {
+		return nil, fmt.Errorf("expected a single JSON value")
+	}
 	return v, nil
+}
+
+// DecodeObject rejects null, arrays and scalars where an API object is expected.
+func DecodeObject(data []byte) (map[string]any, error) {
+	v, err := Decode(data)
+	if err != nil {
+		return nil, err
+	}
+	m, ok := v.(map[string]any)
+	if !ok {
+		return nil, fmt.Errorf("expected a JSON object")
+	}
+	return m, nil
 }
 
 // Arr returns v as a slice, or nil if v is not an array.

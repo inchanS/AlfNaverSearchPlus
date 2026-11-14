@@ -9,22 +9,23 @@ import (
 )
 
 func TestDictionaryDefinitionsAndCopy(t *testing.T) {
+	r := testRequest(t, nil)
 	tests := []struct {
 		name, prefix, word, reading, meaning, title string
 		run                                         func(*alfred.Feedback, string) error
 	}{
 		{
 			"English definition", "en1", "love", "", "an intense feeling of deep affection",
-			"love     an intense feeling of deep affection", enendic,
+			"love     an intense feeling of deep affection", r.enendic,
 		},
 		{
 			"French punctuation", "frko", "오늘", "", `aujourd'hui & "demain" <test>`,
 			`오늘     aujourd'hui & "demain" <test>`,
-			func(fb *alfred.Feedback, word string) error { return dictMulti(fb, "frko", word) },
+			func(fb *alfred.Feedback, word string) error { return r.dictMulti(fb, "frko", word) },
 		},
 		{
 			"Hanja punctuation", "hanja", "愛", `"애"`, `사랑 & '애정'`,
-			`愛["애"] 사랑 & '애정'`, hanja,
+			`愛["애"] 사랑 & '애정'`, r.hanja,
 		},
 	}
 	for _, tt := range tests {

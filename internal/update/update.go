@@ -12,10 +12,11 @@
 package update
 
 import (
+	"context"
 	"encoding/json"
+	"net/http"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"syscall"
@@ -56,6 +57,15 @@ type info struct {
 	Version   string `json:"version"`
 	URL       string `json:"url"`
 }
+
+const (
+	releaseTimeout  = 15 * time.Second
+	downloadTimeout = 2 * time.Minute
+)
+
+type updater struct{ http *httpx.Client }
+
+func newUpdater() *updater { return &updater{http: httpx.New(&http.Client{})} }
 
 func currentVersion() string { return os.Getenv("alfred_workflow_version") }
 
@@ -129,13 +139,15 @@ func maybeSpawnWorker() {
 // always prunes the stale query cache — housekeeping kept off the foreground
 // autocomplete path — and additionally refreshes the release info at most once
 // per checkFrequency, so the daily worker does not hit the GitHub API every run.
-func RunCheck() {
+func RunCheck() { newUpdater().runCheck() }
+
+func (u *updater) runCheck() {
 	cache.Cleanup(cacheMaxAge)
 
 	if _, fresh := cache.Read(stampKey, checkFrequency); fresh {
 		return
 	}
-	inf, err := fetchLatest()
+	inf, err := u.fetchLatest()
 	if err != nil {
 		return
 	}
@@ -147,8 +159,10 @@ func RunCheck() {
 
 // fetchLatest asks the GitHub API for the latest release and locates the
 // .alfredworkflow asset.
-func fetchLatest() (info, error) {
-	body, err := httpx.Get(
+func (u *updater) fetchLatest() (info, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), releaseTimeout)
+	defer cancel()
+	body, err := u.http.Get(ctx,
 		"https://api.github.com/repos/"+githubSlug+"/releases/latest",
 		nil,
 		map[string]string{"Accept": "application/vnd.github+json"},
@@ -193,8 +207,10 @@ func fetchLatest() (info, error) {
 // offline fallback when the fresh fetch fails. Either source must identify a
 // newer release before anything is downloaded, so stale caches cannot downgrade
 // an installation that has already been updated.
-func Install(fb *alfred.Feedback) {
-	inf, err := fetchLatest()
+func Install(fb *alfred.Feedback) { newUpdater().install(fb) }
+
+func (u *updater) install(fb *alfred.Feedback) {
+	inf, err := u.fetchLatest()
 	if err != nil {
 		if cached, ok := readInfo(); ok {
 			inf = cached
@@ -208,7 +224,7 @@ func Install(fb *alfred.Feedback) {
 		return
 	}
 
-	path, err := download(inf.URL)
+	path, err := u.download(inf.URL)
 	if err != nil {
 		fb.Add(alfred.ItemOpts{
 			Title:    "Update download failed",
@@ -219,7 +235,11 @@ func Install(fb *alfred.Feedback) {
 		return
 	}
 
-	_ = exec.Command("/usr/bin/open", path).Run()
+	if err := exec.Command("/usr/bin/open", path).Run(); err != nil {
+		fb.Add(alfred.ItemOpts{Title: "Could not open update", Subtitle: err.Error(), Valid: false})
+		fb.Send()
+		return
+	}
 	fb.Add(alfred.ItemOpts{
 		Title:    "Installing update " + inf.Version + " …",
 		Subtitle: "Alfred will prompt to import the new version",
@@ -229,16 +249,23 @@ func Install(fb *alfred.Feedback) {
 }
 
 // download saves the asset to a temp file and returns its path.
-func download(url string) (string, error) {
-	body, err := httpx.Get(url, nil, nil)
+func (u *updater) download(url string) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), downloadTimeout)
+	defer cancel()
+	f, err := os.CreateTemp("", "NaverSearchPlus-update-*.alfredworkflow")
 	if err != nil {
 		return "", err
 	}
-	dst := filepath.Join(os.TempDir(), "NaverSearchPlus-update.alfredworkflow")
-	if err := os.WriteFile(dst, body, 0o644); err != nil {
+	if err := u.http.Download(ctx, url, f); err != nil {
+		_ = f.Close()
+		_ = os.Remove(f.Name())
 		return "", err
 	}
-	return dst, nil
+	if err := f.Close(); err != nil {
+		_ = os.Remove(f.Name())
+		return "", err
+	}
+	return f.Name(), nil
 }
 
 // isNewer reports whether the remote version tag is greater than the current

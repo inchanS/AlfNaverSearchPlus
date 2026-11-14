@@ -1,27 +1,24 @@
-// Package httpx is a tiny HTTP helper replacing alfred-pyworkflow's web.get:
-// build a GET with query params and optional headers, enforce a success status,
-// and return the response body. gzip is handled transparently by net/http.
+// Package httpx builds context-aware HTTP requests for search and updates.
 package httpx
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
-	"time"
 )
 
-// DefaultUserAgent is a browser-like UA used unless a handler overrides it.
-// Several Naver endpoints reject or alter responses for non-browser agents.
 const DefaultUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) " +
 	"AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.6 Safari/605.1.15"
 
-var client = &http.Client{Timeout: 15 * time.Second}
+// Client owns its HTTP client so callers and tests never change global HTTP state.
+// Each operation supplies its own deadline through ctx.
+type Client struct{ http *http.Client }
 
-// Get performs a GET request. params are URL query values (encoded like
-// urllib), headers override or add request headers. It returns the response
-// body on a 2xx/3xx status, or an error otherwise.
-func Get(rawURL string, params, headers map[string]string) ([]byte, error) {
+func New(client *http.Client) *Client { return &Client{http: client} }
+
+func (c *Client) get(ctx context.Context, rawURL string, params, headers map[string]string) (*http.Response, error) {
 	u, err := url.Parse(rawURL)
 	if err != nil {
 		return nil, err
@@ -33,33 +30,42 @@ func Get(rawURL string, params, headers map[string]string) ([]byte, error) {
 		}
 		u.RawQuery = q.Encode()
 	}
-
-	req, err := http.NewRequest(http.MethodGet, u.String(), nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u.String(), nil)
 	if err != nil {
 		return nil, err
 	}
-
-	if _, ok := headers["user-agent"]; !ok {
-		if _, ok := headers["User-Agent"]; !ok {
-			req.Header.Set("User-Agent", DefaultUserAgent)
-		}
-	}
+	req.Header.Set("User-Agent", DefaultUserAgent)
 	for k, v := range headers {
 		req.Header.Set(k, v)
 	}
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		_ = resp.Body.Close()
+		return nil, fmt.Errorf("http %d for %s", resp.StatusCode, rawURL)
+	}
+	return resp, nil
+}
 
-	resp, err := client.Do(req)
+// Get reads an API response. Redirects and gzip are handled by net/http.
+func (c *Client) Get(ctx context.Context, rawURL string, params, headers map[string]string) ([]byte, error) {
+	resp, err := c.get(ctx, rawURL, params, headers)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
+	return io.ReadAll(resp.Body)
+}
 
-	body, err := io.ReadAll(resp.Body)
+// Download streams an asset rather than buffering the whole archive in memory.
+func (c *Client) Download(ctx context.Context, rawURL string, dst io.Writer) error {
+	resp, err := c.get(ctx, rawURL, nil, nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	if resp.StatusCode >= 400 {
-		return nil, fmt.Errorf("http %d for %s", resp.StatusCode, rawURL)
-	}
-	return body, nil
+	defer resp.Body.Close()
+	_, err = io.Copy(dst, resp.Body)
+	return err
 }

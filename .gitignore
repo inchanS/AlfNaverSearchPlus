@@ -52,3 +52,5 @@ workflow/error.log
 # Go build artifacts (the universal binary is produced by build.sh / CI)
 /dist/
 /workflow/naversearch
+
+/workflow/.naversearch-ready/

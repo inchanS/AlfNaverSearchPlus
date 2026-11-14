@@ -58,7 +58,7 @@ func TestFinanceResultURLs(t *testing.T) {
 			}
 
 			fb := alfred.New()
-			if err := finance(fb, tt.name); err != nil {
+			if err := testRequest(t, nil).finance(fb, tt.name); err != nil {
 				t.Fatal(err)
 			}
 			if len(fb.Items) != 1 {

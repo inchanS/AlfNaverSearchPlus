@@ -16,12 +16,13 @@ func TestPackagingVersionsAndSourcePreservation(t *testing.T) {
 		t.Skip("packaging requires zip")
 	}
 	root := t.TempDir()
-	for _, dir := range []string{"workflow", "bin"} {
+	for _, dir := range []string{"workflow", "workflow/.naversearch-ready", "bin"} {
 		if err := os.Mkdir(filepath.Join(root, dir), 0o755); err != nil {
 			t.Fatal(err)
 		}
 	}
 	writeFile(t, filepath.Join(root, "make.sh"), readFile(t, "../../make.sh"), 0o755)
+	writeFile(t, filepath.Join(root, "workflow/.naversearch-ready/binary"), []byte("local binary"), 0o644)
 	original := readFile(t, "../../workflow/info.plist")
 	source := filepath.Join(root, "workflow/info.plist")
 	writeFile(t, source, original, 0o644)
@@ -76,6 +77,11 @@ func TestPackagingVersionsAndSourcePreservation(t *testing.T) {
 				t.Fatal(err)
 			}
 			defer archive.Close()
+			for _, entry := range archive.File {
+				if strings.HasPrefix(entry.Name, ".naversearch-ready") {
+					t.Fatalf("packaged runtime state: %s", entry.Name)
+				}
+			}
 			file, err := archive.Open("info.plist")
 			if err != nil {
 				t.Fatal(err)

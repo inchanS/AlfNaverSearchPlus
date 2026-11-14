@@ -4,22 +4,23 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"os"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/inchanS/AlfNaverSearchPlus/internal/alfred"
 	"github.com/inchanS/AlfNaverSearchPlus/internal/cache"
+	"github.com/inchanS/AlfNaverSearchPlus/internal/httpx"
 )
 
 type testTransport func(*http.Request) (*http.Response, error)
 
 func (f testTransport) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
 
-func stubHTTP(t *testing.T, f testTransport) {
+func stubHTTP(t *testing.T, f testTransport) *updater {
 	t.Helper()
-	original := http.DefaultTransport
-	http.DefaultTransport = f
-	t.Cleanup(func() { http.DefaultTransport = original })
+	return &updater{http: httpx.New(&http.Client{Transport: f})}
 }
 
 func TestFailedCheckCanRetry(t *testing.T) {
@@ -27,7 +28,7 @@ func TestFailedCheckCanRetry(t *testing.T) {
 	t.Setenv("alfred_workflow_version", "2.0.3")
 	writeInfo(info{Version: "v2.0.2"})
 	requests := 0
-	stubHTTP(t, func(*http.Request) (*http.Response, error) {
+	u := stubHTTP(t, func(*http.Request) (*http.Response, error) {
 		requests++
 		if requests == 1 {
 			return nil, errors.New("temporarily offline")
@@ -37,14 +38,14 @@ func TestFailedCheckCanRetry(t *testing.T) {
 			Body:       io.NopCloser(strings.NewReader(`{"tag_name":"v2.0.4","assets":[]}`)),
 		}, nil
 	})
-	RunCheck()
+	u.runCheck()
 	if _, ok := cache.Read(stampKey, 0); ok {
 		t.Fatal("failed check was recorded as a successful weekly check")
 	}
 	if got, ok := readInfo(); !ok || got.Version != "v2.0.2" {
 		t.Fatalf("failed check discarded previous release info: %+v", got)
 	}
-	RunCheck()
+	u.runCheck()
 	if requests != 2 {
 		t.Fatalf("recovered network was not retried: %d requests", requests)
 	}
@@ -54,7 +55,7 @@ func TestFailedCheckCanRetry(t *testing.T) {
 	if _, ok := cache.Read(stampKey, checkFrequency); !ok {
 		t.Fatal("successful check was not recorded")
 	}
-	RunCheck()
+	u.runCheck()
 	if requests != 2 {
 		t.Errorf("successful check did not retain weekly throttling: %d requests", requests)
 	}
@@ -73,7 +74,7 @@ func TestInstallOnlyDownloadsNewerReleases(t *testing.T) {
 				const asset = "https://example.invalid/update.alfredworkflow"
 				writeInfo(info{Available: true, Version: version, URL: asset})
 				var downloads int
-				stubHTTP(t, func(r *http.Request) (*http.Response, error) {
+				u := stubHTTP(t, func(r *http.Request) (*http.Response, error) {
 					if r.URL.String() == asset {
 						downloads++
 						// Stop before writing an installer or invoking /usr/bin/open.
@@ -92,7 +93,7 @@ func TestInstallOnlyDownloadsNewerReleases(t *testing.T) {
 					}, nil
 				})
 				fb := alfred.New()
-				Install(fb)
+				u.install(fb)
 				wantDownloads, wantTitle := 0, "No update available"
 				if version == "v2.0.4" {
 					wantDownloads, wantTitle = 1, "Update download failed"
@@ -152,5 +153,53 @@ func TestShouldNotify(t *testing.T) {
 				t.Errorf("shouldNotify(%+v, %q) = %v, want %v", c.inf, c.current, got, c.want)
 			}
 		})
+	}
+}
+
+type failingReader struct{}
+
+func (failingReader) Read([]byte) (int, error) { return 0, errors.New("download interrupted") }
+
+func TestDownloadUsesSeparateBudgetAndUniqueFiles(t *testing.T) {
+	t.Setenv("TMPDIR", t.TempDir())
+	u := stubHTTP(t, func(r *http.Request) (*http.Response, error) {
+		deadline, ok := r.Context().Deadline()
+		remaining := time.Until(deadline)
+		if !ok || remaining <= releaseTimeout || remaining > downloadTimeout {
+			t.Fatalf("download budget: %s", remaining)
+		}
+		return &http.Response{StatusCode: 200, Body: io.NopCloser(strings.NewReader("archive"))}, nil
+	})
+	first, err := u.download("https://example.invalid/asset")
+	if err != nil {
+		t.Fatal(err)
+	}
+	second, err := u.download("https://example.invalid/asset")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if first == second || !strings.HasSuffix(first, ".alfredworkflow") {
+		t.Fatalf("download paths: %q, %q", first, second)
+	}
+	for _, path := range []string{first, second} {
+		data, err := os.ReadFile(path)
+		if err != nil || string(data) != "archive" {
+			t.Fatalf("downloaded data: %q, %v", data, err)
+		}
+	}
+}
+
+func TestInterruptedDownloadRemovesPartialFile(t *testing.T) {
+	dir := t.TempDir()
+	t.Setenv("TMPDIR", dir)
+	u := stubHTTP(t, func(*http.Request) (*http.Response, error) {
+		return &http.Response{StatusCode: 200, Body: io.NopCloser(io.MultiReader(strings.NewReader("partial"), failingReader{}))}, nil
+	})
+	if path, err := u.download("https://example.invalid/asset"); err == nil || path != "" {
+		t.Fatalf("partial download accepted: %q, %v", path, err)
+	}
+	entries, err := os.ReadDir(dir)
+	if err != nil || len(entries) != 0 {
+		t.Fatalf("partial files left: %v, %v", entries, err)
 	}
 }

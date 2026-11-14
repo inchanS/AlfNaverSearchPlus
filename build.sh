@@ -8,6 +8,7 @@
 set -e
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
+cd "$ROOT"
 PKG="./cmd/naversearch"
 OUT="$ROOT/workflow/naversearch"
 DIST="$ROOT/dist"

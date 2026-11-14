@@ -36,6 +36,7 @@ sed "s/{{VERSION_INFO}}/$WORKFLOW_VERSION/g" < info.plist > info.plist.bak
 mv info.plist.bak info.plist
 
 zip -r ../NaverSearchPlus.alfredworkflow . \
+    -x ".naversearch-ready/*" \
     -x "*.DS_Store" \
     -x "*.pyc" \
     -x "__pycache__/*" "*/__pycache__/*" \

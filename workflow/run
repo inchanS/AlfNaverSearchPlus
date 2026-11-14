@@ -1,11 +1,21 @@
 #!/bin/bash
-# Script Filter entry point. Runs before the universal binary to:
-#   1. ensure the binary is executable (in case the +x bit was lost on
-#      unzip/import), and
-#   2. strip the download quarantine, so an un-notarized binary launches
-#      without a Gatekeeper prompt.
-# Then it execs the binary with the given handler + arguments.
-d="$(cd "$(dirname "$0")" && pwd)"
-chmod +x "$d/naversearch" 2>/dev/null
-xattr -dr com.apple.quarantine "$d/naversearch" 2>/dev/null
-exec "$d/naversearch" "$@"
+# Prepare each binary once, then use only shell builtins on the hot path.
+# The hard link detects a replacement even when its timestamp is older;
+# the stamp also detects rebuilds that overwrite the existing inode.
+case "$0" in
+    */*) d=${0%/*} ;;
+    *) d=. ;;
+esac
+binary="$d/naversearch"
+ready="$d/.naversearch-ready"
+if [ ! -x "$binary" ] || [ ! "$binary" -ef "$ready/binary" ] || \
+   [ ! -f "$ready/stamp" ] || [ "$binary" -nt "$ready/stamp" ]; then
+    if chmod +x "$binary" 2>/dev/null && \
+       xattr -dr com.apple.quarantine "$binary" 2>/dev/null; then
+        if mkdir -p "$ready" 2>/dev/null && \
+           { [ "$binary" -ef "$ready/binary" ] || ln -f "$binary" "$ready/binary" 2>/dev/null; }; then
+            touch "$ready/stamp" 2>/dev/null
+        fi
+    fi
+fi
+exec "$binary" "$@"

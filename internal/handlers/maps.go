@@ -1,13 +1,16 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"math"
+	"strconv"
+	"time"
 
 	"github.com/inchanS/AlfNaverSearchPlus/internal/alfred"
 	"github.com/inchanS/AlfNaverSearchPlus/internal/cache"
 	"github.com/inchanS/AlfNaverSearchPlus/internal/env"
-	"github.com/inchanS/AlfNaverSearchPlus/internal/httpx"
 	"github.com/inchanS/AlfNaverSearchPlus/internal/jsonx"
 	"github.com/inchanS/AlfNaverSearchPlus/internal/urlx"
 )
@@ -20,53 +23,66 @@ const (
 	mapSearchTypeURL = "https://map.naver.com/p/search/%s/%s/%s"
 )
 
+const locationTimeout = time.Second
+
 func mapHeaders() map[string]string {
-	return map[string]string{
-		"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 " +
-			"(KHTML, like Gecko) Version/17.6 Safari/605.1.15",
-		"Referer": "https://map.naver.com/",
-	}
+	return map[string]string{"Referer": "https://map.naver.com/"}
 }
 
-// getIPLatLng fetches the caller's IP-based location and returns the stored
-// lngLat object (containing lat/lng) as JSON bytes for caching.
-func getIPLatLng() ([]byte, error) {
-	body, err := httpx.Get(apiLocation, nil, mapHeaders())
+type location struct{ lat, lng string }
+
+func decodeLocation(data []byte) (location, error) {
+	root, err := jsonx.DecodeObject(data)
 	if err != nil {
-		return nil, err
+		return location{}, err
 	}
-	root, err := jsonx.Decode(body)
-	if err != nil {
-		return nil, err
+	loc := location{jsonx.AsStr(root["lat"]), jsonx.AsStr(root["lng"])}
+	for i, value := range []string{loc.lat, loc.lng} {
+		n, err := strconv.ParseFloat(value, 64)
+		limit := 90.0
+		if i == 1 {
+			limit = 180
+		}
+		if err != nil || math.IsNaN(n) || math.IsInf(n, 0) || math.Abs(n) > limit {
+			return location{}, fmt.Errorf("invalid location coordinates")
+		}
 	}
-	return json.Marshal(jsonx.Get(root, "lngLat"))
+	return loc, nil
 }
 
-// getLocation returns lat/lng, using the (cached) IP location when useIP is set
-// and falling back to the configured default coordinates on any failure.
-func getLocation(useIP bool) (lat, lng string) {
+// getLocation reserves time for the search even if IP lookup is unavailable.
+func (r *request) getLocation(useIP bool) location {
 	if useIP {
-		data, err := cache.Cached("location_data", env.CacheAge(), getIPLatLng)
-		if err == nil && data != nil {
-			ll, derr := jsonx.Decode(data)
-			if derr == nil {
-				lat = jsonx.AsStr(jsonx.Get(ll, "lat"))
-				lng = jsonx.AsStr(jsonx.Get(ll, "lng"))
-				if lat != "" && lng != "" {
-					return lat, lng
-				}
+		loc, err := cache.Load("location_data", env.CacheAge(), func() ([]byte, error) {
+			ctx, cancel := context.WithTimeout(r.ctx, locationTimeout)
+			defer cancel()
+			body, err := r.http.Get(ctx, apiLocation, nil, mapHeaders())
+			if err != nil {
+				return nil, err
 			}
+			root, err := jsonx.DecodeObject(body)
+			if err != nil {
+				return nil, err
+			}
+			return json.Marshal(root["lngLat"])
+		}, decodeLocation)
+		if err == nil {
+			return loc
 		}
 		logf("map: location lookup failed, using default coordinates: %v", err)
 	}
-	return env.Latitude(), env.Longitude()
+	return location{env.Latitude(), env.Longitude()}
 }
 
-// getData performs the instant-search request and returns the raw body.
-func getData(lat, lng, word string) ([]byte, error) {
-	return httpx.Get(apiSearch, map[string]string{
-		"query": word, "type": "all",
-		"coords": lat + "," + lng, "lang": "ko", "caller": "pcweb",
+// mapData shares the complete response across overview and category searches.
+// The v2 key includes the actual coordinates; legacy query-only caches cannot
+// accidentally supply results from another location.
+func (r *request) mapData(useIP bool, word string) (map[string]any, error) {
+	loc := r.getLocation(useIP)
+	key := cache.Key("navmap2", strconv.FormatBool(useIP)+"\x00"+loc.lat+"\x00"+loc.lng+"\x00"+word)
+	return r.cachedJSON(key, env.CacheAge(), apiSearch, map[string]string{
+		"query": word, "type": "all", "coords": loc.lat + "," + loc.lng,
+		"lang": "ko", "caller": "pcweb",
 	}, mapHeaders())
 }
 
@@ -143,28 +159,15 @@ func addBus(fb *alfred.Feedback, bus map[string]any, prefix, icon string) {
 }
 
 // mapSearch: first-step map search (mode is "useIP" or "doNotUseIP").
-func mapSearch(fb *alfred.Feedback, mode, word string) error {
+func (r *request) mapSearch(fb *alfred.Feedback, mode, word string) error {
 	useIP := mode == "useIP"
 
-	// Persist the IP-usage choice for the follow-up category step.
-	if data, err := json.Marshal(map[string]bool{"use": useIP}); err == nil {
-		_ = cache.Write("use_ip", data)
-	}
-
-	phrase, keyPrefix := "Search Naver Map for", "navmap"
+	phrase := "Search Naver Map for"
 	if useIP {
-		phrase, keyPrefix = "Search Naver Map(ip) for", "navmapip"
+		phrase = "Search Naver Map(ip) for"
 	}
 	addMapSearch(fb, word, phrase)
-
-	lat, lng := getLocation(useIP)
-	body, err := cache.Cached(cache.Key(keyPrefix, word), env.CacheAge(), func() ([]byte, error) {
-		return getData(lat, lng, word)
-	})
-	if err != nil {
-		return err
-	}
-	root, err := jsonx.Decode(body)
+	root, err := r.mapData(useIP, word)
 	if err != nil {
 		return err
 	}
@@ -177,13 +180,13 @@ func mapSearch(fb *alfred.Feedback, mode, word string) error {
 		addNoResults(fb, word)
 	}
 	if len(place) > 0 {
-		addCategory(fb, word, "place", iconPlace, "Search only Place for")
+		addCategory(fb, useIP, word, "place", iconPlace, "Search only Place for")
 	}
 	if len(address) > 0 {
-		addCategory(fb, word, "address", iconAddress, "Search only Address for")
+		addCategory(fb, useIP, word, "address", iconAddress, "Search only Address for")
 	}
 	if len(bus) > 0 {
-		addCategory(fb, word, "bus", iconBus, "Search only Bus for")
+		addCategory(fb, useIP, word, "bus", iconBus, "Search only Bus for")
 	}
 
 	for _, el := range jsonx.Arr(jsonx.Get(root, "all")) {
@@ -203,7 +206,7 @@ func mapSearch(fb *alfred.Feedback, mode, word string) error {
 // addCategory adds an item that switches to a category-only search. The
 // map_type variable both routes the info.plist conditional and is read as an
 // env var by the maphub handler.
-func addCategory(fb *alfred.Feedback, word, categoryType, icon, prefix string) {
+func addCategory(fb *alfred.Feedback, useIP bool, word, categoryType, icon, prefix string) {
 	it := fb.Add(alfred.ItemOpts{
 		Title:        prefix + " '" + word + "'",
 		Autocomplete: word,
@@ -212,29 +215,14 @@ func addCategory(fb *alfred.Feedback, word, categoryType, icon, prefix string) {
 		Valid:        true,
 	})
 	it.SetVar("map_type", categoryType)
+	it.SetVar("useIP", useIP)
 }
 
-var hubCacheName = map[string]string{
-	"place":   "navplace",
-	"address": "navaddress",
-	"bus":     "navbus",
-}
-
-// mapHub: second-step, category-filtered map search. The category comes from
-// the map_type workflow variable (exposed as an env var); IP usage is read from
-// the state saved by mapSearch.
-func mapHub(fb *alfred.Feedback, word string) error {
+// mapHub gets both category and location mode from the selected Alfred item.
+func (r *request) mapHub(fb *alfred.Feedback, word string) error {
 	mapType := env.Str("map_type", "")
 
-	useIP := false
-	if data, ok := cache.Read("use_ip", 0); ok {
-		var s struct {
-			Use bool `json:"use"`
-		}
-		if json.Unmarshal(data, &s) == nil {
-			useIP = s.Use
-		}
-	}
+	useIP, _ := strconv.ParseBool(env.Str("useIP", "false"))
 
 	// Keep navigation available even when fetching or decoding results fails.
 	addMapSearch(fb, word, "Search Naver Map for")
@@ -247,35 +235,16 @@ func mapHub(fb *alfred.Feedback, word string) error {
 	ret.SetVar("useIP", useIP)
 	ret.SetVar("return", true)
 
-	name := hubCacheName[mapType]
-	if name == "" {
-		name = "nav" + mapType
+	switch mapType {
+	case "place", "address", "bus":
+	default:
+		return fmt.Errorf("unknown map category: %s", mapType)
 	}
-	if useIP {
-		name += "ip"
-	}
-
-	body, err := cache.Cached(cache.Key(name, word), env.CacheAge(), func() ([]byte, error) {
-		lat, lng := getLocation(useIP)
-		full, gerr := getData(lat, lng, word)
-		if gerr != nil {
-			return nil, gerr
-		}
-		root, derr := jsonx.Decode(full)
-		if derr != nil {
-			return nil, derr
-		}
-		return json.Marshal(jsonx.Get(root, mapType))
-	})
+	root, err := r.mapData(useIP, word)
 	if err != nil {
 		return err
 	}
-
-	cat, err := jsonx.Decode(body)
-	if err != nil {
-		return err
-	}
-	results := jsonx.Arr(cat)
+	results := jsonx.Arr(root[mapType])
 
 	if len(results) == 0 {
 		addNoResults(fb, word)

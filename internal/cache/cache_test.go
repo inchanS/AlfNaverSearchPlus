@@ -89,7 +89,7 @@ func TestCleanup(t *testing.T) {
 	}
 }
 
-func TestCachedUsesLoaderOnce(t *testing.T) {
+func TestLoadUsesLoaderOnce(t *testing.T) {
 	t.Setenv("alfred_workflow_cache", t.TempDir())
 
 	calls := 0
@@ -99,7 +99,7 @@ func TestCachedUsesLoaderOnce(t *testing.T) {
 	}
 
 	for i := 0; i < 3; i++ {
-		data, err := Cached("k", time.Hour, loader)
+		data, err := Load("k", time.Hour, loader, func(data []byte) ([]byte, error) { return data, nil })
 		if err != nil || string(data) != "payload" {
 			t.Fatalf("Cached returned %q err=%v", data, err)
 		}
@@ -109,7 +109,7 @@ func TestCachedUsesLoaderOnce(t *testing.T) {
 	}
 
 	// Nil loader on a miss returns no data without error.
-	if data, err := Cached("missing", time.Hour, nil); err != nil || data != nil {
+	if data, err := Load("missing", time.Hour, nil, func(data []byte) ([]byte, error) { return data, nil }); err != nil || data != nil {
 		t.Fatalf("nil loader miss = %q err=%v", data, err)
 	}
 }

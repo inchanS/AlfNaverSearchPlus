@@ -3,10 +3,16 @@
 package handlers
 
 import (
+	"context"
 	"fmt"
+	"net/http"
 	"os"
+	"time"
 
 	"github.com/inchanS/AlfNaverSearchPlus/internal/alfred"
+	"github.com/inchanS/AlfNaverSearchPlus/internal/cache"
+	"github.com/inchanS/AlfNaverSearchPlus/internal/httpx"
+	"github.com/inchanS/AlfNaverSearchPlus/internal/jsonx"
 	"github.com/inchanS/AlfNaverSearchPlus/internal/update"
 	"github.com/inchanS/AlfNaverSearchPlus/internal/urlx"
 )
@@ -19,31 +25,67 @@ const (
 	iconBus       = "845B46E7-61FB-43CD-A287-FCB4C075A4A6.png"
 )
 
+const searchTimeout = 3 * time.Second
+
+// request shares one deadline across every network operation in a search.
+type request struct {
+	ctx  context.Context
+	http *httpx.Client
+}
+
+func (r *request) cachedJSON(key string, age time.Duration, endpoint string, params, headers map[string]string) (map[string]any, error) {
+	return cache.Load(key, age, func() ([]byte, error) {
+		return r.http.Get(r.ctx, endpoint, params, headers)
+	}, jsonx.DecodeObject)
+}
+
+// addQuery supplies the fields shared by fallback and suggestion rows.
+func addQuery(fb *alfred.Feedback, word, title, quicklook string) *alfred.Item {
+	return fb.Add(alfred.ItemOpts{
+		Title: title, Autocomplete: word, Arg: word,
+		QuicklookURL: quick(quicklook, word), Valid: true,
+	})
+}
+
+func addSuggestion(fb *alfred.Feedback, word, title, subtitle, copyText, quicklook string) *alfred.Item {
+	it := addQuery(fb, word, title, quicklook)
+	it.Subtitle = subtitle
+	it.Text = &alfred.Text{Copy: copyText, LargeType: word}
+	return it
+}
+
 // Dispatch runs the handler named cmd with the remaining CLI args.
 func Dispatch(cmd string, args []string) {
+	ctx, cancel := context.WithTimeout(context.Background(), searchTimeout)
+	defer cancel()
+	r := &request{ctx: ctx, http: httpx.New(&http.Client{})}
+	r.dispatch(cmd, args)
+}
+
+func (r *request) dispatch(cmd string, args []string) {
 	switch cmd {
 	case "search":
-		run(func(fb *alfred.Feedback) error { return search(fb, at(args, 0)) })
+		run(func(fb *alfred.Feedback) error { return r.search(fb, at(args, 0)) })
 	case "shopping":
-		run(func(fb *alfred.Feedback) error { return shopping(fb, at(args, 0)) })
+		run(func(fb *alfred.Feedback) error { return r.shopping(fb, at(args, 0)) })
 	case "terms":
-		run(func(fb *alfred.Feedback) error { return terms(fb, at(args, 0)) })
+		run(func(fb *alfred.Feedback) error { return r.terms(fb, at(args, 0)) })
 	case "dict":
-		run(func(fb *alfred.Feedback) error { return dictMulti(fb, at(args, 0), at(args, 1)) })
+		run(func(fb *alfred.Feedback) error { return r.dictMulti(fb, at(args, 0), at(args, 1)) })
 	case "endic":
-		run(func(fb *alfred.Feedback) error { return endic(fb, at(args, 0)) })
+		run(func(fb *alfred.Feedback) error { return r.endic(fb, at(args, 0)) })
 	case "krdic":
-		run(func(fb *alfred.Feedback) error { return krdic(fb, at(args, 0)) })
+		run(func(fb *alfred.Feedback) error { return r.krdic(fb, at(args, 0)) })
 	case "hanja":
-		run(func(fb *alfred.Feedback) error { return hanja(fb, at(args, 0)) })
+		run(func(fb *alfred.Feedback) error { return r.hanja(fb, at(args, 0)) })
 	case "enendic":
-		run(func(fb *alfred.Feedback) error { return enendic(fb, at(args, 0)) })
+		run(func(fb *alfred.Feedback) error { return r.enendic(fb, at(args, 0)) })
 	case "finance":
-		run(func(fb *alfred.Feedback) error { return finance(fb, at(args, 0)) })
+		run(func(fb *alfred.Feedback) error { return r.finance(fb, at(args, 0)) })
 	case "map":
-		run(func(fb *alfred.Feedback) error { return mapSearch(fb, at(args, 0), at(args, 1)) })
+		run(func(fb *alfred.Feedback) error { return r.mapSearch(fb, at(args, 0), at(args, 1)) })
 	case "maphub":
-		run(func(fb *alfred.Feedback) error { return mapHub(fb, at(args, 0)) })
+		run(func(fb *alfred.Feedback) error { return r.mapHub(fb, at(args, 0)) })
 	default:
 		fb := alfred.New()
 		fb.Add(alfred.ItemOpts{Title: "Unknown command: " + cmd, Valid: false})

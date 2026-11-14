@@ -37,3 +37,14 @@ func TestAsStrPreservesNumbers(t *testing.T) {
 		t.Fatalf("ok = %q", got)
 	}
 }
+
+func TestDecodeRejectsTrailingDataAndNonObjects(t *testing.T) {
+	for _, data := range []string{`{} {}`, `{} garbage`, `null`, `[]`, `"text"`} {
+		if _, err := DecodeObject([]byte(data)); err == nil {
+			t.Errorf("accepted %q", data)
+		}
+	}
+	if _, err := DecodeObject([]byte("{\"ok\":true}\n ")); err != nil {
+		t.Fatal(err)
+	}
+}

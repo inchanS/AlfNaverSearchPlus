@@ -4,16 +4,13 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 	"testing"
 
 	"github.com/inchanS/AlfNaverSearchPlus/internal/alfred"
 	"github.com/inchanS/AlfNaverSearchPlus/internal/cache"
 )
-
-type mapTestTransport func(*http.Request) (*http.Response, error)
-
-func (f mapTestTransport) RoundTrip(r *http.Request) (*http.Response, error) { return f(r) }
 
 func TestMapNavigationSurvivesAPIFailure(t *testing.T) {
 	for _, useIP := range []bool{false, true} {
@@ -26,20 +23,19 @@ func TestMapNavigationSurvivesAPIFailure(t *testing.T) {
 				t.Run(name, func(t *testing.T) {
 					t.Setenv("alfred_workflow_cache", t.TempDir())
 					t.Setenv("map_type", category)
-					mode, state := "doNotUseIP", `{"use":false}`
+					mode := "doNotUseIP"
+					t.Setenv("useIP", strconv.FormatBool(useIP))
 					if useIP {
-						mode, state = "useIP", `{"use":true}`
+						mode = "useIP"
 					}
 					for key, data := range map[string]string{
-						"use_ip": state, "location_data": `{"lat":37.5665,"lng":126.9780}`,
+						"location_data": `{"lat":37.5665,"lng":126.9780}`,
 					} {
 						if err := cache.Write(key, []byte(data)); err != nil {
 							t.Fatal(err)
 						}
 					}
-					original := http.DefaultTransport
-					t.Cleanup(func() { http.DefaultTransport = original })
-					http.DefaultTransport = mapTestTransport(func(*http.Request) (*http.Response, error) {
+					r := testRequest(t, func(*http.Request) (*http.Response, error) {
 						if failure == "network" {
 							return nil, errors.New("offline")
 						}
@@ -56,9 +52,9 @@ func TestMapNavigationSurvivesAPIFailure(t *testing.T) {
 					fb := alfred.New()
 					var err error
 					if category == "" {
-						err = mapSearch(fb, mode, word)
+						err = r.mapSearch(fb, mode, word)
 					} else {
-						err = mapHub(fb, word)
+						err = r.mapHub(fb, word)
 					}
 					if (err != nil) != (failure != "empty results") {
 						t.Fatalf("unexpected error: %v", err)

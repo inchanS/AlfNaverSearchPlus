@@ -60,20 +60,35 @@ func TestQueriesArePassedLiterallyToHandlers(t *testing.T) {
 	wantHandlers := map[string][]string{
 		"n": {"search"}, "nst": {"finance"},
 		"nm": {"map", "doNotUseIP"}, "nmi": {"map", "useIP"},
+		"ns": {"shopping"}, "nt": {"terms"}, "": {"maphub"},
+		"ne": {"endic"}, "nee": {"enendic"}, "nk": {"krdic"}, "nah": {"hanja"},
+	}
+	for keyword, lang := range map[string]string{
+		"nasv": "svko", "nahu": "huko", "nad": "deko", "nafi": "fiko", "namy": "myko", "nauk": "ukko",
+		"nasq": "sqko", "naf": "frko", "naka": "kako", "naro": "roko", "naj": "jako", "nasw": "swko",
+		"nai": "itko", "nacs": "csko", "nac": "zhko", "naar": "arko", "nala": "lako", "nael": "elko",
+		"nacm": "kmko", "nahr": "hrko", "nav": "viko", "nasp": "esko", "nath": "thko", "natr": "trko",
+		"nafa": "fako", "nar": "ruko", "nan": "idko", "napt": "ptko", "nahi": "hiko", "nau": "uzko",
+		"nanl": "nlko", "napl": "plko", "nane": "neko", "namn": "mnko",
+	} {
+		wantHandlers[keyword] = []string{"dict", lang}
 	}
 	queries := []string{
-		"$100", "$(printf substituted)", "`printf substituted`",
+		"$100", "$(printf substituted)", "`printf substituted`", "two  spaces", "*", "-n", "",
 		"따옴표 \" ' \\ & ; /\n두 번째 줄", "workflow:update",
 	}
 	dir := t.TempDir()
 	// Capture exactly the argv that the real run shim would pass to Go.
 	writeFile(t, filepath.Join(dir, "run"), []byte("#!/bin/sh\nprintf '%s\\000' \"$@\"\n"), 0o755)
 	for _, obj := range root.value("objects").Children {
+		if obj.value("type").Text != "alfred.workflow.input.scriptfilter" {
+			continue
+		}
 		config := obj.value("config")
 		keyword := config.value("keyword").Text
 		handler, ok := wantHandlers[keyword]
 		if !ok {
-			continue
+			t.Fatalf("unexpected filter %q", keyword)
 		}
 		delete(wantHandlers, keyword)
 		t.Run(keyword, func(t *testing.T) {
