@@ -17,7 +17,7 @@ Alfred에서 네이버 검색, 네이버 쇼핑, 네이버 지식백과, 네이�
 [@Kuniz](https://github.com/Kuniz)님의 [alfnaversearch 워크플로우](https://github.com/Kuniz/alfnaversearch)를 따로이 개인적인 용도에 맞게 부분적으로 수정 및 개선한 워크플로우입니다.  
 **alfnaversearch** 워크플로우의 코드기여는 [forked repository](https://github.com/inchanS/alfnaversearch)에서 진행하였습니다.    
 
-변경부분
+#### **변경부분**
 - 일부 script 호출 keyword 변경 
 - 네이버 **지도 검색 기능 추가 및 개선** (updated v0.0.2)
   - 사용자 위치 설정 및 장소, 주소, 버스 전용보기 추가 
@@ -27,7 +27,12 @@ Alfred에서 네이버 검색, 네이버 쇼핑, 네이버 지식백과, 네이�
   - **`v1.x.x`까지는 Python이 필요했지만, `v2.0.0`부터는 Python이 필요 없습니다.**
   - Python 및 alfred-pyworkflow 의존을 완전히 제거하여 별도 런타임 설치가 불필요
   - Apple Silicon / Intel 유니버설 바이너리, 검색 기동 속도 대폭 향상 (아래 [Performance](#performance) 참고)
+- `nn` 명령어로 **[네이버 통합검색](#통합검색-alfred-6)** 기능(일반, 지도, 주식, 쇼핑) - Alfred 6버전 필요! (updated v3.1.0)
+  - 통합검색시 언어 입력소스 설정 가능(updated v3.2.0)
+
+
 <br>  
+
 
 Preview
 --------
@@ -72,6 +77,9 @@ v0.3.1부터 자동 업데이트를 지원합니다.
 - 새 버전이 있으면 검색 결과 맨 위에 `New version of NaverSearchPlus is available!` 항목이 표시되고,
   선택하면 새 버전을 내려받아 설치합니다.
 - 수동 명령어: 검색 keyword 뒤에 `workflow:update`를 입력하면 즉시 최신 버전을 내려받아 설치합니다. (예: `n workflow:update`)
+- 자동 업데이트의 기능은 다음과 같이 켜고 끌 수 있습니다.
+  - 자동 업데이트 끄기 : `n workflow:noautoupdate`
+  - 자동 업데이트 켜기 : `n workflow:autoupdate`
 
 
 Performance
@@ -106,6 +114,8 @@ Alfred의 Script Filter는 **키 입력 한 번마다 프로세스를 새로 실
 
 통합검색 (Alfred 6)
 --------------
+
+<img src="images/alfnsp-nn.gif" width="700">
 
 `nn`을 입력하고 Enter를 누르면 Alfred 창 안에서 일반 검색이 열립니다. `nn 서울`처럼 검색어를 붙여 시작할 수도 있습니다. 검색어를 바꾸면 현재 카테고리만 조회하고, 새 제안이 도착하면 같은 목록에서 내용을 갱신합니다.
 

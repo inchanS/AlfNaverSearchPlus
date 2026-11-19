@@ -69,6 +69,10 @@ func TestInstallOnlyDownloadsNewerReleases(t *testing.T) {
 				name = "cached/" + version
 			}
 			t.Run(name, func(t *testing.T) {
+				t.Setenv("alfred_workflow_data", t.TempDir())
+				if err := setAutoUpdate(false); err != nil {
+					t.Fatal(err)
+				}
 				t.Setenv("alfred_workflow_cache", t.TempDir())
 				t.Setenv("alfred_workflow_version", "2.0.3")
 				const asset = "https://example.invalid/update.alfredworkflow"

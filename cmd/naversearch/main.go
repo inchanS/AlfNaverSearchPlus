@@ -36,6 +36,9 @@ func main() {
 
 	// Update magic: the query autocompletes to update.Magic, so any handler
 	// invocation ending in it means "install the update".
+	if cmd != "nui" && update.HandleAutoUpdate(args[len(args)-1], alfred.New()) {
+		return
+	}
 	if cmd != "nui" && args[len(args)-1] == update.Magic {
 		update.Install(alfred.New())
 		return

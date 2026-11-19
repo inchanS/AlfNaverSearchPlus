@@ -1,6 +1,40 @@
 package main
 
-import "testing"
+import (
+	"encoding/json"
+	"os"
+	"path/filepath"
+	"testing"
+)
+
+func TestToggleDispatchBeforeSearch(t *testing.T) {
+	dataDir := t.TempDir()
+	t.Setenv("alfred_workflow_data", dataDir)
+	cacheDir := filepath.Join(t.TempDir(), "unused-cache")
+	t.Setenv("alfred_workflow_cache", cacheDir)
+	originalArgs := os.Args
+	t.Cleanup(func() { os.Args = originalArgs })
+	for _, tc := range []struct {
+		query string
+		want  bool
+	}{
+		{"workflow:noautoupdate", false},
+		{"workflow:autoupdate", true},
+	} {
+		os.Args = []string{"naversearch", "search", tc.query}
+		main()
+		data, err := os.ReadFile(filepath.Join(dataDir, "update-settings.json"))
+		var settings struct {
+			Enabled bool `json:"automatic_updates"`
+		}
+		if err != nil || json.Unmarshal(data, &settings) != nil || settings.Enabled != tc.want {
+			t.Fatalf("%s did not reach toggle handler: %s, %v", tc.query, data, err)
+		}
+	}
+	if _, err := os.Stat(cacheDir); !os.IsNotExist(err) {
+		t.Fatalf("toggle ran search or spawned a worker: %v", err)
+	}
+}
 
 func TestNormalizeArgs(t *testing.T) {
 	// Build NFD (decomposed) inputs explicitly via code points, independent of

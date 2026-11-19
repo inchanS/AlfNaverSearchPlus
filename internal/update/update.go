@@ -90,7 +90,7 @@ func writeInfo(inf info) {
 // MaybeShow adds the update notice (when a newer version is known) and triggers
 // the daily background worker (cache cleanup plus a weekly release check).
 func MaybeShow(fb *alfred.Feedback) {
-	if inf, ok := readInfo(); ok && shouldNotify(inf, currentVersion()) {
+	if inf, ok := readInfo(); autoUpdateEnabled() && ok && shouldNotify(inf, currentVersion()) {
 		fb.Add(alfred.ItemOpts{
 			Title:        "New version of NaverSearchPlus is available!",
 			Subtitle:     "Press Enter to install the update",
@@ -144,6 +144,9 @@ func RunCheck() { newUpdater().runCheck() }
 func (u *updater) runCheck() {
 	cache.Cleanup(cacheMaxAge)
 
+	if !autoUpdateEnabled() {
+		return
+	}
 	if _, fresh := cache.Read(stampKey, checkFrequency); fresh {
 		return
 	}
