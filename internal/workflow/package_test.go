@@ -16,20 +16,13 @@ func TestPackagingVersionsAndSourcePreservation(t *testing.T) {
 		t.Skip("packaging requires zip")
 	}
 	root := t.TempDir()
-	for _, dir := range []string{"workflow", "workflow/.naversearch-ready", "workflow/map.alfredui"} {
+	for _, dir := range []string{"workflow", "workflow/.naversearch-ready"} {
 		if err := os.Mkdir(filepath.Join(root, dir), 0o755); err != nil {
 			t.Fatal(err)
 		}
 	}
 	writeFile(t, filepath.Join(root, "make.sh"), readFile(t, "../../make.sh"), 0o755)
 	writeFile(t, filepath.Join(root, "workflow/.naversearch-ready/binary"), []byte("local binary"), 0o644)
-	for _, name := range []string{"ui.json", "run"} {
-		mode := os.FileMode(0644)
-		if name == "run" {
-			mode = 0755
-		}
-		writeFile(t, filepath.Join(root, "workflow/map.alfredui", name), readFile(t, "../../workflow/map.alfredui/"+name), mode)
-	}
 	original := readFile(t, "../../workflow/info.plist")
 	source := filepath.Join(root, "workflow/info.plist")
 	writeFile(t, source, original, 0o644)
@@ -92,17 +85,6 @@ func TestPackagingVersionsAndSourcePreservation(t *testing.T) {
 			for _, entry := range archive.File {
 				if strings.HasPrefix(entry.Name, ".naversearch-ready") {
 					t.Fatalf("packaged runtime state: %s", entry.Name)
-				}
-			}
-			for _, name := range []string{"map.alfredui/ui.json", "map.alfredui/run"} {
-				f, err := archive.Open(name)
-				if err != nil {
-					t.Fatal(err)
-				}
-				data, err := io.ReadAll(f)
-				f.Close()
-				if err != nil || !bytes.Equal(data, readFile(t, "../../workflow/"+name)) {
-					t.Fatalf("missing or changed UI asset: %s", name)
 				}
 			}
 			file, err := archive.Open("info.plist")

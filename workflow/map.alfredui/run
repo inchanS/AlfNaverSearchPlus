@@ -1,4 +1,0 @@
-#!/bin/bash
-# Resolve from this script, not Alfred UI's working directory.
-d=$(cd -- "${0%/*}/.." && pwd) || exit 1
-exec /bin/bash "$d/run" "$@"

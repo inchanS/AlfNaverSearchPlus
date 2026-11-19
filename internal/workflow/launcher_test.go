@@ -82,38 +82,31 @@ func TestLauncherPreparesOnlyNewOrChangedBinary(t *testing.T) {
 	count(6)
 }
 
-func TestMapUILaunchActionsPreserveLiteralQueries(t *testing.T) {
+func TestPassThroughActionsPreserveLiteralQueries(t *testing.T) {
 	root := parsePlist(t, readFile(t, "../../workflow/info.plist"))
 	count := 0
-	dir := t.TempDir()
-	writeFile(t, filepath.Join(dir, "run"), []byte("#!/bin/sh\nprintf '%s\\000' \"$@\"\n"), 0755)
 	for _, obj := range root.value("objects").Children {
 		if obj.value("type").Text != "alfred.workflow.action.script" {
 			continue
 		}
 		config := obj.value("config")
 		script := config.value("script").Text
-		if !strings.Contains(script, "map-ui-launch") {
+		if !strings.HasPrefix(script, "printf") {
 			continue
 		}
 		count++
 		if config.value("scriptargtype").Text != "1" {
-			t.Fatal("map UI launch must use argv")
+			t.Fatal("pass-through must use argv")
 		}
-		for _, query := range []string{"", "two  spaces", "*", "-n", "$100", "a\nb", "$(printf injected)", "`printf injected`", "workflow:update"} {
+		for _, query := range []string{"two  spaces", "*", "-n", "$100", "a\nb"} {
 			cmd := exec.Command("/bin/bash", "-c", script, "alfred", query)
-			cmd.Dir = dir
-			mode := "doNotUseIP"
-			if strings.Contains(script, "launch useIP") {
-				mode = "useIP"
-			}
 			out, err := cmd.CombinedOutput()
-			if err != nil || string(out) != "map-ui-launch\x00"+mode+"\x00"+query+"\x00" {
+			if err != nil || string(out) != query {
 				t.Fatalf("query %q became %q: %v", query, out, err)
 			}
 		}
 	}
-	if count != 2 {
-		t.Fatalf("map UI launch scripts=%d, want 2", count)
+	if count != 3 {
+		t.Fatalf("pass-through scripts=%d, want 3", count)
 	}
 }

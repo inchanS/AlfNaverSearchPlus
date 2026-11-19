@@ -59,7 +59,8 @@ func TestQueriesArePassedLiterallyToHandlers(t *testing.T) {
 	root := parsePlist(t, readFile(t, "../../workflow/info.plist"))
 	wantHandlers := map[string][]string{
 		"n": {"search"}, "nst": {"finance"},
-		"ns": {"shopping"}, "nt": {"terms"},
+		"nm": {"map", "doNotUseIP"}, "nmi": {"map", "useIP"},
+		"ns": {"shopping"}, "nt": {"terms"}, "": {"maphub"},
 		"ne": {"endic"}, "nee": {"enendic"}, "nk": {"krdic"}, "nah": {"hanja"},
 	}
 	for keyword, lang := range map[string]string{
