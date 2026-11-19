@@ -9,6 +9,7 @@
 package main
 
 import (
+	"encoding/json"
 	"os"
 
 	"golang.org/x/text/unicode/norm"
@@ -27,6 +28,34 @@ func main() {
 	normalizeArgs(args)
 
 	cmd := args[0]
+
+	if cmd == "map-ui-launch" {
+		mode := "doNotUseIP"
+		if len(args) > 1 && args[1] == "useIP" {
+			mode = "useIP"
+		}
+		word := ""
+		if len(args) > 2 {
+			word = args[2]
+		}
+		// Preserve the existing background update check and cache cleanup for
+		// people who only use maps, without mixing Script Filter JSON into UI.
+		notice := alfred.New()
+		update.MaybeShow(notice)
+		title := "네이버 지도"
+		if len(notice.Items) > 0 {
+			title += " · 새 버전 있음: n workflow:update"
+		}
+		_ = json.NewEncoder(os.Stdout).Encode(map[string]any{"alfredworkflow": map[string]any{"arg": []string{word, mode, title}}})
+		return
+	}
+
+	// Alfred UI has its own output protocol; even a literal workflow:update
+	// in its search field is a query, never an installation command.
+	if cmd == "map-ui-prepare" || cmd == "map-ui-search" {
+		handlers.MapUI(cmd, args[1:])
+		return
+	}
 
 	// Detached background worker: refresh update info, no Alfred output.
 	if cmd == "_update-check" {

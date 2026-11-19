@@ -12,7 +12,6 @@ import (
 	"github.com/inchanS/AlfNaverSearchPlus/internal/cache"
 	"github.com/inchanS/AlfNaverSearchPlus/internal/env"
 	"github.com/inchanS/AlfNaverSearchPlus/internal/jsonx"
-	"github.com/inchanS/AlfNaverSearchPlus/internal/urlx"
 )
 
 const (
@@ -52,6 +51,12 @@ func decodeLocation(data []byte) (location, error) {
 
 // getLocation reserves time for the search even if IP lookup is unavailable.
 func (r *request) getLocation(useIP bool) location {
+	loc, _ := r.getLocationInfo(useIP)
+	return loc
+}
+
+// getLocationInfo also reports when IP lookup fell back to configured coordinates.
+func (r *request) getLocationInfo(useIP bool) (location, bool) {
 	if useIP {
 		loc, err := cache.Load("location_data", env.CacheAge(), func() ([]byte, error) {
 			ctx, cancel := context.WithTimeout(r.ctx, locationTimeout)
@@ -67,11 +72,11 @@ func (r *request) getLocation(useIP bool) location {
 			return json.Marshal(root["lngLat"])
 		}, decodeLocation)
 		if err == nil {
-			return loc
+			return loc, false
 		}
 		logf("map: location lookup failed, using default coordinates: %v", err)
 	}
-	return location{env.Latitude(), env.Longitude()}
+	return location{env.Latitude(), env.Longitude()}, useIP
 }
 
 // mapData shares the complete response across overview and category searches.
@@ -79,6 +84,10 @@ func (r *request) getLocation(useIP bool) location {
 // accidentally supply results from another location.
 func (r *request) mapData(useIP bool, word string) (map[string]any, error) {
 	loc := r.getLocation(useIP)
+	return r.mapDataAt(useIP, word, loc)
+}
+
+func (r *request) mapDataAt(useIP bool, word string, loc location) (map[string]any, error) {
 	key := cache.Key("navmap2", strconv.FormatBool(useIP)+"\x00"+loc.lat+"\x00"+loc.lng+"\x00"+word)
 	return r.cachedJSON(key, env.CacheAge(), apiSearch, map[string]string{
 		"query": word, "type": "all", "coords": loc.lat + "," + loc.lng,
@@ -105,57 +114,22 @@ func addNoResults(fb *alfred.Feedback, word string) {
 	})
 }
 
+func addMapResult(fb *alfred.Feedback, result mapResult, prefix, icon string) {
+	fb.Add(alfred.ItemOpts{
+		Title: prefix + " '" + result.Name + "'", Subtitle: result.Detail,
+		Autocomplete: result.Name, Arg: result.URL, Copy: result.Name,
+		LargeType: result.Name, QuicklookURL: result.URL, Icon: icon, Valid: true,
+	})
+}
+
 func addPlace(fb *alfred.Feedback, place map[string]any, prefix, icon string) {
-	txt := jsonx.AsStr(place["title"])
-	address := jsonx.AsStr(place["roadAddress"])
-	if address == "" {
-		address = jsonx.AsStr(place["jibunAddress"])
-	}
-	url := fmt.Sprintf(mapSearchTypeURL, urlx.Quote(txt), jsonx.AsStr(place["type"]), jsonx.AsStr(place["id"]))
-	fb.Add(alfred.ItemOpts{
-		Title:        prefix + " '" + txt + "'",
-		Subtitle:     address,
-		Autocomplete: txt,
-		Arg:          url,
-		Copy:         txt,
-		LargeType:    txt,
-		QuicklookURL: url,
-		Icon:         icon,
-		Valid:        true,
-	})
+	addMapResult(fb, decodeMapResult("place", place), prefix, icon)
 }
-
 func addAddress(fb *alfred.Feedback, address map[string]any, prefix, icon string) {
-	txt := jsonx.AsStr(address["fullAddress"])
-	url := fmt.Sprintf(mapEntryURL, "address", jsonx.AsStr(address["y"]), jsonx.AsStr(address["x"]), urlx.Quote(txt))
-	fb.Add(alfred.ItemOpts{
-		Title:        prefix + " '" + txt + "'",
-		Subtitle:     jsonx.AsStr(address["title"]),
-		Autocomplete: txt,
-		Arg:          url,
-		Copy:         txt,
-		LargeType:    txt,
-		QuicklookURL: url,
-		Icon:         icon,
-		Valid:        true,
-	})
+	addMapResult(fb, decodeMapResult("address", address), prefix, icon)
 }
-
 func addBus(fb *alfred.Feedback, bus map[string]any, prefix, icon string) {
-	txt := jsonx.AsStr(bus["title"])
-	subtitle := jsonx.AsStr(bus["cityName"]) + "버스 " + txt
-	url := fmt.Sprintf(mapSearchTypeURL, urlx.Quote(txt), "bus-route", jsonx.AsStr(bus["id"]))
-	fb.Add(alfred.ItemOpts{
-		Title:        prefix + " '" + txt + "'",
-		Subtitle:     subtitle,
-		Autocomplete: txt,
-		Arg:          url,
-		Copy:         txt,
-		LargeType:    txt,
-		QuicklookURL: url,
-		Icon:         icon,
-		Valid:        true,
-	})
+	addMapResult(fb, decodeMapResult("bus", bus), prefix, icon)
 }
 
 // mapSearch: first-step map search (mode is "useIP" or "doNotUseIP").

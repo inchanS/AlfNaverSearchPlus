@@ -3,6 +3,9 @@
 ![GitHub stars](https://img.shields.io/github/stars/inchans/Alfnaversearchplus?style=flat&logo=apachespark)
 ![GitHub all releases](https://img.shields.io/github/downloads/inchanS/Alfnaversearchplus/total?logo=github) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/inchanS/Alfnaversearchplus?logo=rocket)  ![GitHub](https://img.shields.io/github/license/inchanS/Alfnaversearchplus)
 
+> **Alfred 4·5 사용자는 이전 메이저 버전인 2.x를 사용해 주세요. 3.x는 Alfred 6에서만 동작합니다.**
+> 2.x 패키지는 [이전 릴리스](../../releases)에서 다운로드할 수 있습니다.
+
 Naver Search Workflow for Alfred
 ---------------------------------
 
@@ -15,6 +18,9 @@ Alfred에서 네이버 검색, 네이버 쇼핑, 네이버 지식백과, 네이�
 **alfnaversearch** 워크플로우의 코드기여는 [forked repository](https://github.com/inchanS/alfnaversearch)에서 진행하였습니다.    
 
 변경부분
+- **Alfred 6 전용 지도 UI 추가** (v3.0.0)
+  - 한 화면에서 전체·장소·주소·버스와 설정 위치·IP 추정 위치 전환
+  - 이름·주소 복사, 비동기 검색, IP 위치 조회 실패 시 대체 위치 안내
 - 일부 script 호출 keyword 변경 
 - 네이버 **지도 검색 기능 추가 및 개선** (updated v0.0.2)
   - 사용자 위치 설정 및 장소, 주소, 버스 전용보기 추가 
@@ -34,7 +40,7 @@ Preview
 
 <br>  
 
-**네이버 지도 검색**  
+**네이버 지도 검색 — 아래 GIF는 v2.x 화면입니다.**
 
 <img src="images/nspmap.gif" width="600">
 
@@ -55,17 +61,20 @@ Install workflow
   - 다운로드 격리(Gatekeeper)는 워크플로우 내부의 `run` 스크립트가 최초 실행 및 바이너리 교체 시 자동으로 해제합니다. 준비가 끝난 바이너리는 반복 작업 없이 실행합니다.
   - 참고: `v1.x.x` 이하 버전은 Python 3 설치가 필요했습니다. (`brew install python`, `xcode-select --install`)
 
-- Alfred 4.0 이상 지원
+- **3.x: Alfred 6 + Powerpack 필요**
+- **2.x: Alfred 4·5 사용자용 이전 메이저 버전**
 
 Auto Update
 --------------
 
 v0.3.1부터 자동 업데이트를 지원합니다.
 
+> **Alfred 4·5 사용자는 3.x 업데이트를 설치하지 마세요.** 기존 2.x 업데이터는 Alfred 버전을 판별하지 않으므로 3.x 업데이트도 안내할 수 있습니다. 2.x를 계속 사용하고, 실수로 업데이트했다면 [이전 릴리스](../../releases)에서 2.x를 다시 설치해 주세요. 이 경고는 자동 업데이트를 기술적으로 차단하는 기능은 아닙니다.
+
 - 워크플로우 사용 시 **주 1회** 백그라운드에서 새 릴리스를 확인하며, 검색 속도에는 영향이 없습니다.
 - 새 버전이 있으면 검색 결과 맨 위에 `New version of NaverSearchPlus is available!` 항목이 표시되고,
   선택하면 새 버전을 내려받아 설치합니다.
-- 수동 명령어: 검색 keyword 뒤에 `workflow:update`를 입력하면 즉시 최신 버전을 내려받아 설치합니다. (예: `na workflow:update`)
+- 수동 명령어: 검색 keyword 뒤에 `workflow:update`를 입력하면 즉시 최신 버전을 내려받아 설치합니다. (예: `n workflow:update`)
 
 
 Performance
@@ -100,13 +109,26 @@ Alfred의 Script Filter는 **키 입력 한 번마다 프로세스를 새로 실
 
 General Usage
 --------------
-* `na ...`  : Naver Search(일반 네이버 검색)
+* `n ...`  : Naver Search(일반 네이버 검색)
 * `ns ...`  : Naver Shopping(네이버 쇼핑 검색) - 네이버 가격비교 검색
   * `ns ...` + `shift`키 : 네이버플러스 스토어 검색 (updated v0.2.0) 
 * `nt ...`  : Naver Terms(네이버 지식백과 검색)
-* `nm ...` : Naver Map(네이버 지도 검색) - Configure 위치 설정값 기반 - **New**
-* `nmi ...` : Naver Map(네이버 지도 검색) - IP 위치 기반 - **New**
+* `nm ...` : 네이버 지도 UI 열기 — 설정한 위치 기준 (Enter)
+* `nmi ...` : 네이버 지도 UI 열기 — IP 추정 위치 기준 (Enter)
 * `nst ...` : Naver Finance - 증권 검색 - **New**
+
+Map UI (Alfred 6)
+--------------
+- `nm 검색어` 또는 `nmi 검색어` 입력 후 Enter를 누르면 지도 화면이 열립니다. 검색어 없이도 열 수 있습니다.
+- 검색창에서 입력을 잠시 멈추면 비동기로 검색합니다. Enter 또는 **다시 검색(⌘R)** 으로 다시 조회할 수 있습니다. 유효한 캐시는 재사용합니다.
+- **전체 / 장소 / 주소 / 버스** 선택 메뉴와 **설정한 위치 / IP 추정 위치** 선택 메뉴로 검색 범위를 바꿉니다.
+- 결과 목록에 포커스를 두고 방향키로 선택하고 Enter로 엽니다. **선택한 결과 열기(⌘Enter)** 버튼도 사용할 수 있습니다.
+- **이름 복사 / 주소 복사**를 제공합니다. 주소가 없는 버스 등은 주소 복사가 비활성화됩니다.
+- API 오류나 결과 없음 상태에서도 **네이버 지도에서 검색**으로 브라우저 검색을 실행할 수 있습니다.
+- IP 위치 조회 실패 시 설정한 좌표를 사용하며 화면에 안내합니다. IP 위치는 GPS 기반 현재 위치가 아닙니다.
+- 새 버전이 확인되면 지도 화면을 열 때 상단에 안내합니다.
+- 이 화면의 `workflow:update`는 검색어로 취급합니다. 수동 업데이트는 `n workflow:update`를 사용하세요.
+- 기준 좌표는 기존 **Configure Workflow…**에서 설정합니다. 주소로 기준 위치를 저장하는 기능은 아직 포함하지 않습니다.
 
 Dictionary Usage
 --------------
@@ -182,7 +204,9 @@ Build from source
 sh ./build.sh
 
 # .alfredworkflow 패키지 생성
+# 기본 개발 버전은 VERSION(3.0.0), 릴리스 CI는 v3.x 태그를 사용합니다.
 sh ./make.sh
+# 명시적으로 지정하려면: WORKFLOW_VERSION=3.0.0 sh ./make.sh
 
 # 테스트
 go test -race ./...
@@ -191,6 +215,7 @@ go vet ./...
 
 - `cmd/naversearch` : 진입점 (서브커맨드 디스패치)
 - `internal/` : `alfred`(피드백 JSON), `httpx`(HTTP), `cache`(캐시), `update`(자동 업데이트), `handlers`(각 검색 기능)
+- `workflow/map.alfredui` : Alfred 6 지도 화면과 Go 호출 스크립트
 - `workflow/run` : 다운로드 격리 해제 후 바이너리를 실행하는 Script Filter 진입 스크립트
 
 `v1.x.x` 이하 버전은 Python 및 [alfred-pyworkflow](https://github.com/harrtho/alfred-pyworkflow)에 의존했으나, Intel 기반 헬퍼 및 런타임 의존성 문제로 `v2.0.0`에서 Go로 전면 대체되었습니다.

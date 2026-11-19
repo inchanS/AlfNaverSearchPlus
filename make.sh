@@ -7,17 +7,22 @@ set -eu
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 
-# An explicit version also supports source archives without Git metadata.
-# Otherwise prefer the release tag in CI, then the latest local version tag.
+# Explicit override > release tag > checked-in development version.
+# Do not label Alfred 6 UI builds with the last historical 2.x Git tag.
 if [ -z "${WORKFLOW_VERSION:-}" ]; then
     case "${GITHUB_REF:-}" in
         refs/tags/v*) WORKFLOW_VERSION=${GITHUB_REF#refs/tags/v} ;;
-        *) WORKFLOW_VERSION=$(git describe --tags --match 'v[0-9]*' --abbrev=0 2>/dev/null || true) ;;
+        *) WORKFLOW_VERSION=$(cat VERSION 2>/dev/null || true) ;;
     esac
 fi
 WORKFLOW_VERSION=${WORKFLOW_VERSION#v}
 if ! printf '%s\n' "$WORKFLOW_VERSION" | LC_ALL=C grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
-    echo "Cannot determine a release version. Set WORKFLOW_VERSION to a version such as 2.0.3." >&2
+    echo "Cannot determine a release version. Set WORKFLOW_VERSION to a version such as 3.0.0." >&2
+    exit 1
+fi
+
+if [ "${WORKFLOW_VERSION%%.*}" -lt 3 ]; then
+    echo "This source requires Alfred 6. Set WORKFLOW_VERSION to 3.0.0 or newer." >&2
     exit 1
 fi
 

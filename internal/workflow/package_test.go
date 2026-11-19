@@ -16,46 +16,58 @@ func TestPackagingVersionsAndSourcePreservation(t *testing.T) {
 		t.Skip("packaging requires zip")
 	}
 	root := t.TempDir()
-	for _, dir := range []string{"workflow", "workflow/.naversearch-ready", "bin"} {
+	for _, dir := range []string{"workflow", "workflow/.naversearch-ready", "workflow/map.alfredui"} {
 		if err := os.Mkdir(filepath.Join(root, dir), 0o755); err != nil {
 			t.Fatal(err)
 		}
 	}
 	writeFile(t, filepath.Join(root, "make.sh"), readFile(t, "../../make.sh"), 0o755)
 	writeFile(t, filepath.Join(root, "workflow/.naversearch-ready/binary"), []byte("local binary"), 0o644)
+	for _, name := range []string{"ui.json", "run"} {
+		mode := os.FileMode(0644)
+		if name == "run" {
+			mode = 0755
+		}
+		writeFile(t, filepath.Join(root, "workflow/map.alfredui", name), readFile(t, "../../workflow/map.alfredui/"+name), mode)
+	}
 	original := readFile(t, "../../workflow/info.plist")
 	source := filepath.Join(root, "workflow/info.plist")
 	writeFile(t, source, original, 0o644)
 	// Exercise the actual packaging script without rebuilding Mach-O binaries
-	// or creating Git commits/tags. Only the build and tag lookup are stubbed.
+	// or creating Git commits/tags. Only the build is stubbed.
 	writeFile(t, filepath.Join(root, "build.sh"), []byte("#!/bin/sh\nprintf binary > workflow/naversearch\n"), 0o755)
-	writeFile(t, filepath.Join(root, "bin/git"), []byte("#!/bin/sh\n[ -n \"$TEST_TAG\" ] || exit 1\nprintf '%s\\n' \"$TEST_TAG\"\n"), 0o755)
 	baseEnv := []string{}
 	for _, entry := range os.Environ() {
 		key, _, _ := strings.Cut(entry, "=")
-		if key != "PATH" && key != "GITHUB_REF" && key != "WORKFLOW_VERSION" && key != "TEST_TAG" {
+		if key != "GITHUB_REF" && key != "WORKFLOW_VERSION" {
 			baseEnv = append(baseEnv, entry)
 		}
 	}
-	baseEnv = append(baseEnv, "PATH="+filepath.Join(root, "bin")+string(os.PathListSeparator)+os.Getenv("PATH"))
 	packagePath := filepath.Join(root, "NaverSearchPlus.alfredworkflow")
 	tests := []struct {
-		name, tag, ref, explicit, want string
+		name, sourceVersion, ref, explicit, want string
 	}{
-		{"local tag", "v2.0.3", "", "", "2.0.3"},
-		{"CI tag on second build", "v2.0.3", "refs/tags/v2.0.4", "", "2.0.4"},
-		{"branch build", "v2.0.3", "refs/heads/main", "", "2.0.3"},
-		{"explicit source archive version", "", "", "2.0.5", "2.0.5"},
-		{"explicit override", "v2.0.3", "refs/tags/v2.0.4", "v2.0.6", "2.0.6"},
+		{"development version", "v3.0.3", "", "", "3.0.3"},
+		{"CI tag on second build", "v3.0.3", "refs/tags/v3.0.4", "", "3.0.4"},
+		{"branch development version", "v3.0.3", "refs/heads/main", "", "3.0.3"},
+		{"explicit source archive version", "", "", "3.0.5", "3.0.5"},
+		{"explicit override", "v3.0.3", "refs/tags/v3.0.4", "v3.0.6", "3.0.6"},
 		{"missing version", "", "", "", ""},
+		{"reject legacy version", "", "", "2.0.9", ""},
 		{"invalid version", "", "", "not-a-version", ""},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			versionPath := filepath.Join(root, "VERSION")
+			if tt.sourceVersion == "" {
+				_ = os.Remove(versionPath)
+			} else {
+				writeFile(t, versionPath, []byte(strings.TrimPrefix(tt.sourceVersion, "v")+"\n"), 0o644)
+			}
 			previous, _ := os.ReadFile(packagePath)
 			cmd := exec.Command("/bin/sh", filepath.Join(root, "make.sh"))
 			cmd.Dir = t.TempDir() // also prove invocation is independent of cwd
-			cmd.Env = append(append([]string{}, baseEnv...), "TEST_TAG="+tt.tag, "GITHUB_REF="+tt.ref, "WORKFLOW_VERSION="+tt.explicit)
+			cmd.Env = append(append([]string{}, baseEnv...), "GITHUB_REF="+tt.ref, "WORKFLOW_VERSION="+tt.explicit)
 			out, err := cmd.CombinedOutput()
 			if !bytes.Equal(readFile(t, source), original) {
 				t.Fatal("packaging changed the source version template")
@@ -80,6 +92,17 @@ func TestPackagingVersionsAndSourcePreservation(t *testing.T) {
 			for _, entry := range archive.File {
 				if strings.HasPrefix(entry.Name, ".naversearch-ready") {
 					t.Fatalf("packaged runtime state: %s", entry.Name)
+				}
+			}
+			for _, name := range []string{"map.alfredui/ui.json", "map.alfredui/run"} {
+				f, err := archive.Open(name)
+				if err != nil {
+					t.Fatal(err)
+				}
+				data, err := io.ReadAll(f)
+				f.Close()
+				if err != nil || !bytes.Equal(data, readFile(t, "../../workflow/"+name)) {
+					t.Fatalf("missing or changed UI asset: %s", name)
 				}
 			}
 			file, err := archive.Open("info.plist")

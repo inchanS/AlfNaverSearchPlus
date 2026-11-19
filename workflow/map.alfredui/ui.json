@@ -1,0 +1,290 @@
+{
+  "bundleid": "com.inchans.alfnaversearchplus.map",
+  "variablesconfig": {
+    "map_initial_query": {
+      "src": "args[0]",
+      "default": ""
+    },
+    "map_initial_mode": {
+      "src": "args[1]",
+      "default": "doNotUseIP"
+    },
+    "latitude": {
+      "src": "variable",
+      "scriptenv": true
+    },
+    "longitude": {
+      "src": "variable",
+      "scriptenv": true
+    },
+    "cache_age": {
+      "src": "variable",
+      "scriptenv": true
+    },
+    "map_initial_title": {
+      "src": "args[2]",
+      "default": "네이버 지도"
+    }
+  },
+  "window": {
+    "title": "네이버 지도",
+    "size": {
+      "width": 680,
+      "height": 560
+    },
+    "padding": 16,
+    "root": {
+      "type": "view",
+      "layout": "inline",
+      "direction": "vertical",
+      "spacing": 12,
+      "events": {
+        "triggers": "launched",
+        "action": [
+          {
+            "type": "script",
+            "src": "./run",
+            "args": [
+              "map-ui-prepare",
+              "{value:map_query.text}",
+              "{value:map_mode.selected.value}",
+              "{value:map_category.selected.value}"
+            ]
+          },
+          {
+            "type": "script",
+            "src": "./run",
+            "args": [
+              "map-ui-search",
+              "{value:map_query.text}",
+              "{value:map_mode.selected.value}",
+              "{value:map_category.selected.value}"
+            ],
+            "async": true
+          }
+        ]
+      },
+      "components": [
+        {
+          "type": "label",
+          "text": "{var:map_initial_title}",
+          "font": {
+            "size": "large"
+          }
+        },
+        {
+          "id": "map_query",
+          "type": "textfield",
+          "text": "{var:map_initial_query}",
+          "placeholder": "장소, 주소 또는 버스 번호",
+          "editable": true,
+          "focus": true,
+          "accessibility": {
+            "label": "지도 검색어"
+          },
+          "events": [
+            {
+              "triggers": "changed",
+              "action": {
+                "type": "script",
+                "src": "./run",
+                "args": [
+                  "map-ui-prepare",
+                  "{value:map_query.text}",
+                  "{value:map_mode.selected.value}",
+                  "{value:map_category.selected.value}"
+                ]
+              }
+            },
+            {
+              "triggers": "typingstopped",
+              "action": {
+                "type": "script",
+                "src": "./run",
+                "args": [
+                  "map-ui-search",
+                  "{value:map_query.text}",
+                  "{value:map_mode.selected.value}",
+                  "{value:map_category.selected.value}"
+                ],
+                "async": true
+              }
+            },
+            {
+              "triggers": "actioned",
+              "action": [
+                {
+                  "type": "script",
+                  "src": "./run",
+                  "args": [
+                    "map-ui-prepare",
+                    "{value:map_query.text}",
+                    "{value:map_mode.selected.value}",
+                    "{value:map_category.selected.value}"
+                  ]
+                },
+                {
+                  "type": "script",
+                  "src": "./run",
+                  "args": [
+                    "map-ui-search",
+                    "{value:map_query.text}",
+                    "{value:map_mode.selected.value}",
+                    "{value:map_category.selected.value}"
+                  ],
+                  "async": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "view",
+          "layout": "inline",
+          "direction": "horizontal",
+          "spacing": 8,
+          "components": [
+            {
+              "id": "map_category",
+              "type": "picker",
+              "selected": "all",
+              "accessibility": {
+                "label": "검색 카테고리"
+              },
+              "items": [
+                {
+                  "text": "전체",
+                  "value": "all"
+                },
+                {
+                  "text": "장소",
+                  "value": "place"
+                },
+                {
+                  "text": "주소",
+                  "value": "address"
+                },
+                {
+                  "text": "버스",
+                  "value": "bus"
+                }
+              ],
+              "events": {
+                "triggers": "changed",
+                "action": [
+                  {
+                    "type": "script",
+                    "src": "./run",
+                    "args": [
+                      "map-ui-prepare",
+                      "{value:map_query.text}",
+                      "{value:map_mode.selected.value}",
+                      "{value:map_category.selected.value}"
+                    ]
+                  },
+                  {
+                    "type": "script",
+                    "src": "./run",
+                    "args": [
+                      "map-ui-search",
+                      "{value:map_query.text}",
+                      "{value:map_mode.selected.value}",
+                      "{value:map_category.selected.value}"
+                    ],
+                    "async": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": "map_mode",
+              "type": "picker",
+              "selected": "{var:map_initial_mode}",
+              "accessibility": {
+                "label": "검색 기준 위치"
+              },
+              "items": [
+                {
+                  "text": "설정한 위치",
+                  "value": "doNotUseIP"
+                },
+                {
+                  "text": "IP 추정 위치",
+                  "value": "useIP"
+                }
+              ],
+              "events": {
+                "triggers": "changed",
+                "action": [
+                  {
+                    "type": "script",
+                    "src": "./run",
+                    "args": [
+                      "map-ui-prepare",
+                      "{value:map_query.text}",
+                      "{value:map_mode.selected.value}",
+                      "{value:map_category.selected.value}"
+                    ]
+                  },
+                  {
+                    "type": "script",
+                    "src": "./run",
+                    "args": [
+                      "map-ui-search",
+                      "{value:map_query.text}",
+                      "{value:map_mode.selected.value}",
+                      "{value:map_category.selected.value}"
+                    ],
+                    "async": true
+                  }
+                ]
+              }
+            },
+            {
+              "type": "button",
+              "text": "다시 검색",
+              "shortcut": "⌘R",
+              "events": {
+                "triggers": "actioned",
+                "action": [
+                  {
+                    "type": "script",
+                    "src": "./run",
+                    "args": [
+                      "map-ui-prepare",
+                      "{value:map_query.text}",
+                      "{value:map_mode.selected.value}",
+                      "{value:map_category.selected.value}"
+                    ]
+                  },
+                  {
+                    "type": "script",
+                    "src": "./run",
+                    "args": [
+                      "map-ui-search",
+                      "{value:map_query.text}",
+                      "{value:map_mode.selected.value}",
+                      "{value:map_category.selected.value}"
+                    ],
+                    "async": true
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "map_content",
+          "type": "view",
+          "layout": "stack",
+          "constraints": {
+            "size": {
+              "height": 410
+            }
+          },
+          "components": []
+        }
+      ]
+    }
+  }
+}
