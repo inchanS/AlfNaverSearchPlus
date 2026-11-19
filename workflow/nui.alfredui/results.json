@@ -1,7 +1,7 @@
 {
   "id": "results",
   "type": "dataview",
-  "constraints": {"size": {"height": 258}},
+  "constraints": {"size": {"height": "{var:nn_list_height}"}},
   "placeholder": "검색어를 입력하세요.",
   "cell": {
     "root": {
@@ -11,9 +11,9 @@
       "direction": "vertical",
       "padding": 5,
       "spacing": 1,
-      "components": [{"id": "name", "type": "label"}, {"id": "detail", "type": "label", "font": {"size": "small"}}]
+      "components": [{"id": "name", "type": "label", "font": {"size": "{var:nn_primary_font}"}}, {"id": "detail", "type": "label", "font": {"size": "{var:nn_secondary_font}"}}]
     },
-    "height": 43,
+    "height": "{var:nn_row_height}",
     "init": {"row.background": null, "name.colour": "labelColor", "detail.colour": "secondaryLabelColor"},
     "selected": {
       "row.background": "alfredSelectedResultBackgroundColor",

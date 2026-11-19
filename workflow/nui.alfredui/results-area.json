@@ -1,0 +1,29 @@
+{
+  "id": "results_area",
+  "type": "view",
+  "layout": "stack",
+  "focusable": true,
+  "accessibility": {"label": "검색 결과"},
+  "constraints": {"size": {"height": "{var:nn_list_height}"}},
+  "shortcuts": [
+    {"shortcut": "\uf701", "action": {"type": "function", "src": "results", "args": "selectdown"}},
+    {"shortcut": "\uf700", "action": {"type": "function", "src": "results", "args": "selectup"}},
+    {
+      "shortcut": "↩",
+      "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:results.selected.url}", "{value:results.selected.lookup}", "{var:lookup}"]}
+    },
+    {
+      "shortcut": "⌥↩",
+      "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:results.selected.url}", "{value:results.selected.lookup}", "{var:lookup}"]}
+    },
+    {
+      "shortcut": "⇧↩",
+      "action": {
+        "type": "script",
+        "src": "./run",
+        "args": ["nui", "open", "{value:results.selected.shiftURL}", "{value:results.selected.lookup}", "{var:lookup}"]
+      }
+    }
+  ],
+  "components": ["{file:results.json}", "{file:response-slot.json}"]
+}

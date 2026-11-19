@@ -4095,6 +4095,90 @@ v0.3.1부터 자동 업데이트를 지원합니다.
 			<key>variable</key>
 			<string>cache_age</string>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>current</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>Alfred 테마에 맞춤</string>
+						<string>theme</string>
+					</array>
+					<array>
+						<string>현재 너비</string>
+						<string>current</string>
+					</array>
+					<array>
+						<string>넓게</string>
+						<string>wide</string>
+					</array>
+				</array>
+			</dict>
+			<key>label</key>
+			<string>통합검색 창 너비</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>nn_width</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>default</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>기본</string>
+						<string>default</string>
+					</array>
+					<array>
+						<string>크게</string>
+						<string>large</string>
+					</array>
+					<array>
+						<string>아주 크게</string>
+						<string>extra_large</string>
+					</array>
+				</array>
+			</dict>
+			<key>label</key>
+			<string>통합검색 글자 크기</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>nn_font</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>6</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>6개</string>
+						<string>6</string>
+					</array>
+					<array>
+						<string>8개</string>
+						<string>8</string>
+					</array>
+					<array>
+						<string>10개</string>
+						<string>10</string>
+					</array>
+				</array>
+			</dict>
+			<key>label</key>
+			<string>통합검색 표시할 결과 수</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>nn_rows</string>
+		</dict>
 	</array>
 	<key>version</key>
 	<string>{{VERSION_INFO}}</string>

@@ -1,6 +1,9 @@
 {
   "bundleid": "com.inchans.alfnaversearchplus.nui",
   "variablesconfig": {
+    "nn_width": {"src": "variable", "scriptenv": true},
+    "nn_rows": {"src": "variable", "scriptenv": true},
+    "nn_font": {"src": "variable", "scriptenv": true},
     "latitude": {"src": "variable", "scriptenv": true},
     "longitude": {"src": "variable", "scriptenv": true},
     "cache_age": {"src": "variable", "scriptenv": true},
@@ -14,7 +17,7 @@
   "window": {
     "title": "네이버 통합검색",
     "padding": 14,
-    "size": {"width": 595, "height": 455},
+    "size": {"height": 455},
     "root": {
       "type": "view",
       "layout": "inline",
@@ -23,7 +26,10 @@
       "events": [
         {
           "triggers": "preload",
-          "action": {"type": "script", "src": "./run", "args": ["_ime", "enter"]}
+          "action": [
+            {"type": "script", "src": "./run", "args": ["nui", "layout"]},
+            {"type": "script", "src": "./run", "args": ["_ime", "enter"]}
+          ]
         },
         {
           "triggers": "launched",
@@ -76,6 +82,7 @@
           "components": [
             {
               "type": "button",
+              "id": "tab_search",
               "text": "일반 ⌘1",
               "shortcut": "⌘1",
               "events": {
@@ -92,6 +99,7 @@
             },
             {
               "type": "button",
+              "id": "tab_map",
               "text": "지도 ⌘2",
               "shortcut": "⌘2",
               "events": {
@@ -108,6 +116,7 @@
             },
             {
               "type": "button",
+              "id": "tab_finance",
               "text": "증권 ⌘3",
               "shortcut": "⌘3",
               "events": {
@@ -124,6 +133,7 @@
             },
             {
               "type": "button",
+              "id": "tab_shopping",
               "text": "쇼핑 ⌘4",
               "shortcut": "⌘4",
               "events": {
@@ -141,35 +151,7 @@
           ]
         },
         {"id": "category_label", "type": "label", "text": "일반 검색"},
-        {
-          "id": "results_area",
-          "type": "view",
-          "layout": "stack",
-          "focusable": true,
-          "accessibility": {"label": "검색 결과"},
-          "constraints": {"size": {"height": 288}},
-          "shortcuts": [
-            {"shortcut": "\uf701", "action": {"type": "function", "src": "results", "args": "selectdown"}},
-            {"shortcut": "\uf700", "action": {"type": "function", "src": "results", "args": "selectup"}},
-            {
-              "shortcut": "↩",
-              "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:results.selected.url}", "{value:results.selected.lookup}", "{var:lookup}"]}
-            },
-            {
-              "shortcut": "⌥↩",
-              "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:results.selected.url}", "{value:results.selected.lookup}", "{var:lookup}"]}
-            },
-            {
-              "shortcut": "⇧↩",
-              "action": {
-                "type": "script",
-                "src": "./run",
-                "args": ["nui", "open", "{value:results.selected.shiftURL}", "{value:results.selected.lookup}", "{var:lookup}"]
-              }
-            }
-          ],
-          "components": ["{file:results.json}", "{file:response-slot.json}"]
-        },
+        {"type": "view", "id": "results_area"},
         {"id": "hint", "type": "label", "colour": "secondaryLabelColor", "font": {"size": "small"}}
       ]
     }
