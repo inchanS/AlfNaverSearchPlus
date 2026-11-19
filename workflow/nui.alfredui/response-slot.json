@@ -1,0 +1,15 @@
+{
+  "id": "response_slot",
+  "type": "dataview",
+  "hidden": true,
+  "cell": {"root": {"type": "label"}},
+  "data": {"type": "basic", "src": []},
+  "events": {
+    "triggers": "changed",
+    "action": {
+      "type": "json",
+      "variables": {"result_update": "{value:response_slot.selected.patch}"},
+      "src": {"update": "{var:result_update}"}
+    }
+  }
+}

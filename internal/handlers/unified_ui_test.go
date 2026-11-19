@@ -1,0 +1,93 @@
+package handlers
+
+import (
+	"errors"
+	"net/http"
+	"testing"
+
+	"github.com/inchanS/AlfNaverSearchPlus/internal/cache"
+)
+
+func TestUnifiedShoppingUsesSelectedSuggestionAndCurrentView(t *testing.T) {
+	t.Setenv("alfred_workflow_cache", t.TempDir())
+	const word = "workflow:update"
+	if err := cache.Write(cache.Key("navs", word), []byte(`{"result":{"keywordList":[{"keywordName":"서울 & 우유"}]}}`)); err != nil {
+		t.Fatal(err)
+	}
+	id := func() string {
+		return prepareSearch("shopping", word, "shopping")["variables"].(uiJSON)["lookup"].(string)
+	}
+	first, next := id(), id()
+	if first == next {
+		t.Fatal("retyping the same query must invalidate its previous result view")
+	}
+	action := testRequest(t, nil).unifiedResults("shopping", word, first)
+	ids := action["update"].(uiJSON)["ids"].(uiJSON)
+	if len(ids) != 1 || ids["response_slot"] == nil {
+		t.Fatal("async responses must go through the current request slot")
+	}
+	rows := resultRows(t, action, first)
+	if len(rows) != 2 || rows[1]["name.text"] != "서울 & 우유" {
+		t.Fatalf("missing suggestion: %v", rows)
+	}
+	const encoded = "%EC%84%9C%EC%9A%B8%20%26%20%EC%9A%B0%EC%9C%A0"
+	for key, want := range map[string]string{
+		"url":      "https://search.shopping.naver.com/search/all?query=" + encoded,
+		"shiftURL": "https://search.shopping.naver.com/ns/search?query=" + encoded,
+	} {
+		if got := rows[1][key].(string); got != want || openResult(got, rows[1]["lookup"].(string), first)["open"] == nil {
+			t.Errorf("%s = %q, want actionable %q", key, got, want)
+		}
+	}
+}
+
+func TestUnifiedEmptyQueryAndOfflineFallback(t *testing.T) {
+	t.Setenv("alfred_workflow_cache", t.TempDir())
+	const id = "lookup_test"
+	if got := testRequest(t, nil).unifiedResults("search", "  ", id); len(got) != 0 {
+		t.Fatalf("empty query started search: %v", got)
+	}
+	r := testRequest(t, func(*http.Request) (*http.Response, error) { return nil, errors.New("offline") })
+	action := r.unifiedResults("search", "서울", id)
+	rows := resultRows(t, action, id)
+	if len(rows) != 1 || rows[0]["url"] == "" {
+		t.Fatal("keep direct search when suggestions are unavailable")
+	}
+	if action := openResult("", id, id); len(action) != 0 {
+		t.Fatal("an empty selection should leave the window open")
+	}
+}
+
+func resultRows(t *testing.T, action uiJSON, lookup string) []uiJSON {
+	t.Helper()
+	replacements := action["variables"].(uiJSON)["replacements"].(uiJSON)
+	entry, ok := replacements[lookup].(uiJSON)
+	if !ok || len(replacements) != 1 {
+		t.Fatalf("response must match only %q", lookup)
+	}
+	ids := entry["patch"].(uiJSON)["ids"].(uiJSON)
+	return ids["results"].(uiJSON)["data"].(uiJSON)["src"].([]uiJSON)
+}
+
+func TestTypingRetainsVisibleRowsButInvalidatesTheirActions(t *testing.T) {
+	for _, tc := range []struct {
+		category, previous, word string
+		clear                    bool
+	}{
+		{"search", "search", "서울역", false},
+		{"search", "search", "", true},
+		{"map", "search", "서울역", true},
+	} {
+		action := prepareSearch(tc.category, tc.word, tc.previous)
+		ids := action["update"].(uiJSON)["ids"].(uiJSON)
+		view := ids["results"].(uiJSON)
+		_, cleared := view["data"]
+		if cleared != tc.clear || view["components"] != nil {
+			t.Fatalf("%+v: unexpected list update: %v", tc, view)
+		}
+		current := action["variables"].(uiJSON)["lookup"].(string)
+		if got := openResult("https://map.naver.com", "lookup_previous", current); len(got) != 0 {
+			t.Fatal("an old visible suggestion must not open while new results are pending")
+		}
+	}
+}

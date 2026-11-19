@@ -1,0 +1,29 @@
+{
+  "id": "results",
+  "type": "dataview",
+  "constraints": {"size": {"height": 258}},
+  "placeholder": "검색어를 입력하세요.",
+  "cell": {
+    "root": {
+      "id": "row",
+      "type": "view",
+      "layout": "inline",
+      "direction": "vertical",
+      "padding": 5,
+      "spacing": 1,
+      "components": [{"id": "name", "type": "label"}, {"id": "detail", "type": "label", "font": {"size": "small"}}]
+    },
+    "height": 43,
+    "init": {"row.background": null, "name.colour": "labelColor", "detail.colour": "secondaryLabelColor"},
+    "selected": {
+      "row.background": "alfredSelectedResultBackgroundColor",
+      "name.colour": "alfredSelectedResultTextColor",
+      "detail.colour": "alfredSelectedResultTextColor"
+    }
+  },
+  "data": {"type": "basic", "src": []},
+  "events": {
+    "triggers": "actioned",
+    "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:results.selected.url}", "{value:results.selected.lookup}", "{var:lookup}"]}
+  }
+}

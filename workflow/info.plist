@@ -8,6 +8,19 @@
 	<string>Internet</string>
 	<key>connections</key>
 	<dict>
+		<key>659237F4-0BFD-49AF-8B3D-6A2527F010F1</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>DAFD312A-135C-4A70-9A07-6B00A3F5E929</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>0166BD8D-0775-422A-B4A9-6C7EBE6B407C</key>
 		<array>
 			<dict>
@@ -769,6 +782,44 @@
 	<string>Naver Search Plus</string>
 	<key>objects</key>
 	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>keyword</key>
+				<string>nn</string>
+				<key>text</key>
+				<string>네이버 통합검색</string>
+				<key>subtext</key>
+				<string>일반 · 지도 · 증권 · 쇼핑</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>659237F4-0BFD-49AF-8B3D-6A2527F010F1</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>path</key>
+				<string>nui.alfredui</string>
+				<key>launchmode</key>
+				<integer>0</integer>
+				<key>stackview</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.userinterface.alfredui</string>
+			<key>uid</key>
+			<string>DAFD312A-135C-4A70-9A07-6B00A3F5E929</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -3387,7 +3438,8 @@
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>&gt; **Alfred 4·5 사용자는 이전 메이저 버전인 2.x를 사용해 주세요. 3.x는 Alfred 6에서만 동작합니다.**
+	<string>&gt; **v3.x는 Alfred 6에서만 동작합니다.!! Alfred 4·5 사용자는 이 워크플로우의 이전 메이저 버전인 v2.x를 사용해 주세요. **
+&gt; v2.x 마지막 버전을 설치 후, `workflow:noautoupdate` 명령어로 자동업데이트를 꺼주세요!
 
 Autocomplete Workflow for Naver Services
 
@@ -3413,6 +3465,20 @@ v0.3.1부터 자동 업데이트를 지원합니다.
   - `workflow:noautoupdate` / `workflow:autoupdate` : 자동 확인 끄기 / 켜기</string>
 	<key>uidata</key>
 	<dict>
+		<key>659237F4-0BFD-49AF-8B3D-6A2527F010F1</key>
+		<dict>
+			<key>xpos</key>
+			<real>30.0</real>
+			<key>ypos</key>
+			<real>2530.0</real>
+		</dict>
+		<key>DAFD312A-135C-4A70-9A07-6B00A3F5E929</key>
+		<dict>
+			<key>xpos</key>
+			<real>230.0</real>
+			<key>ypos</key>
+			<real>2530.0</real>
+		</dict>
 		<key>0166BD8D-0775-422A-B4A9-6C7EBE6B407C</key>
 		<dict>
 			<key>xpos</key>

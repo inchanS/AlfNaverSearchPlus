@@ -64,6 +64,8 @@ func Dispatch(cmd string, args []string) {
 
 func (r *request) dispatch(cmd string, args []string) {
 	switch cmd {
+	case "nui":
+		r.unifiedUI(args)
 	case "search":
 		run(func(fb *alfred.Feedback) error { return r.search(fb, at(args, 0)) })
 	case "shopping":
