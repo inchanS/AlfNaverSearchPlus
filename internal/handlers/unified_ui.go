@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"net/url"
 	"os"
+	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"github.com/inchanS/AlfNaverSearchPlus/internal/alfred"
@@ -136,6 +138,18 @@ func (r *request) unifiedUI(args []string) {
 	command, category := at(args, 0), at(args, 1)
 	if command == "open" {
 		action = openResult(at(args, 1), at(args, 2), at(args, 3))
+		// Restore before the JSON open action gives focus to the browser.
+		if action["open"] != nil && os.Getenv("nnime_applied") != "" {
+			if binary, err := os.Executable(); err == nil {
+				helper := filepath.Join(filepath.Dir(binary), "input-source")
+				cmd := exec.Command(helper, "leave", os.Getenv("nnime_previous"), os.Getenv("nnime_applied"))
+				if err := cmd.Run(); err != nil {
+					logf("nnime restore: %v", err)
+				}
+			}
+			vars := action["variables"].(uiJSON)
+			vars["nnime_previous"], vars["nnime_applied"] = "", ""
+		}
 	} else if _, ok := categoryNames[category]; ok {
 		switch command {
 		case "prepare":

@@ -54,3 +54,5 @@ workflow/error.log
 /workflow/naversearch
 
 /workflow/.naversearch-ready/
+
+/workflow/input-source

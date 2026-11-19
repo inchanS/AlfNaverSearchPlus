@@ -1,0 +1,5 @@
+{
+  "type": "script",
+  "src": "./run",
+  "args": ["_ime", "leave", "{var:nnime_previous}", "{var:nnime_applied}"]
+}

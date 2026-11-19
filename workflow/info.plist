@@ -8,6 +8,19 @@
 	<string>Internet</string>
 	<key>connections</key>
 	<dict>
+		<key>2044D295-FCEF-46B9-B096-542E77AFEB5D</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>F9DBB8A2-E27C-4546-BDB9-CDA09386CF5E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>659237F4-0BFD-49AF-8B3D-6A2527F010F1</key>
 		<array>
 			<dict>
@@ -782,6 +795,78 @@
 	<string>Naver Search Plus</string>
 	<key>objects</key>
 	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>keyword</key>
+				<string>nnime</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Running</string>
+				<key>script</key>
+				<string>exec bash ./run _ime list "$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>이 Mac에서 사용할 입력 소스를 선택하세요</string>
+				<key>title</key>
+				<string>통합검색 입력기 설정</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>2044D295-FCEF-46B9-B096-542E77AFEB5D</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>uid</key>
+			<string>F9DBB8A2-E27C-4546-BDB9-CDA09386CF5E</string>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>version</key>
+			<integer>2</integer>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>script</key>
+				<string>exec bash ./run _ime set "$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+			</dict>
+		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -3441,6 +3526,8 @@
 	<string>&gt; **v3.x는 Alfred 6에서만 동작합니다.!! Alfred 4·5 사용자는 이 워크플로우의 이전 메이저 버전인 v2.x를 사용해 주세요. **
 &gt; v2.x 마지막 버전을 설치 후, `workflow:noautoupdate` 명령어로 자동업데이트를 꺼주세요!
 
+통합검색 입력기 설정: Alfred에서 `nnime`를 입력해 이 Mac에서 nn에 사용할 자판을 선택하세요.
+
 Autocomplete Workflow for Naver Services
 
 중요 !!
@@ -3465,6 +3552,20 @@ v0.3.1부터 자동 업데이트를 지원합니다.
   - `workflow:noautoupdate` / `workflow:autoupdate` : 자동 확인 끄기 / 켜기</string>
 	<key>uidata</key>
 	<dict>
+		<key>2044D295-FCEF-46B9-B096-542E77AFEB5D</key>
+		<dict>
+			<key>xpos</key>
+			<real>30.0</real>
+			<key>ypos</key>
+			<real>2680.0</real>
+		</dict>
+		<key>F9DBB8A2-E27C-4546-BDB9-CDA09386CF5E</key>
+		<dict>
+			<key>xpos</key>
+			<real>230.0</real>
+			<key>ypos</key>
+			<real>2680.0</real>
+		</dict>
 		<key>659237F4-0BFD-49AF-8B3D-6A2527F010F1</key>
 		<dict>
 			<key>xpos</key>

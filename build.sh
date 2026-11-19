@@ -30,4 +30,11 @@ codesign --force --sign - "$OUT"
 codesign --verify --verbose "$OUT"
 
 lipo -info "$OUT"
-echo "==> done: $OUT"
+
+# Keep AppKit and Carbon off the per-keystroke search binary's launch path.
+xcrun clang -fobjc-arc -Os -arch arm64 -arch x86_64 -mmacosx-version-min=12.0 \
+    -framework AppKit -framework Carbon -framework CoreGraphics "$ROOT/native/input-source.m" -o "$DIST/input-source"
+codesign --force --sign - "$DIST/input-source"
+codesign --verify "$DIST/input-source"
+cp "$DIST/input-source" "$ROOT/workflow/input-source"
+echo "==> done: $OUT and workflow/input-source"

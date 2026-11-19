@@ -8,6 +8,11 @@ case "$0" in
 esac
 binary="$d/naversearch"
 ready="$d/.naversearch-ready"
+if [ "$1" = "_ime" ]; then
+    shift
+    binary="$d/input-source"
+    ready="$ready/ime"
+fi
 if [ ! -x "$binary" ] || [ ! "$binary" -ef "$ready/binary" ] || \
    [ ! -f "$ready/stamp" ] || [ "$binary" -nt "$ready/stamp" ]; then
     if chmod +x "$binary" 2>/dev/null && \
