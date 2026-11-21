@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/inchanS/AlfNaverSearchPlus/internal/alfred"
+	"github.com/inchanS/AlfNaverSearchPlus/internal/env"
 )
 
 type uiJSON = map[string]any
@@ -20,6 +21,10 @@ var categoryNames = map[string]string{
 
 func updateViews(ids uiJSON) uiJSON {
 	return uiJSON{"update": uiJSON{"ids": ids}}
+}
+
+func unifiedMapMode() string {
+	return env.Str("nn_map_location", "useIP")
 }
 
 func prepareSearch(category, word, previousCategory string) uiJSON {
@@ -39,7 +44,11 @@ func prepareSearch(category, word, previousCategory string) uiJSON {
 	ids["results"] = results
 	title := categoryNames[category] + " 검색"
 	if category == "map" {
-		title += " · 설정 위치 기준"
+		if unifiedMapMode() == "useIP" {
+			title += " · IP 주소 기준"
+		} else {
+			title += " · 설정 위치 기준"
+		}
 	}
 	ids["category_label"] = uiJSON{"text": title}
 	ids["hint"] = uiJSON{"text": keyboardHint(category)}
@@ -67,7 +76,7 @@ func (r *request) unifiedResults(category, word, id string) uiJSON {
 		case "search":
 			return r.search(fb, word)
 		case "map":
-			return r.mapSearch(fb, "doNotUseIP", word)
+			return r.mapSearch(fb, unifiedMapMode(), word)
 		case "shopping":
 			return r.shopping(fb, word)
 		default:

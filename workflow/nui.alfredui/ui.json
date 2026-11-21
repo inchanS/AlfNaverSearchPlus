@@ -4,6 +4,7 @@
     "nn_width": {"src": "variable", "scriptenv": true},
     "nn_rows": {"src": "variable", "scriptenv": true},
     "nn_font": {"src": "variable", "scriptenv": true},
+    "nn_map_location": {"src": "variable", "default": "useIP", "scriptenv": true},
     "latitude": {"src": "variable", "scriptenv": true},
     "longitude": {"src": "variable", "scriptenv": true},
     "cache_age": {"src": "variable", "scriptenv": true},

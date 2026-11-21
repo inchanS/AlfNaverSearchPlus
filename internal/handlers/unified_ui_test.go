@@ -91,3 +91,38 @@ func TestTypingRetainsVisibleRowsButInvalidatesTheirActions(t *testing.T) {
 		}
 	}
 }
+
+func TestUnifiedMapLocation(t *testing.T) {
+	for _, tc := range []struct{ mode, title, coords string }{
+		{"", "지도 검색 · IP 주소 기준", "35.1,129.1"},
+		{"doNotUseIP", "지도 검색 · 설정 위치 기준", "37.5,127.0"},
+		{"useIP", "지도 검색 · IP 주소 기준", "35.1,129.1"},
+	} {
+		t.Run(tc.mode, func(t *testing.T) {
+			t.Setenv("alfred_workflow_cache", t.TempDir())
+			t.Setenv("nn_map_location", tc.mode)
+			t.Setenv("latitude", "37.5")
+			t.Setenv("longitude", "127.0")
+			prepared := prepareSearch("map", "카페", "search")
+			ids := prepared["update"].(uiJSON)["ids"].(uiJSON)
+			if title := ids["category_label"].(uiJSON)["text"]; title != tc.title {
+				t.Fatalf("map label = %q, want %q", title, tc.title)
+			}
+			var coords string
+			r := testRequest(t, func(req *http.Request) (*http.Response, error) {
+				if req.URL.Path == "/p/api/location" {
+					if tc.mode == "doNotUseIP" {
+						t.Fatal("configured coordinates must skip IP lookup")
+					}
+					return mapResponse(`{"lngLat":{"lat":35.1,"lng":129.1}}`), nil
+				}
+				coords = req.URL.Query().Get("coords")
+				return mapResponse("{}"), nil
+			})
+			r.unifiedResults("map", "카페", "lookup_test")
+			if coords != tc.coords {
+				t.Fatalf("map search coordinates = %q, want %q", coords, tc.coords)
+			}
+		})
+	}
+}

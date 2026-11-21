@@ -3548,6 +3548,8 @@ Alfred에서 `nnime`를 입력하여 네이버 통합검색(`nn`)에 사용할 M
 - **좌표를 설정하면:** 해당 위치를 기준으로 주변 장소를 검색합니다.
 - **좌표를 설정하지 않으면:** 서울시청 좌표가 기본값으로 사용됩니다.
 
+통합검색 지도 탭(⌘2)의 위치 기준은 Configure에서 ‘통합검색 지도 위치 기준’으로 선택합니다. 기본값은 IP 주소로 추정한 위치이며, IP 위치를 확인할 수 없으면 설정 좌표를 사용합니다.
+
 좌표 확인: [findlatlng.org](https://www.findlatlng.org)
 
 **IP 기반 위치 검색**
@@ -4092,6 +4094,30 @@ v0.3.1부터 자동 업데이트 확인을 지원합니다. 워크플로우 사�
 			<string>textfield</string>
 			<key>variable</key>
 			<string>longitude</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>useIP</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>설정 위치 (위도·경도)</string>
+						<string>doNotUseIP</string>
+					</array>
+					<array>
+						<string>IP 주소로 추정한 위치</string>
+						<string>useIP</string>
+					</array>
+				</array>
+			</dict>
+			<key>label</key>
+			<string>통합검색 지도 위치 기준</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>nn_map_location</string>
 		</dict>
 		<dict>
 			<key>config</key>
