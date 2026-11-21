@@ -83,13 +83,13 @@ static NSDictionary *choices(NSString *preference, NSString *query) {
 
 static NSDictionary *enterSearch(NSString *preferred) {
     if (!preferred.length) return @{};
-    NSArray *sources = enabledSources();
-    TISInputSourceRef target = findSource(sources, preferred);
-    if (!target) return @{};
     // Called synchronously by nn's preload, while its new panel may still be hidden.
     id current = CFBridgingRelease(TISCopyCurrentKeyboardInputSource());
     NSString *previous = property((__bridge TISInputSourceRef)current, kTISPropertyInputSourceID);
     if (!previous.length || [previous isEqualToString:preferred]) return @{};
+    NSArray *sources = enabledSources();
+    TISInputSourceRef target = findSource(sources, preferred);
+    if (!target) return @{};
     if (TISSelectInputSource(target) != noErr) return @{};
     // macOS publishes the new ID before a composing IME accepts its first key.
     // Give the input method time to attach before Alfred presents the field.

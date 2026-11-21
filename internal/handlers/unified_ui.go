@@ -22,52 +22,6 @@ func updateViews(ids uiJSON) uiJSON {
 	return uiJSON{"update": uiJSON{"ids": ids}}
 }
 
-// Return typed JSON directly to the UI. Workflow stream variables cannot
-// reliably carry the numeric types used by window and dataview constraints.
-func unifiedLayout() uiJSON {
-	rows := 6
-	switch os.Getenv("nn_rows") {
-	case "8":
-		rows = 8
-	case "10":
-		rows = 10
-	}
-	font, secondary := "default", "small"
-	rowHeight, chromeHeight := 43, 197
-	switch os.Getenv("nn_font") {
-	case "large":
-		font, secondary = "large", "default"
-		rowHeight, chromeHeight = 51, 211
-	case "extra_large":
-		font, secondary = "extralarge", "large"
-		rowHeight, chromeHeight = 59, 227
-	}
-	listHeight := rowHeight * rows
-	resize := uiJSON{"height": listHeight + chromeHeight}
-	switch os.Getenv("nn_width") {
-	case "theme":
-		// Omitting width keeps the embedded window at Alfred's theme width.
-	case "wide":
-		resize["width"] = 760
-	default:
-		resize["width"] = 595
-	}
-	styles := uiJSON{"hint": uiJSON{"font": uiJSON{"size": secondary}, "text": keyboardHint("search")}}
-	for _, id := range []string{"query", "category_label", "tab_search", "tab_map", "tab_finance", "tab_shopping"} {
-		styles[id] = uiJSON{"font": uiJSON{"size": font}}
-	}
-	return uiJSON{
-		"variables": uiJSON{
-			"lookup":         "lookup_" + rand.Text(),
-			"nn_list_height": listHeight,
-			"nn_row_height":  rowHeight, "nn_primary_font": font, "nn_secondary_font": secondary,
-		},
-		"update":  uiJSON{"ids": styles, "relayout": true},
-		"replace": uiJSON{"ids": uiJSON{"results_area": "{file:results-area.json}"}},
-		"window":  uiJSON{"resize": resize},
-	}
-}
-
 func prepareSearch(category, word, previousCategory string) uiJSON {
 	id := "lookup_" + rand.Text()
 	// The hidden data provider has one slot. A reply can replace it only
@@ -182,9 +136,7 @@ func openResult(destination, selectedLookup, currentLookup string) uiJSON {
 func (r *request) unifiedUI(args []string) {
 	var action = uiJSON{}
 	command, category := at(args, 0), at(args, 1)
-	if command == "layout" {
-		action = unifiedLayout()
-	} else if command == "preview" {
+	if command == "preview" {
 		if completion, selected := at(args, 1), at(args, 2); completion != "" && selected != "" && selected == at(args, 3) {
 			action = updateViews(uiJSON{"query": uiJSON{"text": "{var:completion}"}})
 			action["variables"] = uiJSON{"completion": completion}

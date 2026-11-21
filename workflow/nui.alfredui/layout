@@ -1,0 +1,47 @@
+#!/bin/bash
+# Emit typed Alfred UI properties before the IME preload. Only the numeric
+# settings and font names selected below are interpolated in the JSON.
+case "$nn_rows" in
+    8|10) rows=$nn_rows ;;
+    *) rows=6 ;;
+esac
+
+case "$nn_font" in
+    large)      font=large;      secondary=default; row=51; chrome=211 ;;
+    extra_large) font=extralarge; secondary=large;   row=59; chrome=227 ;;
+    *)          font=default;    secondary=small;   row=43; chrome=197 ;;
+esac
+
+case "$nn_width" in
+    theme) width='' ;;
+    wide)  width='"width":760,' ;;
+    *)     width='"width":595,' ;;
+esac
+
+# An empty field has no request to match. Typing starts a fresh lookup via prepare.
+lookup=idle
+if [[ -n $1 ]]; then
+    request_id=$(/usr/bin/uuidgen) || exit 1
+    lookup=lookup_$request_id
+fi
+height=$((rows * row))
+style="{\"font\":{\"size\":\"$font\"}}"
+exec /bin/cat <<JSON
+{
+  "variables": {
+    "lookup": "$lookup",
+    "nn_list_height": $height, "nn_row_height": $row,
+    "nn_primary_font": "$font", "nn_secondary_font": "$secondary"
+  },
+  "window": {"resize": {$width "height": $((height + chrome))}},
+  "replace": {"ids": {"results_area": "{file:results-area.json}"}},
+  "update": {
+    "relayout": true,
+    "ids": {
+      "query": $style, "category_label": $style,
+      "tab_search": $style, "tab_map": $style, "tab_finance": $style, "tab_shopping": $style,
+      "hint": {"font": {"size": "$secondary"}, "text": "↑↓ 자동완성 선택    ↩ 열기    ⌘L 검색창"}
+    }
+  }
+}
+JSON

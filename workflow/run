@@ -2,8 +2,8 @@
 # Prepare each binary once, then use only shell builtins on the hot path.
 # The hard link detects a replacement even when its timestamp is older;
 # the stamp also detects rebuilds that overwrite the existing inode.
-case "$0" in
-    */*) d=${0%/*} ;;
+case "${BASH_SOURCE[0]}" in
+    */*) d=${BASH_SOURCE[0]%/*} ;;
     *) d=. ;;
 esac
 binary="$d/naversearch"

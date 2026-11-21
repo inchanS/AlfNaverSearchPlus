@@ -27,7 +27,7 @@
         {
           "triggers": "preload",
           "action": [
-            {"type": "script", "src": "./run", "args": ["nui", "layout"]},
+            {"type": "script", "src": "./layout", "args": ["{var:initial_query}"]},
             {"type": "script", "src": "./run", "args": ["_ime", "enter"]}
           ]
         },

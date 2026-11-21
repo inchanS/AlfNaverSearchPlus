@@ -11,4 +11,4 @@ if [[ $1 == _ime && $2 == enter ]]; then
         exit 0
     fi
 fi
-exec /bin/bash "${0%/*}/../run" "$@"
+source "${0%/*}/../run"
