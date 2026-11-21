@@ -36,21 +36,28 @@ func prepareSearch(category, word, previousCategory string) uiJSON {
 	empty := strings.TrimSpace(word) == ""
 	results := uiJSON{"placeholder": "검색 중…"}
 	if empty {
-		results["placeholder"] = "검색어를 입력하세요."
+		results["placeholder"] = ""
 	}
 	if empty || category != previousCategory {
 		results["data"] = uiJSON{"src": []uiJSON{}}
 	}
 	ids["results"] = results
-	title := categoryNames[category] + " 검색"
-	if category == "map" {
-		if unifiedMapMode() == "useIP" {
-			title += " · IP 주소 기준"
-		} else {
-			title += " · 설정 위치 기준"
+	if category != previousCategory {
+		if _, ok := categoryNames[previousCategory]; ok {
+			ids["segment_"+previousCategory] = uiJSON{"background": "tabFill"}
+			ids["tab_"+previousCategory] = uiJSON{"font": uiJSON{"size": "{var:nn_secondary_font}", "weight": "regular"}}
 		}
+		ids["segment_"+category] = uiJSON{"background": "activeTabFill"}
+		ids["tab_"+category] = uiJSON{"font": uiJSON{"size": "{var:nn_secondary_font}", "weight": "semibold"}}
+		location := ""
+		if category == "map" {
+			location = "설정 위치 기준"
+			if unifiedMapMode() == "useIP" {
+				location = "IP 주소 기준"
+			}
+		}
+		ids["map_location"] = uiJSON{"text": location}
 	}
-	ids["category_label"] = uiJSON{"text": title}
 	ids["hint"] = uiJSON{"text": keyboardHint(category)}
 	action := updateViews(ids)
 	action["variables"] = uiJSON{"category": category, "lookup": id}
@@ -58,7 +65,7 @@ func prepareSearch(category, word, previousCategory string) uiJSON {
 }
 
 func keyboardHint(category string) string {
-	hint := "↑↓ 자동완성 선택    ↩ 열기    ⌘L 검색창"
+	hint := "↑↓ 선택    ↩ 열기    ⌘L 검색창"
 	if category == "shopping" {
 		hint += "    ⇧↩ 네이버플러스 스토어"
 	}

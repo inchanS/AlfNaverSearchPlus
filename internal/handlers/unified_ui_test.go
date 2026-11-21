@@ -94,9 +94,9 @@ func TestTypingRetainsVisibleRowsButInvalidatesTheirActions(t *testing.T) {
 
 func TestUnifiedMapLocation(t *testing.T) {
 	for _, tc := range []struct{ mode, title, coords string }{
-		{"", "지도 검색 · IP 주소 기준", "35.1,129.1"},
-		{"doNotUseIP", "지도 검색 · 설정 위치 기준", "37.5,127.0"},
-		{"useIP", "지도 검색 · IP 주소 기준", "35.1,129.1"},
+		{"", "IP 주소 기준", "35.1,129.1"},
+		{"doNotUseIP", "설정 위치 기준", "37.5,127.0"},
+		{"useIP", "IP 주소 기준", "35.1,129.1"},
 	} {
 		t.Run(tc.mode, func(t *testing.T) {
 			t.Setenv("alfred_workflow_cache", t.TempDir())
@@ -105,7 +105,7 @@ func TestUnifiedMapLocation(t *testing.T) {
 			t.Setenv("longitude", "127.0")
 			prepared := prepareSearch("map", "카페", "search")
 			ids := prepared["update"].(uiJSON)["ids"].(uiJSON)
-			if title := ids["category_label"].(uiJSON)["text"]; title != tc.title {
+			if title := ids["map_location"].(uiJSON)["text"]; title != tc.title {
 				t.Fatalf("map label = %q, want %q", title, tc.title)
 			}
 			var coords string

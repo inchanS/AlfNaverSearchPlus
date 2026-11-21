@@ -14,11 +14,12 @@
     "nnime_applied": {"default": "", "scriptenv": true},
     "initial_query": {"src": "args[0]", "default": ""}
   },
+  "colours": {"tabFill": "#80808020", "activeTabFill": "#47AA614A"},
   "variables": {"category": "search"},
   "window": {
     "title": "네이버 통합검색",
-    "padding": 14,
-    "size": {"height": 455},
+    "padding": 6,
+    "size": {"height": 435},
     "root": {
       "type": "view",
       "layout": "inline",
@@ -51,104 +52,145 @@
       ],
       "components": [
         {
-          "id": "query",
-          "type": "textfield",
-          "focus": true,
-          "editable": true,
-          "placeholder": "검색어",
-          "text": "{var:initial_query}",
-          "accessibility": {"label": "검색어"},
-          "events": [
+          "type": "view",
+          "layout": "border",
+          "spacing": 8,
+          "components": [
             {
-              "triggers": "changed",
-              "action": [
-                {"type": "script", "src": "./run", "args": ["nui", "prepare", "{var:category}", "{value:query.text}", "{var:category}"]},
-                "{file:fetch.json}"
+              "id": "query",
+              "type": "textfield",
+              "constraints": {"region": "centre"},
+              "focus": true,
+              "editable": true,
+              "placeholder": "검색어",
+              "text": "{var:initial_query}",
+              "accessibility": {"label": "검색어"},
+              "events": [
+                {
+                  "triggers": "changed",
+                  "action": [
+                    {"type": "script", "src": "./run", "args": ["nui", "prepare", "{var:category}", "{value:query.text}", "{var:category}"]},
+                    "{file:fetch.json}"
+                  ]
+                },
+                {
+                  "triggers": "actioned",
+                  "action": "{file:open.json}"
+                }
               ]
             },
             {
-              "triggers": "actioned",
-              "action": "{file:open.json}"
+              "id": "service_name",
+              "type": "label",
+              "text": "네이버 통합검색",
+              "colour": "secondaryLabelColor",
+              "textalign": "right",
+              "constraints": {"region": "top"}
             }
           ]
         },
         {
           "type": "view",
-          "layout": "inline",
-          "direction": "horizontal",
-          "spacing": 6,
+          "layout": "border",
+          "spacing": 4,
           "components": [
-            {
-              "type": "button",
-              "id": "tab_search",
-              "text": "일반 ⌘1",
-              "shortcut": "⌘1",
-              "events": {
-                "triggers": "actioned",
-                "action": [
+            {"type": "view", "layout": "inline", "direction": "horizontal", "spacing": 6, "constraints": {"region": "left"}, "components": [
+              {
+                "type": "view", "id": "segment_search", "background": "activeTabFill", "cornerradius": 6, "padding": 2,
+                "components": [
                   {
-                    "type": "script",
-                    "src": "./run",
-                    "args": ["nui", "prepare", "search", "{value:query.text}", "{var:category}"]
-                  },
-                  "{file:fetch.json}"
+                    "type": "button",
+                    "bordered": false,
+                    "id": "tab_search",
+                    "text": "일반 ⌘1",
+                    "shortcut": "⌘1",
+                    "events": {
+                      "triggers": "actioned",
+                      "action": [
+                        {
+                          "type": "script",
+                          "src": "./run",
+                          "args": ["nui", "prepare", "search", "{value:query.text}", "{var:category}"]
+                        },
+                        "{file:fetch.json}"
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "view", "id": "segment_map", "background": "tabFill", "cornerradius": 6, "padding": 2,
+                "components": [
+                  {
+                    "type": "button",
+                    "bordered": false,
+                    "id": "tab_map",
+                    "text": "지도 ⌘2",
+                    "shortcut": "⌘2",
+                    "events": {
+                      "triggers": "actioned",
+                      "action": [
+                        {
+                          "type": "script",
+                          "src": "./run",
+                          "args": ["nui", "prepare", "map", "{value:query.text}", "{var:category}"]
+                        },
+                        "{file:fetch.json}"
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "view", "id": "segment_finance", "background": "tabFill", "cornerradius": 6, "padding": 2,
+                "components": [
+                  {
+                    "type": "button",
+                    "bordered": false,
+                    "id": "tab_finance",
+                    "text": "증권 ⌘3",
+                    "shortcut": "⌘3",
+                    "events": {
+                      "triggers": "actioned",
+                      "action": [
+                        {
+                          "type": "script",
+                          "src": "./run",
+                          "args": ["nui", "prepare", "finance", "{value:query.text}", "{var:category}"]
+                        },
+                        "{file:fetch.json}"
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "view", "id": "segment_shopping", "background": "tabFill", "cornerradius": 6, "padding": 2,
+                "components": [
+                  {
+                    "type": "button",
+                    "bordered": false,
+                    "id": "tab_shopping",
+                    "text": "쇼핑 ⌘4",
+                    "shortcut": "⌘4",
+                    "events": {
+                      "triggers": "actioned",
+                      "action": [
+                        {
+                          "type": "script",
+                          "src": "./run",
+                          "args": ["nui", "prepare", "shopping", "{value:query.text}", "{var:category}"]
+                        },
+                        "{file:fetch.json}"
+                      ]
+                    }
+                  }
                 ]
               }
-            },
-            {
-              "type": "button",
-              "id": "tab_map",
-              "text": "지도 ⌘2",
-              "shortcut": "⌘2",
-              "events": {
-                "triggers": "actioned",
-                "action": [
-                  {
-                    "type": "script",
-                    "src": "./run",
-                    "args": ["nui", "prepare", "map", "{value:query.text}", "{var:category}"]
-                  },
-                  "{file:fetch.json}"
-                ]
-              }
-            },
-            {
-              "type": "button",
-              "id": "tab_finance",
-              "text": "증권 ⌘3",
-              "shortcut": "⌘3",
-              "events": {
-                "triggers": "actioned",
-                "action": [
-                  {
-                    "type": "script",
-                    "src": "./run",
-                    "args": ["nui", "prepare", "finance", "{value:query.text}", "{var:category}"]
-                  },
-                  "{file:fetch.json}"
-                ]
-              }
-            },
-            {
-              "type": "button",
-              "id": "tab_shopping",
-              "text": "쇼핑 ⌘4",
-              "shortcut": "⌘4",
-              "events": {
-                "triggers": "actioned",
-                "action": [
-                  {
-                    "type": "script",
-                    "src": "./run",
-                    "args": ["nui", "prepare", "shopping", "{value:query.text}", "{var:category}"]
-                  },
-                  "{file:fetch.json}"
-                ]
-              }
-            }
+            ]},
+            {"id": "map_location", "type": "label", "text": "", "textalign": "right", "colour": "secondaryLabelColor", "constraints": {"region": "centre"}}
           ]
         },
-        {"id": "category_label", "type": "label", "text": "일반 검색"},
         {"type": "view", "id": "results_area"},
         {"id": "hint", "type": "label", "colour": "secondaryLabelColor", "font": {"size": "small"}}
       ]

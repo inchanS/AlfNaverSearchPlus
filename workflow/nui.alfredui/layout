@@ -7,9 +7,9 @@ case "$nn_rows" in
 esac
 
 case "$nn_font" in
-    large)      font=large;      secondary=default; row=51; chrome=211 ;;
-    extra_large) font=extralarge; secondary=large;   row=59; chrome=227 ;;
-    *)          font=default;    secondary=small;   row=43; chrome=197 ;;
+    large)      font=large;      query=extralarge; secondary=default; service=default;    row=51; chrome=191 ;;
+    extra_large) font=extralarge; query=ginormous;  secondary=large;   service=medium;     row=59; chrome=207 ;;
+    *)          font=default;    query=large;      secondary=small;   service=small;      row=43; chrome=177 ;;
 esac
 
 case "$nn_width" in
@@ -25,7 +25,7 @@ if [[ -n $1 ]]; then
     lookup=lookup_$request_id
 fi
 height=$((rows * row))
-style="{\"font\":{\"size\":\"$font\"}}"
+tab_style="{\"font\":{\"size\":\"$secondary\"}}"
 exec /bin/cat <<JSON
 {
   "variables": {
@@ -38,9 +38,10 @@ exec /bin/cat <<JSON
   "update": {
     "relayout": true,
     "ids": {
-      "query": $style, "category_label": $style,
-      "tab_search": $style, "tab_map": $style, "tab_finance": $style, "tab_shopping": $style,
-      "hint": {"font": {"size": "$secondary"}, "text": "↑↓ 자동완성 선택    ↩ 열기    ⌘L 검색창"}
+      "query": {"font": {"size": "$query"}}, "map_location": {"font": {"size": "$secondary"}},
+      "service_name": {"font": {"size": "$service"}},
+      "tab_search": {"font": {"size": "$secondary", "weight": "semibold"}}, "tab_map": $tab_style, "tab_finance": $tab_style, "tab_shopping": $tab_style,
+      "hint": {"font": {"size": "$secondary"}, "text": "↑↓ 선택    ↩ 열기    ⌘L 검색창"}
     }
   }
 }

@@ -2,16 +2,17 @@
   "id": "results",
   "type": "dataview",
   "constraints": {"size": {"height": "{var:nn_list_height}"}},
-  "placeholder": "검색어를 입력하세요.",
+  "placeholder": "",
   "cell": {
     "root": {
       "id": "row",
       "type": "view",
       "layout": "inline",
       "direction": "vertical",
+      "cornerradius": 6,
       "padding": 5,
       "spacing": 1,
-      "components": [{"id": "name", "type": "label", "font": {"size": "{var:nn_primary_font}"}}, {"id": "detail", "type": "label", "font": {"size": "{var:nn_secondary_font}"}}]
+      "components": [{"id": "name", "type": "label", "font": {"size": "{var:nn_primary_font}", "weight": "semibold"}}, {"id": "detail", "type": "label", "font": {"size": "{var:nn_secondary_font}"}}]
     },
     "height": "{var:nn_row_height}",
     "init": {"row.background": null, "name.colour": "labelColor", "detail.colour": "secondaryLabelColor"},
