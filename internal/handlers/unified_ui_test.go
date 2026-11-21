@@ -21,7 +21,7 @@ func TestUnifiedShoppingUsesSelectedSuggestionAndCurrentView(t *testing.T) {
 	if first == next {
 		t.Fatal("retyping the same query must invalidate its previous result view")
 	}
-	action := testRequest(t, nil).unifiedResults("shopping", word, first)
+	action := testRequest(t, nil).unifiedResults("shopping", word, first, "")
 	ids := action["update"].(uiJSON)["ids"].(uiJSON)
 	if len(ids) != 1 || ids["response_slot"] == nil {
 		t.Fatal("async responses must go through the current request slot")
@@ -44,11 +44,11 @@ func TestUnifiedShoppingUsesSelectedSuggestionAndCurrentView(t *testing.T) {
 func TestUnifiedEmptyQueryAndOfflineFallback(t *testing.T) {
 	t.Setenv("alfred_workflow_cache", t.TempDir())
 	const id = "lookup_test"
-	if got := testRequest(t, nil).unifiedResults("search", "  ", id); len(got) != 0 {
+	if got := testRequest(t, nil).unifiedResults("search", "  ", id, ""); len(got) != 0 {
 		t.Fatalf("empty query started search: %v", got)
 	}
 	r := testRequest(t, func(*http.Request) (*http.Response, error) { return nil, errors.New("offline") })
-	action := r.unifiedResults("search", "서울", id)
+	action := r.unifiedResults("search", "서울", id, "")
 	rows := resultRows(t, action, id)
 	if len(rows) != 1 || rows[0]["url"] == "" {
 		t.Fatal("keep direct search when suggestions are unavailable")
@@ -119,10 +119,65 @@ func TestUnifiedMapLocation(t *testing.T) {
 				coords = req.URL.Query().Get("coords")
 				return mapResponse("{}"), nil
 			})
-			r.unifiedResults("map", "카페", "lookup_test")
+			r.unifiedResults("map", "카페", "lookup_test", "")
 			if coords != tc.coords {
 				t.Fatalf("map search coordinates = %q, want %q", coords, tc.coords)
 			}
 		})
+	}
+}
+
+func TestResumeMapByDestination(t *testing.T) {
+	t.Setenv("nn_resume", "1")
+	t.Setenv("alfred_workflow_data", t.TempDir())
+	t.Setenv("alfred_workflow_cache", t.TempDir())
+	t.Setenv("nn_map_location", "doNotUseIP")
+	const query = "목욕탕"
+	const lookup = "lookup_resume"
+	r := testRequest(t, func(req *http.Request) (*http.Response, error) {
+		if req.URL.Query().Get("query") != query {
+			t.Fatal("searched for the preview instead of the original query")
+		}
+		return mapResponse(`{"all":[{"place":{"type":"place","id":"22","title":"새 목욕탕"}},{"place":{"type":"place","id":"11","title":"우리 목욕탕"}}]}`), nil
+	})
+	rows := resultRows(t, r.unifiedResults("map", query, lookup, ""), lookup)
+	s := lastSearch{Category: "map", Query: query, Selected: rows[2]["url"].(string)}
+	if err := s.save(); err != nil {
+		t.Fatal(err)
+	}
+	resumed := resumeSearch("")["variables"].(uiJSON)
+	if resumed["source_query"] != query || resumed["category"] != "map" || resumed["restore_url"] != s.Selected {
+		t.Fatalf("restored %v", resumed)
+	}
+	for _, tc := range []struct{ url, want string }{{s.Selected, "restored_result"}, {"missing", ""}} {
+		action := r.unifiedResults("map", query, lookup, tc.url)
+		patch := action["variables"].(uiJSON)["replacements"].(uiJSON)[lookup].(uiJSON)["patch"].(uiJSON)
+		view := patch["ids"].(uiJSON)["results"].(uiJSON)
+		if view["select"] != tc.want {
+			t.Fatalf("selection = %v", view["select"])
+		}
+		if tc.want != "" && resultRows(t, action, lookup)[2]["uid"] != tc.want {
+			t.Fatal("wrong place selected")
+		}
+	}
+	if len(resumeSearch("새 검색")) != 0 {
+		t.Fatal("explicit query was overwritten")
+	}
+	t.Setenv("nn_resume", "0")
+	if len(resumeSearch("")) != 0 {
+		t.Fatal("restored while disabled")
+	}
+	if err := (lastSearch{Category: "search", Query: "disabled"}).save(); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("nn_resume", "1")
+	if resumeSearch("")["variables"].(uiJSON)["source_query"] != query {
+		t.Fatal("saved while disabled")
+	}
+	if err := (lastSearch{Category: "map"}).save(); err != nil {
+		t.Fatal(err)
+	}
+	if len(resumeSearch("")) != 0 {
+		t.Fatal("empty query did not clear the session")
 	}
 }

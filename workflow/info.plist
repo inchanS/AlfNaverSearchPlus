@@ -4224,6 +4224,23 @@ v0.3.1부터 자동 업데이트 확인을 지원합니다. 워크플로우 사�
 			<key>variable</key>
 			<string>nn_rows</string>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<false/>
+				<key>text</key>
+				<string>마지막 검색 이어가기</string>
+			</dict>
+			<key>description</key>
+			<string>nn을 다시 열면 마지막 검색어와 탭을 복원하고 이전 결과를 선택합니다. 새 검색어를 함께 입력하면 새로 검색합니다.</string>
+			<key>label</key>
+			<string>통합검색</string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>nn_resume</string>
+		</dict>
 	</array>
 	<key>version</key>
 	<string>{{VERSION_INFO}}</string>

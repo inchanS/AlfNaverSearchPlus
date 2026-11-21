@@ -1,5 +1,10 @@
 #!/bin/bash
 # Avoid starting the search engine for an empty field or AppKit for a disabled IME.
+if [[ $1 == nui && $2 == resume && ( $nn_resume != 1 || -n $3 ) ]] ||
+   [[ $1 == nui && $2 == remember && ( $nn_resume != 1 || ${8} == 1 ) ]]; then
+    echo '{}'
+    exit 0
+fi
 if [[ $1 == nui && $2 == search && -z $4 ]]; then
     echo '{}'
     exit 0

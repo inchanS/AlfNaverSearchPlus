@@ -1,1 +1,1 @@
-{"type": "script", "src": "./run", "args": ["nui", "open", "{value:results.selected.url}", "{value:results.selected.lookup}", "{var:lookup}"]}
+{"type": "script", "src": "./run", "args": ["nui", "open", "{value:results.selected.url}", "{value:results.selected.lookup}", "{var:lookup}", "{var:category}", "{var:source_query}", "{value:results.selected.url}"]}

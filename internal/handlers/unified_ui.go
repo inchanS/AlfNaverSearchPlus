@@ -60,7 +60,7 @@ func prepareSearch(category, word, previousCategory string) uiJSON {
 	}
 	ids["hint"] = uiJSON{"text": keyboardHint(category)}
 	action := updateViews(ids)
-	action["variables"] = uiJSON{"category": category, "lookup": id}
+	action["variables"] = uiJSON{"category": category, "lookup": id, "source_query": word, "restore_url": ""}
 	return action
 }
 
@@ -72,7 +72,7 @@ func keyboardHint(category string) string {
 	return hint
 }
 
-func (r *request) unifiedResults(category, word, id string) uiJSON {
+func (r *request) unifiedResults(category, word, id, selected string) uiJSON {
 	word = strings.TrimSpace(word)
 	if word == "" || !strings.HasPrefix(id, "lookup_") {
 		return uiJSON{}
@@ -91,6 +91,7 @@ func (r *request) unifiedResults(category, word, id string) uiJSON {
 		}
 	})
 	rows := []uiJSON{}
+	selection := ""
 	for _, item := range fb.Items {
 		// Map drill-down entries navigate between Script Filters. The unified
 		// list shows the instant-search suggestions and their destinations.
@@ -109,8 +110,13 @@ func (r *request) unifiedResults(category, word, id string) uiJSON {
 		if len(rows) == 0 && category != "finance" {
 			detail = categoryNames[category] + "에서 입력한 검색어로 검색"
 		}
-		rows = append(rows, uiJSON{"name.text": item.Autocomplete, "completion": item.Autocomplete, "detail.text": detail,
-			"url": destination, "shiftURL": alternate, "lookup": id})
+		row := uiJSON{"name.text": item.Autocomplete, "completion": item.Autocomplete, "detail.text": detail,
+			"url": destination, "shiftURL": alternate, "lookup": id}
+		if selected != "" && destination == selected && selection == "" {
+			selection = "restored_result"
+			row["uid"] = selection
+		}
+		rows = append(rows, row)
 	}
 	placeholder := "검색 결과가 없습니다."
 	hint := keyboardHint(category)
@@ -119,8 +125,12 @@ func (r *request) unifiedResults(category, word, id string) uiJSON {
 		placeholder = "자동완성을 불러오지 못했습니다."
 		hint = "자동완성 조회 실패 · 카테고리를 다시 선택하면 재시도합니다."
 	}
+	results := uiJSON{"data": uiJSON{"src": rows}, "placeholder": placeholder}
+	if selected != "" {
+		results["select"] = selection
+	}
 	patch := uiJSON{"ids": uiJSON{
-		"results": uiJSON{"data": uiJSON{"src": rows}, "placeholder": placeholder},
+		"results": results,
 		"hint":    uiJSON{"text": hint},
 	}}
 	// Matching is performed by Alfred at delivery time, including when a
@@ -152,13 +162,31 @@ func openResult(destination, selectedLookup, currentLookup string) uiJSON {
 func (r *request) unifiedUI(args []string) {
 	var action = uiJSON{}
 	command, category := at(args, 0), at(args, 1)
-	if command == "preview" {
+	if command == "resume" {
+		action = resumeSearch(at(args, 1))
+	} else if command == "remember" {
+		selected := at(args, 3)
+		if at(args, 4) != at(args, 5) {
+			selected = ""
+		}
+		if err := (lastSearch{Category: category, Query: at(args, 2), Selected: selected}).save(); err != nil {
+			logf("save last search: %v", err)
+		}
+	} else if command == "preview" {
 		if completion, selected := at(args, 1), at(args, 2); completion != "" && selected != "" && selected == at(args, 3) {
 			action = updateViews(uiJSON{"query": uiJSON{"text": "{var:completion}"}})
 			action["variables"] = uiJSON{"completion": completion}
 		}
 	} else if command == "open" {
 		action = openResult(at(args, 1), at(args, 2), at(args, 3))
+		if action["open"] != nil && os.Getenv("nn_resume") == "1" {
+			s := lastSearch{Category: at(args, 4), Query: at(args, 5), Selected: at(args, 6)}
+			if err := s.save(); err != nil {
+				logf("save last search: %v", err)
+			} else {
+				action["variables"].(uiJSON)["search_saved"] = "1"
+			}
+		}
 		// Restore before the JSON open action gives focus to the browser.
 		if action["open"] != nil && os.Getenv("nnime_applied") != "" {
 			if binary, err := os.Executable(); err == nil {
@@ -176,7 +204,7 @@ func (r *request) unifiedUI(args []string) {
 		case "prepare":
 			action = prepareSearch(category, at(args, 2), at(args, 3))
 		case "search":
-			action = r.unifiedResults(category, at(args, 2), at(args, 3))
+			action = r.unifiedResults(category, at(args, 2), at(args, 3), at(args, 4))
 		}
 	}
 	_ = json.NewEncoder(os.Stdout).Encode(action)

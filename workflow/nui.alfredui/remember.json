@@ -1,0 +1,5 @@
+{
+  "type": "script",
+  "src": "./run",
+  "args": ["nui", "remember", "{var:category}", "{var:source_query}", "{value:results.selected.url}", "{value:results.selected.lookup}", "{var:lookup}", "{var:search_saved}"]
+}

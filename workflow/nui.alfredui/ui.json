@@ -12,6 +12,8 @@
     "alfred_workflow_data": {"src": "variable", "scriptenv": true},
     "nnime_previous": {"default": "", "scriptenv": true},
     "nnime_applied": {"default": "", "scriptenv": true},
+    "nn_resume": {"src": "variable", "default": "0", "scriptenv": true},
+    "source_query": {"src": "args[0]", "default": ""},
     "initial_query": {"src": "args[0]", "default": ""}
   },
   "colours": {"tabFill": "#80808020", "activeTabFill": "#47AA614A"},
@@ -33,13 +35,13 @@
             {"type": "script", "src": "./run", "args": ["_ime", "enter"]}
           ]
         },
-        {"triggers": "launched", "action": "{file:fetch.json}"},
-        {"triggers": "quit", "action": "{file:leave-input.json}"}
+        {"triggers": "launched", "action": [{"type": "script", "src": "./run", "args": ["nui", "resume", "{var:initial_query}"]}, "{file:fetch.json}"]},
+        {"triggers": "quit", "action": ["{file:remember.json}", "{file:leave-input.json}"]}
       ],
       "shortcuts": [
         {"shortcut": "↑", "action": [{"type": "function", "src": "results", "args": "selectup"}, "{file:preview.json}"]},
         {"shortcut": "↓", "action": [{"type": "function", "src": "results", "args": "selectdown"}, "{file:preview.json}"]},
-        {"shortcut": "⇧↩", "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:results.selected.shiftURL}", "{value:results.selected.lookup}", "{var:lookup}"]}},
+        {"shortcut": "⇧↩", "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:results.selected.shiftURL}", "{value:results.selected.lookup}", "{var:lookup}", "{var:category}", "{var:source_query}", "{value:results.selected.url}"]}},
         {
           "shortcut": "⌘L",
           "action": {"type": "json", "src": {"update": {"ids": {"query": {"focus": true}}}}}

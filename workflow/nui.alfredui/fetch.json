@@ -1,6 +1,6 @@
 {
   "type": "script",
   "src": "./run",
-  "args": ["nui", "search", "{var:category}", "{value:query.text}", "{var:lookup}"],
+  "args": ["nui", "search", "{var:category}", "{var:source_query}", "{var:lookup}", "{var:restore_url}"],
   "async": true
 }
