@@ -24,6 +24,6 @@
   "data": {"type": "basic", "src": []},
   "events": {
     "triggers": "actioned",
-    "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:results.selected.url}", "{value:results.selected.lookup}", "{var:lookup}"]}
+    "action": "{file:open.json}"
   }
 }

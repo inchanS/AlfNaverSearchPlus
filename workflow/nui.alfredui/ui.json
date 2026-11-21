@@ -31,16 +31,13 @@
             {"type": "script", "src": "./run", "args": ["_ime", "enter"]}
           ]
         },
-        {
-          "triggers": "launched",
-          "action": [
-            {"type": "script", "src": "./run", "args": ["nui", "prepare", "search", "{value:query.text}", "{var:category}"]},
-            "{file:fetch.json}"
-          ]
-        },
+        {"triggers": "launched", "action": "{file:fetch.json}"},
         {"triggers": "quit", "action": "{file:leave-input.json}"}
       ],
       "shortcuts": [
+        {"shortcut": "↑", "action": [{"type": "function", "src": "results", "args": "selectup"}, "{file:preview.json}"]},
+        {"shortcut": "↓", "action": [{"type": "function", "src": "results", "args": "selectdown"}, "{file:preview.json}"]},
+        {"shortcut": "⇧↩", "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:results.selected.shiftURL}", "{value:results.selected.lookup}", "{var:lookup}"]}},
         {
           "shortcut": "⌘L",
           "action": {"type": "json", "src": {"update": {"ids": {"query": {"focus": true}}}}}
@@ -70,7 +67,7 @@
             },
             {
               "triggers": "actioned",
-              "action": {"type": "json", "src": {"update": {"ids": {"results_area": {"focus": true}}}}}
+              "action": "{file:open.json}"
             }
           ]
         },

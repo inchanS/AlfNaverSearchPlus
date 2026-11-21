@@ -6,23 +6,13 @@
   "accessibility": {"label": "검색 결과"},
   "constraints": {"size": {"height": "{var:nn_list_height}"}},
   "shortcuts": [
-    {"shortcut": "\uf701", "action": {"type": "function", "src": "results", "args": "selectdown"}},
-    {"shortcut": "\uf700", "action": {"type": "function", "src": "results", "args": "selectup"}},
     {
       "shortcut": "↩",
-      "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:results.selected.url}", "{value:results.selected.lookup}", "{var:lookup}"]}
+      "action": "{file:open.json}"
     },
     {
       "shortcut": "⌥↩",
-      "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:results.selected.url}", "{value:results.selected.lookup}", "{var:lookup}"]}
-    },
-    {
-      "shortcut": "⇧↩",
-      "action": {
-        "type": "script",
-        "src": "./run",
-        "args": ["nui", "open", "{value:results.selected.shiftURL}", "{value:results.selected.lookup}", "{var:lookup}"]
-      }
+      "action": "{file:open.json}"
     }
   ],
   "components": ["{file:results.json}", "{file:response-slot.json}"]

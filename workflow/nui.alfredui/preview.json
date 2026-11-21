@@ -1,0 +1,5 @@
+{
+  "type": "script",
+  "src": "./run",
+  "args": ["nui", "preview", "{value:results.selected.completion}", "{value:results.selected.lookup}", "{var:lookup}"]
+}

@@ -52,12 +52,13 @@ func unifiedLayout() uiJSON {
 	default:
 		resize["width"] = 595
 	}
-	styles := uiJSON{"hint": uiJSON{"font": uiJSON{"size": secondary}}}
+	styles := uiJSON{"hint": uiJSON{"font": uiJSON{"size": secondary}, "text": keyboardHint("search")}}
 	for _, id := range []string{"query", "category_label", "tab_search", "tab_map", "tab_finance", "tab_shopping"} {
 		styles[id] = uiJSON{"font": uiJSON{"size": font}}
 	}
 	return uiJSON{
 		"variables": uiJSON{
+			"lookup":         "lookup_" + rand.Text(),
 			"nn_list_height": listHeight,
 			"nn_row_height":  rowHeight, "nn_primary_font": font, "nn_secondary_font": secondary,
 		},
@@ -94,7 +95,7 @@ func prepareSearch(category, word, previousCategory string) uiJSON {
 }
 
 func keyboardHint(category string) string {
-	hint := "↩ 또는 ⌘↓ 목록으로    ↑↓ 선택    ↩ 열기    ⌘L 검색창"
+	hint := "↑↓ 자동완성 선택    ↩ 열기    ⌘L 검색창"
 	if category == "shopping" {
 		hint += "    ⇧↩ 네이버플러스 스토어"
 	}
@@ -138,7 +139,7 @@ func (r *request) unifiedResults(category, word, id string) uiJSON {
 		if len(rows) == 0 && category != "finance" {
 			detail = categoryNames[category] + "에서 입력한 검색어로 검색"
 		}
-		rows = append(rows, uiJSON{"name.text": item.Autocomplete, "detail.text": detail,
+		rows = append(rows, uiJSON{"name.text": item.Autocomplete, "completion": item.Autocomplete, "detail.text": detail,
 			"url": destination, "shiftURL": alternate, "lookup": id})
 	}
 	placeholder := "검색 결과가 없습니다."
@@ -183,6 +184,11 @@ func (r *request) unifiedUI(args []string) {
 	command, category := at(args, 0), at(args, 1)
 	if command == "layout" {
 		action = unifiedLayout()
+	} else if command == "preview" {
+		if completion, selected := at(args, 1), at(args, 2); completion != "" && selected != "" && selected == at(args, 3) {
+			action = updateViews(uiJSON{"query": uiJSON{"text": "{var:completion}"}})
+			action["variables"] = uiJSON{"completion": completion}
+		}
 	} else if command == "open" {
 		action = openResult(at(args, 1), at(args, 2), at(args, 3))
 		// Restore before the JSON open action gives focus to the browser.
