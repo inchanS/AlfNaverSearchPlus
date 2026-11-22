@@ -42,6 +42,7 @@ mv info.plist.bak info.plist
 
 zip -r ../NaverSearchPlus.alfredworkflow . \
     -x ".naversearch-ready/*" \
+    -x "nui.alfredui/*" \
     -x "*.DS_Store" \
     -x "*.pyc" \
     -x "__pycache__/*" "*/__pycache__/*" \

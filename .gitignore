@@ -56,3 +56,4 @@ workflow/error.log
 /workflow/.naversearch-ready/
 
 /workflow/input-source
+/workflow/nui-*.alfredui/

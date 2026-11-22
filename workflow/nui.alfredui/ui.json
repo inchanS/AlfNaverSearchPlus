@@ -1,9 +1,6 @@
 {
   "bundleid": "com.inchans.alfnaversearchplus.nui",
   "variablesconfig": {
-    "nn_width": {"src": "variable", "scriptenv": true},
-    "nn_rows": {"src": "variable", "scriptenv": true},
-    "nn_font": {"src": "variable", "scriptenv": true},
     "nn_map_location": {"src": "variable", "default": "useIP", "scriptenv": true},
     "latitude": {"src": "variable", "scriptenv": true},
     "longitude": {"src": "variable", "scriptenv": true},
@@ -17,11 +14,16 @@
     "initial_query": {"src": "args[0]", "default": ""}
   },
   "colours": {"tabFill": "#80808020", "activeTabFill": "#47AA614A"},
-  "variables": {"category": "search"},
+  "variables": {
+    "category": "search", "lookup": "idle",
+    "nn_list_height": 258, "nn_row_height": 43,
+    "nn_primary_font": "default", "nn_secondary_font": "small",
+    "nn_query_font": "large", "nn_service_font": "small"
+  },
   "window": {
     "title": "네이버 통합검색",
     "padding": 6,
-    "size": {"height": 435},
+    "size": {"width": 595, "height": 435},
     "root": {
       "type": "view",
       "layout": "inline",
@@ -30,12 +32,9 @@
       "events": [
         {
           "triggers": "preload",
-          "action": [
-            {"type": "script", "src": "./layout", "args": ["{var:initial_query}"]},
-            {"type": "script", "src": "./run", "args": ["_ime", "enter"]}
-          ]
+          "action": {"type": "script", "src": "./run", "args": ["_ime", "enter"]}
         },
-        {"triggers": "launched", "action": [{"type": "script", "src": "./run", "args": ["nui", "resume", "{var:initial_query}"]}, "{file:fetch.json}"]},
+        {"triggers": "launched", "action": [{"type": "script", "src": "./run", "args": ["nui", "start", "{var:initial_query}"]}, "{file:fetch.json}"]},
         {"triggers": "quit", "action": ["{file:remember.json}", "{file:leave-input.json}"]}
       ],
       "shortcuts": [
@@ -61,6 +60,7 @@
             {
               "id": "query",
               "type": "textfield",
+              "font": {"size": "{var:nn_query_font}"},
               "constraints": {"region": "centre"},
               "focus": true,
               "editable": true,
@@ -84,6 +84,7 @@
             {
               "id": "service_name",
               "type": "label",
+              "font": {"size": "{var:nn_service_font}"},
               "text": "네이버 통합검색",
               "colour": "secondaryLabelColor",
               "textalign": "right",
@@ -104,6 +105,7 @@
                     "type": "button",
                     "bordered": false,
                     "id": "tab_search",
+                    "font": {"size": "{var:nn_secondary_font}", "weight": "semibold"},
                     "text": "일반 ⌘1",
                     "shortcut": "⌘1",
                     "events": {
@@ -127,6 +129,7 @@
                     "type": "button",
                     "bordered": false,
                     "id": "tab_map",
+                    "font": {"size": "{var:nn_secondary_font}"},
                     "text": "지도 ⌘2",
                     "shortcut": "⌘2",
                     "events": {
@@ -150,6 +153,7 @@
                     "type": "button",
                     "bordered": false,
                     "id": "tab_finance",
+                    "font": {"size": "{var:nn_secondary_font}"},
                     "text": "증권 ⌘3",
                     "shortcut": "⌘3",
                     "events": {
@@ -173,6 +177,7 @@
                     "type": "button",
                     "bordered": false,
                     "id": "tab_shopping",
+                    "font": {"size": "{var:nn_secondary_font}"},
                     "text": "쇼핑 ⌘4",
                     "shortcut": "⌘4",
                     "events": {
@@ -190,11 +195,11 @@
                 ]
               }
             ]},
-            {"id": "map_location", "type": "label", "text": "", "textalign": "right", "colour": "secondaryLabelColor", "constraints": {"region": "centre"}}
+            {"id": "map_location", "type": "label", "text": "", "textalign": "right", "colour": "secondaryLabelColor", "font": {"size": "{var:nn_secondary_font}"}, "constraints": {"region": "centre"}}
           ]
         },
-        {"type": "view", "id": "results_area"},
-        {"id": "hint", "type": "label", "colour": "secondaryLabelColor", "font": {"size": "small"}}
+        "{file:results-area.json}",
+        {"id": "hint", "type": "label", "colour": "secondaryLabelColor", "font": {"size": "{var:nn_secondary_font}"}, "text": "↑↓ 선택    ↩ 열기    ⌘L 검색창"}
       ]
     }
   }

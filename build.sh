@@ -37,4 +37,5 @@ xcrun clang -fobjc-arc -Os -arch arm64 -arch x86_64 -mmacosx-version-min=12.0 \
 codesign --force --sign - "$DIST/input-source"
 codesign --verify "$DIST/input-source"
 cp "$DIST/input-source" "$ROOT/workflow/input-source"
+python3 "$ROOT/scripts/build_nn_layouts.py"
 echo "==> done: $OUT and workflow/input-source"

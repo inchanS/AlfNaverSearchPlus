@@ -31,7 +31,7 @@
 				<key>modifiersubtext</key>
 				<string></string>
 				<key>vitoclose</key>
-				<false/>
+				<true/>
 			</dict>
 		</array>
 		<key>0166BD8D-0775-422A-B4A9-6C7EBE6B407C</key>
@@ -892,7 +892,7 @@
 			<key>config</key>
 			<dict>
 				<key>path</key>
-				<string>nui.alfredui</string>
+				<string>nui-{var:nn_width}-{var:nn_font}-{var:nn_rows}.alfredui</string>
 				<key>launchmode</key>
 				<integer>0</integer>
 				<key>stackview</key>

@@ -223,7 +223,7 @@ Dictionary Usage
 
 Build from source
 --------------
-`v2.0.0`부터 검색 로직은 Go로 작성되어 있습니다. 입력기 선택에는 빌드 시 macOS SDK로 함께 컴파일하는 네이티브 헬퍼를 사용합니다.
+`v2.0.0`부터 검색 로직은 Go로 작성되어 있습니다. 입력기 선택에는 빌드 시 macOS SDK로 함께 컴파일하는 네이티브 헬퍼를 사용합니다. `build.sh`는 Python 3로 통합검색의 창 너비·글자 크기·행 수 조합도 미리 생성합니다. 화면을 수정할 때는 `workflow/nui.alfredui`를 편집하고 다시 빌드하세요.
 
 ```sh
 # 유니버설 바이너리 빌드 + ad-hoc 서명 (workflow/naversearch 생성)
