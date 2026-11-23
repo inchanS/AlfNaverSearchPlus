@@ -3,32 +3,33 @@
 ![GitHub stars](https://img.shields.io/github/stars/inchans/Alfnaversearchplus?style=flat&logo=apachespark)
 ![GitHub all releases](https://img.shields.io/github/downloads/inchanS/Alfnaversearchplus/total?logo=github) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/inchanS/Alfnaversearchplus?logo=rocket)  ![GitHub](https://img.shields.io/github/license/inchanS/Alfnaversearchplus)
 
-> **Alfred 4·5 사용자는 이전 메이저 버전인 2.x를 사용해 주세요. 3.x는 Alfred 6에서만 동작합니다.**
+> **Alfred 4·5 사용자는 이전 메이저 버전인 2.x를 사용해 주세요.**  
+> **3.x는 Alfred 6에서만 동작합니다.**  
 > 2.x 패키지는 [이전 릴리스](../../releases)에서 다운로드할 수 있습니다.
 
 Naver Search Workflow for Alfred
 ---------------------------------
 
-Alfred에서 네이버 검색, 네이버 쇼핑, 네이버 지식백과, 네이버 지도, 네이버 증권    
+[Alfred](https://www.alfredapp.com/)에서 네이버 검색, 네이버 쇼핑, 네이버 지식백과, 네이버 지도, 네이버 증권    
 그리고 각종 네이버 사전 검색이 자동완성 되는 워크플로우
 <br>  
 <br>  
+
 ### **Acknowledgments**
 [@Kuniz](https://github.com/Kuniz)님의 [alfnaversearch 워크플로우](https://github.com/Kuniz/alfnaversearch)를 따로이 개인적인 용도에 맞게 부분적으로 수정 및 개선한 워크플로우입니다.  
 **alfnaversearch** 워크플로우의 코드기여는 [forked repository](https://github.com/inchanS/alfnaversearch)에서 진행하였습니다.    
 
 #### **변경부분**
-- 일부 script 호출 keyword 변경 
-- 네이버 **지도 검색 기능 추가 및 개선** (updated v0.0.2)
-  - 사용자 위치 설정 및 장소, 주소, 버스 전용보기 추가 
-- 네이버 **주식 검색 추가** (updated v0.0.4)
-- **자동 업데이트 기능 추가** (updated v0.3.1)
-- **Go 단일 바이너리로 전면 재작성** (updated v2.0.0)
-  - **`v1.x.x`까지는 Python이 필요했지만, `v2.0.0`부터는 Python이 필요 없습니다.**
-  - Python 및 alfred-pyworkflow 의존을 완전히 제거하여 별도 런타임 설치가 불필요
-  - Apple Silicon / Intel 유니버설 바이너리, 검색 기동 속도 대폭 향상 (아래 [Performance](#performance) 참고)
-- `nn` 명령어로 **[네이버 통합검색](#통합검색-alfred-6)** 기능(일반, 지도, 주식, 쇼핑) - Alfred 6버전 필요! (updated v3.1.0)
-  - 통합검색시 언어 입력소스 설정 가능(updated v3.2.0)
+1. 네이버 **지도 검색 기능 추가 및 개선** (updated v0.0.2)
+    - 사용자 위치 설정 및 장소, 주소, 버스 전용보기 추가 
+2. 네이버 **증권(주식) 검색 추가** (updated v0.0.4)
+3. **워크플로우 자동 업데이트 기능 추가** (updated v0.3.1)
+4. **Go 단일 바이너리로 전면 재작성** (updated v2.0.0)
+    - **`v1.x.x`까지는 워크플로우 사용을 위해 Python 3이 필요했지만, `v2.0.0`부터는 Python이 필요 없습니다.**
+      - Python 및 alfred-pyworkflow 의존을 완전히 제거하여 별도 런타임 설치가 불필요
+    - Apple Silicon / Intel 유니버설 바이너리, 검색 기동 속도 대폭 향상 (아래 [Performance](#performance) 참고)
+5. `nn` 명령어로 [네이버 통합검색](#통합검색-alfred-6) 기능(일반, 지도, 주식, 쇼핑) - Alfred 6버전 필요! (updated v3.1.0)
+    - 통합검색시 언어 입력소스 설정 가능(updated v3.2.0)
 
 
 <br>  
@@ -148,6 +149,7 @@ Alfred의 **Force Keyboard**를 영어로 설정해도 `nn` 검색칸에서는 �
 
 General Usage
 --------------
+* `nn ...`  : Naver Search(네이버 **통합검색**) - 일반, 지도, 증권, 쇼핑을 하나의 창에서 탭으로 나눠 검색합니다. **New**
 * `n ...`  : Naver Search(일반 네이버 검색)
 * `ns ...`  : Naver Shopping(네이버 쇼핑 검색) - 네이버 가격비교 검색
   * `ns ...` + `shift`키 : 네이버플러스 스토어 검색 (updated v0.2.0) 
