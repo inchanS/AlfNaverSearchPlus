@@ -81,6 +81,18 @@ static NSDictionary *choices(NSString *preference, NSString *query) {
     return @{@"items":items};
 }
 
+static BOOL canShortenIMEWait(TISInputSourceRef target) {
+    if ([NSProcessInfo.processInfo.environment[@"nnime_compatibility"] isEqualToString:@"1"]) return NO;
+
+    // Check before selecting: selection itself may start the input method.
+    NSString *bundleID = property(target, kTISPropertyBundleID);
+    if (!bundleID.length) return NO;
+    for (NSRunningApplication *app in [NSRunningApplication runningApplicationsWithBundleIdentifier:bundleID]) {
+        if (app.finishedLaunching && !app.terminated) return YES;
+    }
+    return NO;
+}
+
 static NSDictionary *enterSearch(NSString *preferred) {
     if (!preferred.length) return @{};
     // Called synchronously by nn's preload, while its new panel may still be hidden.
@@ -90,11 +102,19 @@ static NSDictionary *enterSearch(NSString *preferred) {
     NSArray *sources = enabledSources();
     TISInputSourceRef target = findSource(sources, preferred);
     if (!target) return @{};
+    BOOL isLayout = [property(target, kTISPropertyInputSourceType) isEqual:(__bridge NSString *)kTISTypeKeyboardLayout];
+    BOOL shortWait = !isLayout && canShortenIMEWait(target);
     if (TISSelectInputSource(target) != noErr) return @{};
-    // macOS publishes the new ID before a composing IME accepts its first key.
-    // Give the input method time to attach before Alfred presents the field.
-    if (![property(target, kTISPropertyInputSourceType) isEqual:(__bridge NSString *)kTISTypeKeyboardLayout]) {
-        [NSThread sleepForTimeInterval:0.15];
+    if (!isLayout) {
+        // Even a resident IME needs time to attach to Alfred's input context.
+        const NSTimeInterval fullDelay = 0.150, shortDelay = 0.025;
+        [NSThread sleepForTimeInterval:shortWait ? shortDelay : fullDelay];
+        if (shortWait) {
+            id selected = CFBridgingRelease(TISCopyCurrentKeyboardInputSource());
+            if (![property((__bridge TISInputSourceRef)selected, kTISPropertyInputSourceID) isEqualToString:preferred]) {
+                [NSThread sleepForTimeInterval:fullDelay - shortDelay];
+            }
+        }
     }
     return @{@"variables":@{@"nnime_previous":previous, @"nnime_applied":preferred}};
 }

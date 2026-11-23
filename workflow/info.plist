@@ -4241,6 +4241,23 @@ v0.3.1부터 자동 업데이트 확인을 지원합니다. 워크플로우 사�
 			<key>variable</key>
 			<string>nn_resume</string>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<false/>
+				<key>text</key>
+				<string>조합형 입력기로 전환할 때 항상 150ms 대기</string>
+			</dict>
+			<key>description</key>
+			<string>한글·일본어·중국어 등 조합형 입력기로 전환한 직후 첫 글자가 제대로 입력되지 않을 때 켜세요.</string>
+			<key>label</key>
+			<string>통합검색 입력기 호환성</string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>nnime_compatibility</string>
+		</dict>
 	</array>
 	<key>version</key>
 	<string>{{VERSION_INFO}}</string>

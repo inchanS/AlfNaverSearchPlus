@@ -7,6 +7,7 @@
     "cache_age": {"src": "variable", "scriptenv": true},
     "alfred_workflow_cache": {"src": "variable", "scriptenv": true},
     "alfred_workflow_data": {"src": "variable", "scriptenv": true},
+    "nnime_compatibility": {"src": "variable", "default": "0", "scriptenv": true},
     "nnime_previous": {"default": "", "scriptenv": true},
     "nnime_applied": {"default": "", "scriptenv": true},
     "nn_resume": {"src": "variable", "default": "0", "scriptenv": true},
