@@ -30,6 +30,10 @@ func TestUnifiedShoppingUsesSelectedSuggestionAndCurrentView(t *testing.T) {
 	if len(rows) != 2 || rows[1]["name.text"] != "서울 & 우유" {
 		t.Fatalf("missing suggestion: %v", rows)
 	}
+	reply := action["variables"].(uiJSON)["replacements"].(uiJSON)[first].(uiJSON)
+	if reply["lookup"] != first || reply["url1"] != rows[0]["url"] || reply["url2"] != rows[1]["url"] || reply["url3"] != nil {
+		t.Fatalf("numbered shortcuts do not match displayed rows: %v", reply)
+	}
 	const encoded = "%EC%84%9C%EC%9A%B8%20%26%20%EC%9A%B0%EC%9C%A0"
 	for key, want := range map[string]string{
 		"url":      "https://search.shopping.naver.com/search/all?query=" + encoded,

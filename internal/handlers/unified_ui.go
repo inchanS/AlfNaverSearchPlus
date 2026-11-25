@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/inchanS/AlfNaverSearchPlus/internal/alfred"
@@ -65,7 +66,7 @@ func prepareSearch(category, word, previousCategory string) uiJSON {
 }
 
 func keyboardHint(category string) string {
-	hint := "↑↓ 선택    ↩ 열기    ⌘L 검색창"
+	hint := "↑↓ 선택   ↩ 열기   ⌘1–9 바로 열기   ⌘L 검색창"
 	if category == "shopping" {
 		hint += "    ⇧↩ 네이버플러스 스토어"
 	}
@@ -135,7 +136,15 @@ func (r *request) unifiedResults(category, word, id, selected string) uiJSON {
 	}}
 	// Matching is performed by Alfred at delivery time, including when a
 	// slow request finishes after the same query was typed a second time.
-	replacements := uiJSON{id: uiJSON{"uid": "done_" + id, "patch": patch}}
+	reply := uiJSON{"uid": "done_" + id, "patch": patch, "lookup": id}
+	for i, row := range rows[:min(len(rows), 9)] {
+		number := strconv.Itoa(i + 1)
+		if row["url"] != "" {
+			row["key_hint.text"] = "⌘" + number
+		}
+		reply["url"+number] = row["url"]
+	}
+	replacements := uiJSON{id: reply}
 	action := updateViews(uiJSON{"response_slot": uiJSON{"data": uiJSON{"modify": uiJSON{
 		"replace": uiJSON{"srcmap": "{var:replacements}"},
 	}}}})

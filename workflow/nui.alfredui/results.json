@@ -7,19 +7,33 @@
     "root": {
       "id": "row",
       "type": "view",
-      "layout": "inline",
-      "direction": "vertical",
+      "layout": "border",
       "cornerradius": 6,
       "padding": 5,
-      "spacing": 1,
-      "components": [{"id": "name", "type": "label", "font": {"size": "{var:nn_primary_font}", "weight": "semibold"}}, {"id": "detail", "type": "label", "font": {"size": "{var:nn_secondary_font}"}}]
+      "spacing": 8,
+      "components": [
+        {
+          "type": "view", "layout": "inline", "direction": "vertical", "spacing": 1,
+          "constraints": {"region": "centre"},
+          "components": [
+            {"id": "name", "type": "label", "font": {"size": "{var:nn_primary_font}", "weight": "semibold"}},
+            {"id": "detail", "type": "label", "font": {"size": "{var:nn_secondary_font}"}}
+          ]
+        },
+        {
+          "id": "key_hint", "type": "label", "textalign": "right",
+          "constraints": {"region": "right"},
+          "font": {"size": "{var:nn_secondary_font}"}, "opacity": 0.8
+        }
+      ]
     },
     "height": "{var:nn_row_height}",
-    "init": {"row.background": null, "name.colour": "labelColor", "detail.colour": "secondaryLabelColor"},
+    "init": {"row.background": null, "name.colour": "labelColor", "detail.colour": "secondaryLabelColor", "key_hint.text": "", "key_hint.colour": "secondaryLabelColor"},
     "selected": {
       "row.background": "alfredSelectedResultBackgroundColor",
       "name.colour": "alfredSelectedResultTextColor",
-      "detail.colour": "alfredSelectedResultTextColor"
+      "detail.colour": "alfredSelectedResultTextColor",
+      "key_hint.colour": "alfredSelectedResultTextColor"
     }
   },
   "data": {"type": "basic", "src": []},

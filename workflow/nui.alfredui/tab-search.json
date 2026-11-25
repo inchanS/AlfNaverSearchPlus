@@ -1,0 +1,4 @@
+[
+  {"type": "script", "src": "./run", "args": ["nui", "prepare", "search", "{value:query.text}", "{var:category}"]},
+  "{file:fetch.json}"
+]

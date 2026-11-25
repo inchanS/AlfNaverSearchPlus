@@ -39,8 +39,21 @@
         {"triggers": "quit", "action": ["{file:remember.json}", "{file:leave-input.json}"]}
       ],
       "shortcuts": [
+        {"shortcut": "⌃1", "action": "{file:tab-search.json}"},
+        {"shortcut": "⌃2", "action": "{file:tab-map.json}"},
+        {"shortcut": "⌃3", "action": "{file:tab-finance.json}"},
+        {"shortcut": "⌃4", "action": "{file:tab-shopping.json}"},
         {"shortcut": "↑", "action": [{"type": "function", "src": "results", "args": "selectup"}, "{file:preview.json}"]},
         {"shortcut": "↓", "action": [{"type": "function", "src": "results", "args": "selectdown"}, "{file:preview.json}"]},
+        {"shortcut": "⌘1", "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:response_slot.selected.url1}", "{value:response_slot.selected.lookup}", "{var:lookup}", "{var:category}", "{var:source_query}", "{value:response_slot.selected.url1}"]}},
+        {"shortcut": "⌘2", "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:response_slot.selected.url2}", "{value:response_slot.selected.lookup}", "{var:lookup}", "{var:category}", "{var:source_query}", "{value:response_slot.selected.url2}"]}},
+        {"shortcut": "⌘3", "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:response_slot.selected.url3}", "{value:response_slot.selected.lookup}", "{var:lookup}", "{var:category}", "{var:source_query}", "{value:response_slot.selected.url3}"]}},
+        {"shortcut": "⌘4", "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:response_slot.selected.url4}", "{value:response_slot.selected.lookup}", "{var:lookup}", "{var:category}", "{var:source_query}", "{value:response_slot.selected.url4}"]}},
+        {"shortcut": "⌘5", "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:response_slot.selected.url5}", "{value:response_slot.selected.lookup}", "{var:lookup}", "{var:category}", "{var:source_query}", "{value:response_slot.selected.url5}"]}},
+        {"shortcut": "⌘6", "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:response_slot.selected.url6}", "{value:response_slot.selected.lookup}", "{var:lookup}", "{var:category}", "{var:source_query}", "{value:response_slot.selected.url6}"]}},
+        {"shortcut": "⌘7", "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:response_slot.selected.url7}", "{value:response_slot.selected.lookup}", "{var:lookup}", "{var:category}", "{var:source_query}", "{value:response_slot.selected.url7}"]}},
+        {"shortcut": "⌘8", "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:response_slot.selected.url8}", "{value:response_slot.selected.lookup}", "{var:lookup}", "{var:category}", "{var:source_query}", "{value:response_slot.selected.url8}"]}},
+        {"shortcut": "⌘9", "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:response_slot.selected.url9}", "{value:response_slot.selected.lookup}", "{var:lookup}", "{var:category}", "{var:source_query}", "{value:response_slot.selected.url9}"]}},
         {"shortcut": "⇧↩", "action": {"type": "script", "src": "./run", "args": ["nui", "open", "{value:results.selected.shiftURL}", "{value:results.selected.lookup}", "{var:lookup}", "{var:category}", "{var:source_query}", "{value:results.selected.url}"]}},
         {
           "shortcut": "⌘L",
@@ -107,18 +120,10 @@
                     "bordered": false,
                     "id": "tab_search",
                     "font": {"size": "{var:nn_secondary_font}", "weight": "semibold"},
-                    "text": "일반 ⌘1",
-                    "shortcut": "⌘1",
+                    "text": "일반 ⌃1",
                     "events": {
                       "triggers": "actioned",
-                      "action": [
-                        {
-                          "type": "script",
-                          "src": "./run",
-                          "args": ["nui", "prepare", "search", "{value:query.text}", "{var:category}"]
-                        },
-                        "{file:fetch.json}"
-                      ]
+                      "action": "{file:tab-search.json}"
                     }
                   }
                 ]
@@ -131,18 +136,10 @@
                     "bordered": false,
                     "id": "tab_map",
                     "font": {"size": "{var:nn_secondary_font}"},
-                    "text": "지도 ⌘2",
-                    "shortcut": "⌘2",
+                    "text": "지도 ⌃2",
                     "events": {
                       "triggers": "actioned",
-                      "action": [
-                        {
-                          "type": "script",
-                          "src": "./run",
-                          "args": ["nui", "prepare", "map", "{value:query.text}", "{var:category}"]
-                        },
-                        "{file:fetch.json}"
-                      ]
+                      "action": "{file:tab-map.json}"
                     }
                   }
                 ]
@@ -155,18 +152,10 @@
                     "bordered": false,
                     "id": "tab_finance",
                     "font": {"size": "{var:nn_secondary_font}"},
-                    "text": "증권 ⌘3",
-                    "shortcut": "⌘3",
+                    "text": "증권 ⌃3",
                     "events": {
                       "triggers": "actioned",
-                      "action": [
-                        {
-                          "type": "script",
-                          "src": "./run",
-                          "args": ["nui", "prepare", "finance", "{value:query.text}", "{var:category}"]
-                        },
-                        "{file:fetch.json}"
-                      ]
+                      "action": "{file:tab-finance.json}"
                     }
                   }
                 ]
@@ -179,18 +168,10 @@
                     "bordered": false,
                     "id": "tab_shopping",
                     "font": {"size": "{var:nn_secondary_font}"},
-                    "text": "쇼핑 ⌘4",
-                    "shortcut": "⌘4",
+                    "text": "쇼핑 ⌃4",
                     "events": {
                       "triggers": "actioned",
-                      "action": [
-                        {
-                          "type": "script",
-                          "src": "./run",
-                          "args": ["nui", "prepare", "shopping", "{value:query.text}", "{var:category}"]
-                        },
-                        "{file:fetch.json}"
-                      ]
+                      "action": "{file:tab-shopping.json}"
                     }
                   }
                 ]
@@ -200,7 +181,7 @@
           ]
         },
         "{file:results-area.json}",
-        {"id": "hint", "type": "label", "colour": "secondaryLabelColor", "font": {"size": "{var:nn_secondary_font}"}, "text": "↑↓ 선택    ↩ 열기    ⌘L 검색창"}
+        {"id": "hint", "type": "label", "colour": "secondaryLabelColor", "font": {"size": "{var:nn_secondary_font}"}, "text": "↑↓ 선택   ↩ 열기   ⌘1–9 바로 열기   ⌘L 검색창"}
       ]
     }
   }
