@@ -1,7 +1,7 @@
 # AlfNaverSearchPlus : Naver Search Workflow for Alfred  
 ![Test](../../actions/workflows/test-go.yml/badge.svg) ![Release](../../actions/workflows/release.yml/badge.svg)  
 ![GitHub stars](https://img.shields.io/github/stars/inchans/Alfnaversearchplus?style=flat&logo=apachespark)
-![GitHub all releases](https://img.shields.io/github/downloads/inchanS/Alfnaversearchplus/total?logo=github) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/inchanS/Alfnaversearchplus?logo=rocket)  ![GitHub](https://img.shields.io/github/license/inchanS/Alfnaversearchplus)
+![GitHub all releases](https://img.shields.io/github/downloads/inchanS/Alfnaversearchplus/total?logo=github) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/inchanS/Alfnaversearchplus?logo=rocket)  [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 > **Alfred 4·5 사용자는 이전 메이저 버전인 2.x를 사용해 주세요.**  
 > **3.x는 Alfred 6에서만 동작합니다.**  
