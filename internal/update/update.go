@@ -87,10 +87,18 @@ func writeInfo(inf info) {
 	}
 }
 
+// AvailableVersion returns the cached release to advertise on launch.
+func AvailableVersion() string {
+	if inf, ok := readInfo(); ok && autoUpdateEnabled() && shouldNotify(inf, currentVersion()) {
+		return inf.Version
+	}
+	return ""
+}
+
 // MaybeShow adds the update notice (when a newer version is known) and triggers
 // the daily background worker (cache cleanup plus a weekly release check).
 func MaybeShow(fb *alfred.Feedback) {
-	if inf, ok := readInfo(); autoUpdateEnabled() && ok && shouldNotify(inf, currentVersion()) {
+	if AvailableVersion() != "" {
 		fb.Add(alfred.ItemOpts{
 			Title:        "New version of NaverSearchPlus is available!",
 			Subtitle:     "Press Enter to install the update",
@@ -98,7 +106,7 @@ func MaybeShow(fb *alfred.Feedback) {
 			Valid:        false,
 		})
 	}
-	maybeSpawnWorker()
+	MaybeSpawnWorker()
 }
 
 // shouldNotify reports whether a cached release should surface an update notice
@@ -112,10 +120,10 @@ func shouldNotify(inf info, current string) bool {
 	return inf.Version != "" && isNewer(inf.Version, current)
 }
 
-// maybeSpawnWorker spawns a detached "_update-check" process at most once per
+// MaybeSpawnWorker spawns a detached "_update-check" process at most once per
 // workerFrequency, tracked by the mtime of a stamp file. The worker handles both
 // cache cleanup and the (less frequent) release lookup.
-func maybeSpawnWorker() {
+func MaybeSpawnWorker() {
 	if _, fresh := cache.Read(workerKey, workerFrequency); fresh {
 		return
 	}

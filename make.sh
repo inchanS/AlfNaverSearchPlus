@@ -7,12 +7,19 @@ set -eu
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 
-# Explicit override > release tag > checked-in development version.
+# Explicit override > CI release tag > local release tag at HEAD > source version.
 # Do not label Alfred 6 UI builds with the last historical 2.x Git tag.
 if [ -z "${WORKFLOW_VERSION:-}" ]; then
     case "${GITHUB_REF:-}" in
         refs/tags/v*) WORKFLOW_VERSION=${GITHUB_REF#refs/tags/v} ;;
-        *) WORKFLOW_VERSION=$(cat VERSION 2>/dev/null || true) ;;
+        *)
+            WORKFLOW_VERSION=""
+            if [ -e "$ROOT/.git" ]; then
+                WORKFLOW_VERSION=$(git tag --points-at HEAD --sort=-version:refname |
+                    LC_ALL=C sed -nE '/^v([3-9]|[1-9][0-9]+)\.[0-9]+\.[0-9]+$/{p;q;}')
+            fi
+            WORKFLOW_VERSION=${WORKFLOW_VERSION:-$(cat VERSION 2>/dev/null || true)}
+            ;;
     esac
 fi
 WORKFLOW_VERSION=${WORKFLOW_VERSION#v}

@@ -1,16 +1,5 @@
 #!/bin/bash
 # Avoid starting the search engine for an empty field or AppKit for a disabled IME.
-if [[ $1 == nui && $2 == start ]]; then
-    if [[ -n $3 ]]; then
-        # Allocate a fresh lookup and its response slot before the first fetch.
-        set -- nui prepare search "$3" search
-    elif [[ $nn_resume == 1 ]]; then
-        set -- nui resume ""
-    else
-        echo '{}'
-        exit 0
-    fi
-fi
 if [[ $1 == nui && $2 == remember && ( $nn_resume != 1 || ${8} == 1 ) ]]; then
     echo '{}'
     exit 0

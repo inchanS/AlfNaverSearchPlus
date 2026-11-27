@@ -12,6 +12,7 @@ import (
 
 	"github.com/inchanS/AlfNaverSearchPlus/internal/alfred"
 	"github.com/inchanS/AlfNaverSearchPlus/internal/env"
+	"github.com/inchanS/AlfNaverSearchPlus/internal/update"
 )
 
 type uiJSON = map[string]any
@@ -39,7 +40,13 @@ func prepareSearch(category, word, previousCategory string) uiJSON {
 	if empty {
 		results["placeholder"] = ""
 	}
-	if empty || category != previousCategory {
+	if !empty && category != "finance" {
+		row := directSearchRow(category, strings.TrimSpace(word), id)
+		row["uid"], row["key_hint.text"] = "direct", "⌘1"
+		results["data"] = uiJSON{"src": []uiJSON{row}}
+		results["select"] = "direct"
+		slot["lookup"], slot["url1"] = id, row["url"]
+	} else if empty || category != previousCategory {
 		results["data"] = uiJSON{"src": []uiJSON{}}
 	}
 	ids["results"] = results
@@ -50,19 +57,37 @@ func prepareSearch(category, word, previousCategory string) uiJSON {
 		}
 		ids["segment_"+category] = uiJSON{"background": "activeTabFill"}
 		ids["tab_"+category] = uiJSON{"font": uiJSON{"size": "{var:nn_secondary_font}", "weight": "semibold"}}
-		location := ""
-		if category == "map" {
-			location = "설정 위치 기준"
-			if unifiedMapMode() == "useIP" {
-				location = "IP 주소 기준"
-			}
-		}
-		ids["map_location"] = uiJSON{"text": location}
 	}
+	label := ""
+	if category == "map" && !empty {
+		label = "설정 위치 기준"
+		if unifiedMapMode() == "useIP" {
+			label = "위치 확인 중…"
+		}
+	}
+	ids["map_location"] = uiJSON{"text": label}
 	ids["hint"] = uiJSON{"text": keyboardHint(category)}
 	action := updateViews(ids)
 	action["variables"] = uiJSON{"category": category, "lookup": id, "source_query": word, "restore_url": ""}
 	return action
+}
+
+// Direct destinations are available before autocomplete finishes.
+func directSearchRow(category, word, id string) uiJSON {
+	pattern := map[string]string{"search": searchURL, "map": mapSearchURL, "shopping": shoppingStoreURL}[category]
+	return unifiedRow(category, word, categoryNames[category]+"에서 입력한 검색어로 검색", quick(pattern, word), id, true)
+}
+
+func unifiedRow(category, word, detail, quicklook, id string, valid bool) uiJSON {
+	destination := quicklook
+	if category == "shopping" {
+		destination = quick(shoppingCompareURL, word)
+	}
+	if !valid {
+		destination, quicklook = "", ""
+	}
+	return uiJSON{"name.text": word, "completion": word, "detail.text": detail,
+		"url": destination, "shiftURL": quicklook, "lookup": id}
 }
 
 func keyboardHint(category string) string {
@@ -78,13 +103,16 @@ func (r *request) unifiedResults(category, word, id, selected string) uiJSON {
 	if word == "" || !strings.HasPrefix(id, "lookup_") {
 		return uiJSON{}
 	}
+	var loc location
 	fb := alfred.New()
 	err := safe(fb, func(fb *alfred.Feedback) error {
 		switch category {
 		case "search":
 			return r.search(fb, word)
 		case "map":
-			return r.mapSearch(fb, unifiedMapMode(), word)
+			useIP := unifiedMapMode() == "useIP"
+			loc = r.getLocation(useIP)
+			return r.mapSearchAt(fb, loc, useIP, word)
 		case "shopping":
 			return r.shopping(fb, word)
 		default:
@@ -99,21 +127,12 @@ func (r *request) unifiedResults(category, word, id, selected string) uiJSON {
 		if item.Autocomplete == "" || item.Variables["map_type"] != nil {
 			continue
 		}
-		destination := item.QuicklookURL
-		alternate := destination
-		if category == "shopping" {
-			destination = quick("https://search.shopping.naver.com/search/all?query=%s", item.Arg)
-		}
-		if !item.Valid {
-			destination, alternate = "", ""
-		}
 		detail := item.Subtitle
 		if len(rows) == 0 && category != "finance" {
 			detail = categoryNames[category] + "에서 입력한 검색어로 검색"
 		}
-		row := uiJSON{"name.text": item.Autocomplete, "completion": item.Autocomplete, "detail.text": detail,
-			"url": destination, "shiftURL": alternate, "lookup": id}
-		if selected != "" && destination == selected && selection == "" {
+		row := unifiedRow(category, item.Autocomplete, detail, item.QuicklookURL, id, item.Valid)
+		if selected != "" && row["url"] == selected && selection == "" {
 			selection = "restored_result"
 			row["uid"] = selection
 		}
@@ -130,10 +149,18 @@ func (r *request) unifiedResults(category, word, id, selected string) uiJSON {
 	if selected != "" {
 		results["select"] = selection
 	}
-	patch := uiJSON{"ids": uiJSON{
+	ids := uiJSON{
 		"results": results,
 		"hint":    uiJSON{"text": hint},
-	}}
+	}
+	if category == "map" {
+		label := "설정 위치 기준"
+		if loc.fromIP {
+			label = "IP 주소 기준"
+		}
+		ids["map_location"] = uiJSON{"text": label}
+	}
+	patch := uiJSON{"ids": ids}
 	// Matching is performed by Alfred at delivery time, including when a
 	// slow request finishes after the same query was typed a second time.
 	reply := uiJSON{"uid": "done_" + id, "patch": patch, "lookup": id}
@@ -171,7 +198,22 @@ func openResult(destination, selectedLookup, currentLookup string) uiJSON {
 func (r *request) unifiedUI(args []string) {
 	var action = uiJSON{}
 	command, category := at(args, 0), at(args, 1)
-	if command == "resume" {
+	if command == "start" {
+		update.MaybeSpawnWorker()
+		initial := at(args, 1)
+		if initial != "" {
+			action = prepareSearch("search", initial, "search")
+		} else {
+			action = resumeSearch("")
+		}
+		if version := update.AvailableVersion(); version != "" {
+			if action["update"] == nil {
+				action = updateViews(uiJSON{})
+			}
+			ids := action["update"].(uiJSON)["ids"].(uiJSON)
+			ids["service_name"] = uiJSON{"text": "업데이트 " + version + " · n workflow:update"}
+		}
+	} else if command == "resume" {
 		action = resumeSearch(at(args, 1))
 	} else if command == "remember" {
 		selected := at(args, 3)

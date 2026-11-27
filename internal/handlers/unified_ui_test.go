@@ -73,34 +73,42 @@ func resultRows(t *testing.T, action uiJSON, lookup string) []uiJSON {
 	return ids["results"].(uiJSON)["data"].(uiJSON)["src"].([]uiJSON)
 }
 
-func TestTypingRetainsVisibleRowsButInvalidatesTheirActions(t *testing.T) {
-	for _, tc := range []struct {
-		category, previous, word string
-		clear                    bool
-	}{
-		{"search", "search", "서울역", false},
-		{"search", "search", "", true},
-		{"map", "search", "서울역", true},
-	} {
-		action := prepareSearch(tc.category, tc.word, tc.previous)
-		ids := action["update"].(uiJSON)["ids"].(uiJSON)
-		view := ids["results"].(uiJSON)
-		_, cleared := view["data"]
-		if cleared != tc.clear || view["components"] != nil {
-			t.Fatalf("%+v: unexpected list update: %v", tc, view)
-		}
-		current := action["variables"].(uiJSON)["lookup"].(string)
-		if got := openResult("https://map.naver.com", "lookup_previous", current); len(got) != 0 {
-			t.Fatal("an old visible suggestion must not open while new results are pending")
+func TestPreparedDirectSearchIsImmediatelyActionable(t *testing.T) {
+	const word = "서울 & 역"
+	for _, category := range []string{"search", "map", "shopping"} {
+		t.Run(category, func(t *testing.T) {
+			prepared := prepareSearch(category, " "+word+" ", category)
+			id := prepared["variables"].(uiJSON)["lookup"].(string)
+			ids := prepared["update"].(uiJSON)["ids"].(uiJSON)
+			view := ids["results"].(uiJSON)
+			rows := view["data"].(uiJSON)["src"].([]uiJSON)
+			slot := ids["response_slot"].(uiJSON)["data"].(uiJSON)["src"].([]uiJSON)[0]
+			if len(rows) != 1 || rows[0]["completion"] != word || rows[0]["uid"] != view["select"] || rows[0]["lookup"] != id ||
+				slot["uid"] != id || slot["lookup"] != id || slot["url1"] != rows[0]["url"] || slot["url2"] != nil {
+				t.Fatalf("unexpected immediate selection: %v", ids)
+			}
+			for _, field := range []string{"url", "shiftURL"} {
+				dest := rows[0][field].(string)
+				if openResult(dest, id, id)["open"] == nil || len(openResult(dest, "lookup_previous", id)) != 0 {
+					t.Fatalf("incorrect lookup handling for %s", dest)
+				}
+			}
+		})
+	}
+	for _, tc := range []struct{ category, query string }{{"map", "  "}, {"finance", word}} {
+		ids := prepareSearch(tc.category, tc.query, "search")["update"].(uiJSON)["ids"].(uiJSON)
+		if rows := ids["results"].(uiJSON)["data"].(uiJSON)["src"].([]uiJSON); len(rows) != 0 {
+			t.Fatalf("unexpected immediate results for %+v: %v", tc, rows)
 		}
 	}
 }
 
 func TestUnifiedMapLocation(t *testing.T) {
-	for _, tc := range []struct{ mode, title, coords string }{
-		{"", "IP 주소 기준", "35.1,129.1"},
-		{"doNotUseIP", "설정 위치 기준", "37.5,127.0"},
-		{"useIP", "IP 주소 기준", "35.1,129.1"},
+	for _, tc := range []struct{ mode, pending, title, coords string }{
+		{"useIP", "위치 확인 중…", "설정 위치 기준", "37.5,127.0"},
+		{"", "위치 확인 중…", "IP 주소 기준", "35.1,129.1"},
+		{"doNotUseIP", "설정 위치 기준", "설정 위치 기준", "37.5,127.0"},
+		{"useIP", "위치 확인 중…", "IP 주소 기준", "35.1,129.1"},
 	} {
 		t.Run(tc.mode, func(t *testing.T) {
 			t.Setenv("alfred_workflow_cache", t.TempDir())
@@ -109,8 +117,8 @@ func TestUnifiedMapLocation(t *testing.T) {
 			t.Setenv("longitude", "127.0")
 			prepared := prepareSearch("map", "카페", "search")
 			ids := prepared["update"].(uiJSON)["ids"].(uiJSON)
-			if title := ids["map_location"].(uiJSON)["text"]; title != tc.title {
-				t.Fatalf("map label = %q, want %q", title, tc.title)
+			if title := ids["map_location"].(uiJSON)["text"]; title != tc.pending {
+				t.Fatalf("map label = %q, want %q", title, tc.pending)
 			}
 			var coords string
 			r := testRequest(t, func(req *http.Request) (*http.Response, error) {
@@ -118,12 +126,20 @@ func TestUnifiedMapLocation(t *testing.T) {
 					if tc.mode == "doNotUseIP" {
 						t.Fatal("configured coordinates must skip IP lookup")
 					}
+					if tc.title == "설정 위치 기준" {
+						return nil, errors.New("IP lookup failed")
+					}
 					return mapResponse(`{"lngLat":{"lat":35.1,"lng":129.1}}`), nil
 				}
 				coords = req.URL.Query().Get("coords")
 				return mapResponse("{}"), nil
 			})
-			r.unifiedResults("map", "카페", "lookup_test", "")
+			action := r.unifiedResults("map", "카페", "lookup_test", "")
+			entry := action["variables"].(uiJSON)["replacements"].(uiJSON)["lookup_test"].(uiJSON)
+			label := entry["patch"].(uiJSON)["ids"].(uiJSON)["map_location"].(uiJSON)["text"]
+			if label != tc.title {
+				t.Fatalf("location label = %v, want %s", label, tc.title)
+			}
 			if coords != tc.coords {
 				t.Fatalf("map search coordinates = %q, want %q", coords, tc.coords)
 			}

@@ -8,11 +8,15 @@ import (
 	"github.com/inchanS/AlfNaverSearchPlus/internal/jsonx"
 )
 
+const (
+	searchURL          = "https://search.naver.com/search.naver?ie=utf8&sm=stp_hty&where=se&query=%s"
+	shoppingStoreURL   = "https://search.shopping.naver.com/ns/search?query=%s"
+	shoppingCompareURL = "https://search.shopping.naver.com/search/all?query=%s"
+)
+
 // search: Naver integrated search autocomplete.
 func (r *request) search(fb *alfred.Feedback, word string) error {
-	const quicklook = "https://search.naver.com/search.naver?ie=utf8&sm=stp_hty&where=se&query=%s"
-
-	addQuery(fb, word, "Search Naver for '"+word+"'", quicklook)
+	addQuery(fb, word, "Search Naver for '"+word+"'", searchURL)
 
 	root, err := r.cachedJSON(cache.Key("nav", word), 30*time.Second, "https://ac.search.naver.com/nx/ac", map[string]string{
 		"q_enc": "UTF-8", "st": "100", "r_format": "json", "r_enc": "UTF-8",
@@ -27,16 +31,14 @@ func (r *request) search(fb *alfred.Feedback, word string) error {
 		if txt == "" {
 			continue
 		}
-		addSuggestion(fb, txt, "Search Naver for '"+txt+"'", "", txt, quicklook)
+		addSuggestion(fb, txt, "Search Naver for '"+txt+"'", "", txt, searchURL)
 	}
 	return nil
 }
 
 // shopping: Naver Shopping keyword autocomplete.
 func (r *request) shopping(fb *alfred.Feedback, word string) error {
-	const quicklook = "https://search.shopping.naver.com/ns/search?query=%s"
-
-	addQuery(fb, word, "Search Naver Shopping for '"+word+"'", quicklook)
+	addQuery(fb, word, "Search Naver Shopping for '"+word+"'", shoppingStoreURL)
 
 	root, err := r.cachedJSON(cache.Key("navs", word), 30*time.Second, "https://m.shopping.naver.com/api/modules/gnb/auto-complete", map[string]string{
 		"keyword": word, "personalizeYn": "n",
@@ -50,7 +52,7 @@ func (r *request) shopping(fb *alfred.Feedback, word string) error {
 		if txt == "" {
 			continue
 		}
-		addSuggestion(fb, txt, "Search Naver Shopping for '"+txt+"'", "", txt, quicklook)
+		addSuggestion(fb, txt, "Search Naver Shopping for '"+txt+"'", "", txt, shoppingStoreURL)
 	}
 	return nil
 }

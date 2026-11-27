@@ -16,6 +16,10 @@ on:
       - "*.sh"
       - "workflow/info.plist"
       - "workflow/run"
+      - "workflow/nui.alfredui/**"
+      - "scripts/*.py"
+      - "native/**"
+      - "VERSION"
       - ".github/workflows/test-go.yml"
 
 jobs:
@@ -28,3 +32,13 @@ jobs:
           go-version: "stable"
       - run: go vet ./...
       - run: go test -race ./...
+
+  package:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
+      - run: sh make.sh
+      - run: python3 scripts/test_nn_package.py

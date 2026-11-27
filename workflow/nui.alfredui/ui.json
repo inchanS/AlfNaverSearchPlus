@@ -5,6 +5,7 @@
     "latitude": {"src": "variable", "scriptenv": true},
     "longitude": {"src": "variable", "scriptenv": true},
     "cache_age": {"src": "variable", "scriptenv": true},
+    "alfred_workflow_version": {"src": "variable", "scriptenv": true},
     "alfred_workflow_cache": {"src": "variable", "scriptenv": true},
     "alfred_workflow_data": {"src": "variable", "scriptenv": true},
     "nnime_compatibility": {"src": "variable", "default": "0", "scriptenv": true},

@@ -29,14 +29,17 @@ func mapHeaders() map[string]string {
 	return map[string]string{"Referer": "https://map.naver.com/"}
 }
 
-type location struct{ lat, lng string }
+type location struct {
+	lat, lng string
+	fromIP   bool
+}
 
 func decodeLocation(data []byte) (location, error) {
 	root, err := jsonx.DecodeObject(data)
 	if err != nil {
 		return location{}, err
 	}
-	loc := location{jsonx.AsStr(root["lat"]), jsonx.AsStr(root["lng"])}
+	loc := location{lat: jsonx.AsStr(root["lat"]), lng: jsonx.AsStr(root["lng"]), fromIP: true}
 	for i, value := range []string{loc.lat, loc.lng} {
 		n, err := strconv.ParseFloat(value, 64)
 		limit := 90.0
@@ -71,14 +74,13 @@ func (r *request) getLocation(useIP bool) location {
 		}
 		logf("map: location lookup failed, using default coordinates: %v", err)
 	}
-	return location{env.Latitude(), env.Longitude()}
+	return location{lat: env.Latitude(), lng: env.Longitude()}
 }
 
 // mapData shares the complete response across overview and category searches.
 // The v2 key includes the actual coordinates; legacy query-only caches cannot
 // accidentally supply results from another location.
-func (r *request) mapData(useIP bool, word string) (map[string]any, error) {
-	loc := r.getLocation(useIP)
+func (r *request) mapData(loc location, useIP bool, word string) (map[string]any, error) {
 	key := cache.Key("navmap2", strconv.FormatBool(useIP)+"\x00"+loc.lat+"\x00"+loc.lng+"\x00"+word)
 	return r.cachedJSON(key, env.CacheAge(), apiSearch, map[string]string{
 		"query": word, "type": "all", "coords": loc.lat + "," + loc.lng,
@@ -161,13 +163,16 @@ func addBus(fb *alfred.Feedback, bus map[string]any, prefix, icon string) {
 // mapSearch: first-step map search (mode is "useIP" or "doNotUseIP").
 func (r *request) mapSearch(fb *alfred.Feedback, mode, word string) error {
 	useIP := mode == "useIP"
+	return r.mapSearchAt(fb, r.getLocation(useIP), useIP, word)
+}
 
+func (r *request) mapSearchAt(fb *alfred.Feedback, loc location, useIP bool, word string) error {
 	phrase := "Search Naver Map for"
-	if useIP {
+	if loc.fromIP {
 		phrase = "Search Naver Map(ip) for"
 	}
 	addMapSearch(fb, word, phrase)
-	root, err := r.mapData(useIP, word)
+	root, err := r.mapData(loc, useIP, word)
 	if err != nil {
 		return err
 	}
@@ -240,7 +245,7 @@ func (r *request) mapHub(fb *alfred.Feedback, word string) error {
 	default:
 		return fmt.Errorf("unknown map category: %s", mapType)
 	}
-	root, err := r.mapData(useIP, word)
+	root, err := r.mapData(r.getLocation(useIP), useIP, word)
 	if err != nil {
 		return err
 	}
